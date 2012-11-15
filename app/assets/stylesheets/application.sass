@@ -1,0 +1,79 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+//dimensions
+$total_width: 1060px
+
+//colors
+$dark_grey: #353936
+$grey: #C4C4C4
+$light_grey: #F0F0F0
+$logo_green: #B4D77F
+
+body
+  margin: 0
+  padding: 0
+  background: url("background.png") repeat
+  min-width: $total_width + 4
+
+#up-header
+  display: block
+  text-align: left
+  width: 100%
+  height: 24px
+  padding: 2px 0
+  background: $dark_grey
+
+#up-header ul
+  width: $total_width
+  margin: 0 auto
+
+#up-header ul li
+  list-style: none
+  display: inline
+
+#up-header ul li a
+  color: $grey
+  margin-left: 15px
+
+#up-header ul li:first-child a
+  margin-left: 0
+
+#middle-header
+  width: 100%
+  background: $light_grey
+  -webkit-box-shadow: 0 6px 6px -6px #777
+  -moz-box-shadow: 0 6px 6px -6px #777
+  box-shadow: 0 6px 6px -6px #777
+
+#middle-header-wrapper
+  width: $total_width
+  height: 72px
+  margin: 0 auto
+  padding-top: 4px
+
+#middle-header-wrapper div
+  float: left
+
+#search-input-div
+  padding: 20px 15px 0
+
+#search-input
+  width: 500px
+  height: 30px
+
+#wrapper
+  width: $total_width
+  margin: 0 auto
+  padding-top: 10px
