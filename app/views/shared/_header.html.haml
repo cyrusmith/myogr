@@ -16,7 +16,7 @@
         - if user_signed_in?
           %p Вы вошли как
           = current_user.username + '.'
-          = link_to('Выйти?', destroy_user_session_path, :method => :delete)
+          = link_to('Выйти?', destroy_user_session_path)
         -else
           %p Привет!
           = link_to('Войти', new_user_session_path) + ' или '

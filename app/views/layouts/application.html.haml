@@ -11,8 +11,11 @@
   %body
     = render 'shared/header'
     #wrapper
+      -if (flash[:success])
+        %p{:class => 'notice success'}= flash[:success]
       -if (notice)
         %p{:class => 'notice warning'}= notice
       -if (alert)
         %p{:class => 'notice error'}= alert
       = yield
+    = render 'shared/footer'

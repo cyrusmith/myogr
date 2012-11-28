@@ -19,13 +19,24 @@ $total_width: 1060px
 $dark_grey: #353936
 $grey: #C4C4C4
 $light_grey: #F0F0F0
+$green:#94C943
 $logo_green: #B4D77F
 
+html
+  height: 100%
+
 body
+  height: 100%
+  font-size: 16px
+  font-family: Georgia, sans-serif
   margin: 0
   padding: 0
   background: url("background.png") repeat
   min-width: $total_width + 4
+
+.wrapper
+  width: $total_width
+  margin: 0 auto
 
 #up-header
   display: block
@@ -36,8 +47,7 @@ body
   background: $dark_grey
 
 #up-header ul
-  width: $total_width
-  margin: 0 auto
+  @extend .wrapper
 
 #up-header ul li
   list-style: none
@@ -46,6 +56,10 @@ body
 #up-header ul li a
   color: $grey
   margin-left: 15px
+  &:hover
+    color: #ffffff
+  &:active
+    color: $green
 
 #up-header ul li:first-child a
   margin-left: 0
@@ -58,22 +72,46 @@ body
   box-shadow: 0 6px 6px -6px #777
 
 #middle-header-wrapper
-  width: $total_width
+  @extend .wrapper
   height: 72px
-  margin: 0 auto
   padding-top: 4px
 
 #middle-header-wrapper div
   float: left
 
 #search-input-div
-  padding: 20px 15px 0
+  padding: 20px 10px 0
 
 #search-input
   width: 500px
   height: 30px
 
 #wrapper
-  width: $total_width
-  margin: 0 auto
-  padding-top: 10px
+  @extend .wrapper
+
+footer
+  background: url("foot_bg.png") repeat-x
+  height: 194px
+  width: 100%
+  //margin: -209px auto 0
+  //position: relative
+
+#footer-wrapper
+  @extend .wrapper
+
+#footer-wrapper>ul
+  float: left
+  font: 14px
+  list-style: none
+  color: #999999
+
+#footer-wrapper>ul>li>a
+  color: #999999
+  &:hover
+    color: #FFFFFF
+  &:visited
+    color: $green
+
+.no-padding
+  padding: 0
+  margin: 0

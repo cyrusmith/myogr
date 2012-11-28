@@ -24,10 +24,12 @@
 /*---------------------------------
 	HTML ELEMENTS
 -----------------------------------*/
-a{color:#4D99E0;outline:0;}
-a:active{color:inherit;}
+/*a{color:#4D99E0;outline:0;}*/
+a{color:#666666;outline:0;}
+/*a:active{color:inherit;}*/
+a:active{color:#94C943;}
 a:visited{}
-a:hover{}
+a:hover{color: #000000;}
 a img{border:0;}
 strong,b{color:#000;background:lightyellow;position:relative;top:0;left:0;padding:2px 5px;}
 strike{}

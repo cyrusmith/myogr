@@ -1,15 +1,18 @@
 class User
   include Mongoid::Document
   # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
+  # :token_authenticatable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
   ## Database authenticatable
-  field :username,           :type => String, :default => ""
-  field :email,              :type => String, :default => ""
-  field :encrypted_password, :type => String, :default => ""
+  field :username,           :type => String,   :default => ""
+  field :email,              :type => String,   :default => ""
+  field :encrypted_password, :type => String,   :default => ""
+  field :roles,              :type => Array,    :default => ["user"]
+  field :forum_id,           :type => Integer,  :default => 0
+  field :forum_data,         :type => Hash
 
   validates_presence_of :username
   validates_presence_of :email
@@ -30,10 +33,10 @@ class User
   field :last_sign_in_ip,    :type => String
 
   ## Confirmable
-  # field :confirmation_token,   :type => String
-  # field :confirmed_at,         :type => Time
-  # field :confirmation_sent_at, :type => Time
-  # field :unconfirmed_email,    :type => String # Only if using reconfirmable
+  field :confirmation_token,   :type => String
+  field :confirmed_at,         :type => Time
+  field :confirmation_sent_at, :type => Time
+  field :unconfirmed_email,    :type => String # Only if using reconfirmable
 
   ## Lockable
   # field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
@@ -44,10 +47,15 @@ class User
   # field :authentication_token, :type => String
   attr_accessor :login
 
+  ROLES = [:user, :verified_user, :moderator, :admin]
+
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
-      self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
+      result = self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
+      return result if result
+      require "forum_user"
+      ForumUser.find(login)
     else
       super
     end

@@ -1,4 +1,16 @@
-%h1 Listing home
+#home
+  %h1 Каталог
 
-%a= link_to "signout", sign_out_path
+  %ul
+    %li= link_to 'Универсальные закупки', 'http://ogromno.com/index.php?showforum=124'
+    %li= link_to 'Детская одежда и обувь', 'http://ogromno.com/index.php?showforum=125'
+    %li= link_to 'Одежда и обувь для взрослых', 'http://ogromno.com/index.php?showforum=128'
+    %li= link_to 'Товары для дома и себя', 'http://ogromno.com/index.php?showforum=131'
+    %li= link_to 'Игрушки, подарки, книжки, сувениры', 'http://ogromno.com/index.php?showforum=132'
+    %li= link_to 'Товары для детей', 'http://ogromno.com/index.php?showforum=133'
+    %li= link_to 'Продукты', 'http://ogromno.com/index.php?showforum=134'
+    %li= link_to 'Покупки в иностранных интернет-магазинах', 'http://ogromno.com/index.php?showforum=183'
+
+-if (current_user && current_user.roles.include?("admin"))
+  %p Ты админ
 

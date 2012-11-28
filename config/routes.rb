@@ -1,11 +1,14 @@
 Ogromno::Application.routes.draw do
 
+  get "sessions/new"
+
   root :to => "home#index"
 
   devise_for :user
 
   devise_scope :user do
     get "sign_in", :to => "devise/sessions#new"
+    post "sign_in", :to => "sessions#create", :as => "post_user_session"
     get "sign_out", :to => "devise/sessions#destroy"
   end
 
