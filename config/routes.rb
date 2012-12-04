@@ -7,8 +7,8 @@ Ogromno::Application.routes.draw do
   get 'contacts', :to => 'home#contacts'
   get 'advertisment', :to => 'home#advertisment'
   get 'rules', :to => 'home#rules'
-  get 'user-agreement', :to => 'home#agreement'
-  get 'public-offer', :to => 'home#offer'
+  get 'agreement', :to => 'home#agreement'
+  get 'offer', :to => 'home#offer'
 
   devise_for :user
 
