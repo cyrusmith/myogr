@@ -87,6 +87,21 @@ body
   width: 500px
   height: 30px
 
+#carousel-common
+  margin: 0
+  padding: 0
+  width: 570px
+  height: 140px
+  list-style: none
+
+#carousel
+  @extend #carousel-common
+  overflow: hidden
+
+#carousel li
+  @extend #carousel-common
+  float: left
+
 #wrapper
   @extend .wrapper
 
