@@ -28,7 +28,8 @@ html
 body
   height: 100%
   font-size: 16px
-  font-family: Georgia, sans-serif
+  //font-family: Georgia, sans-serif
+  font-family: 'PT Sans', sans-serif
   margin: 0
   padding: 0
   background: url("background.png") repeat
@@ -89,6 +90,19 @@ body
 #wrapper
   @extend .wrapper
 
+#main-data
+  width: 800px
+  float: left
+  padding: 8px
+
+#right-sidebar
+  width: 234px
+  float: right
+  margin: 8px 8px 8px 0
+
+.clear
+  clear: both
+
 footer
   background: url("foot_bg.png") repeat-x
   height: 194px
@@ -115,3 +129,37 @@ footer
 .no-padding
   padding: 0
   margin: 0
+
+li
+  list-style-type: none
+
+li h2
+  display: inline
+
+ol
+  counter-reset: list1
+
+ol li:before
+  counter-increment: list1
+  content: counter(list1) ". "
+
+ol ol
+  counter-reset: list2
+
+ol ol li:before
+  counter-increment: list2
+  content: counter(list1) "." counter(list2) ". "
+
+ol ol ol
+  counter-reset: list3
+
+ol ol ol li:before
+  counter-increment: list3
+  content: counter(list1) "." counter(list2) "." counter(list3)
+
+ol ol ol ol
+  counter-reset: list4
+
+ol ol ol ol li:before
+  counter-increment: list4
+  content: counter(list1) "." counter(list2) "." counter(list3) "." counter(list4)

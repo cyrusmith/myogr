@@ -2,15 +2,15 @@
   #footer-wrapper
     %ul.no-padding
       %li= image_tag 'fl_icon.png'
-      %li= link_to 'Контакты', '#'
-      %li= link_to 'Реклама на сайте', '#'
+      %li= link_to 'Контакты', contacts_path
+      %li= link_to 'Реклама на сайте', advertisment_path
       %li= link_to 'Карта сайта', '#'
     %ul
       %li= image_tag 'fc_icon.png'
-      %li= link_to 'Правила', '#'
+      %li= link_to 'Правила', rules_path
       %li= link_to 'Помощь', '#'
-      %li= link_to 'Пользовательское соглашение', '#'
-      %li= link_to 'Публичная оферта', '#'
+      %li= link_to 'Пользовательское соглашение', :controller => "home", :action => "agreement"
+      %li= link_to 'Публичная оферта', :controller => "home", :action => "offer"
     %ul
       %li= image_tag 'fm_icon.png'
       %li Звоните нам: (922) 022-73-73

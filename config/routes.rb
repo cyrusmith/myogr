@@ -4,6 +4,12 @@ Ogromno::Application.routes.draw do
 
   root :to => "home#index"
 
+  get 'contacts', :to => 'home#contacts'
+  get 'advertisment', :to => 'home#advertisment'
+  get 'rules', :to => 'home#rules'
+  get 'user-agreement', :to => 'home#agreement'
+  get 'public-offer', :to => 'home#offer'
+
   devise_for :user
 
   devise_scope :user do

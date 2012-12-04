@@ -4,6 +4,7 @@
     %title Гипермаркет "Огромно"
     = stylesheet_link_tag "kickstart/kickstart.css", :media => "all"
     = stylesheet_link_tag "application", :media => "all"
+    = stylesheet_link_tag 'http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic', :media => "all"
     = javascript_include_tag "kickstart/kickstart.js"
     = javascript_include_tag "application"
     = csrf_meta_tags
@@ -12,10 +13,14 @@
     = render 'shared/header'
     #wrapper
       -if (flash[:success])
-        %p{:class => 'notice success'}= flash[:success]
+        %div{:class => 'notice success'}= flash[:success]
       -if (notice)
-        %p{:class => 'notice warning'}= notice
+        %div{:class => 'notice warning'}= notice
       -if (alert)
-        %p{:class => 'notice error'}= alert
-      = yield
+        %div{:class => 'notice error'}= alert
+      #main-data
+        = yield
+      #right-sidebar
+      .clear
+
     = render 'shared/footer'
