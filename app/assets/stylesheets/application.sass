@@ -154,27 +154,27 @@ li h2
 ol
   counter-reset: list1
 
-ol li:before
+ol>li:before
   counter-increment: list1
   content: counter(list1) ". "
 
 ol ol
   counter-reset: list2
 
-ol ol li:before
+ol ol>li:before
   counter-increment: list2
   content: counter(list1) "." counter(list2) ". "
 
 ol ol ol
   counter-reset: list3
 
-ol ol ol li:before
+ol ol ol>li:before
   counter-increment: list3
-  content: counter(list1) "." counter(list2) "." counter(list3)
+  content: counter(list1) "." counter(list2) "." counter(list3) ". "
 
 ol ol ol ol
   counter-reset: list4
 
 ol ol ol ol li:before
   counter-increment: list4
-  content: counter(list1) "." counter(list2) "." counter(list3) "." counter(list4)
+  content: counter(list1) "." counter(list2) "." counter(list3) "." counter(list4) ". "

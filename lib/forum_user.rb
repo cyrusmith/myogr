@@ -1,6 +1,6 @@
 require 'mysql2'
 require 'digest/md5'
-require 'iconv'
+require "warden"
 require 'devise/strategies/base'
 
 class ForumUser < Devise::Strategies::Base

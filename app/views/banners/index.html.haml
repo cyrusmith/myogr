@@ -1,0 +1,25 @@
+%h1 Моя реклама
+
+%table
+  %tr
+    %th
+    %th
+    %th
+
+  - @banners.each do |banner|
+    %tr
+      %td= banner.title
+      %td= banner.type
+      -if banner.active?
+        %td= link_to "", deactivate_banner_path(banner), {:class => "icon medium green", :data => {:icon => "C"}}
+        %td= banner.activation_time
+        %td= banner.days_active
+      -else
+        %td= link_to "", activate_banner_path(banner), {:class => "icon medium red", :data => {:icon => "x"}}
+      %td= link_to 'Show', banner
+      %td= link_to 'Edit', edit_banner_path(banner)
+      %td= link_to 'Destroy', banner, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Banner', create_banner_step1_path
