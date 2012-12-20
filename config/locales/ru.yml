@@ -267,3 +267,26 @@ ru:
   sign_out: выйти
 
   forum_user_found: Мы нашли пользователя форума %{name} с вашими данными и успешно зарегистрировали его в системе.Теперь вы можете войти, используя свой логин и пароль.
+  width: Ширина
+  height: Высота
+  price_per_day: Цена за день размещения, руб.
+
+  actions:
+    create: создать
+    read: открыть
+    update: изменить
+    delete: удалить
+
+  promo_place:
+    key: Уникальный ключ
+    title: Название
+    conditions: Условия
+    mime_whitelist: Разрешенные файлы
+    create: Создать профиль
+    update: Изменить профиль
+
+  banner:
+    my_banners: Моя реклама
+    link: Ссылка
+    title: Заголовок объявления
+    description: Описание

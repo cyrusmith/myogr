@@ -1,0 +1,4 @@
+%h1 Выберите тип создаваемого баннера
+
+- @promo_places.each do |promo_place|
+  %p= link_to promo_place.title, create_banner_step2_path(promo_place.key)

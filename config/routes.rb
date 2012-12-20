@@ -1,5 +1,6 @@
 Ogromno::Application.routes.draw do
 
+
   get "sessions/new"
 
   root :to => "home#index"
@@ -18,6 +19,15 @@ Ogromno::Application.routes.draw do
     get "sign_out", :to => "devise/sessions#destroy"
   end
 
+  resources :banners
+  match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
+  match 'new_banner/step2/:type' => 'banners#create_step2', :as => :create_banner_step2
+  match 'banners/:id/activate' => 'banners#activate', :as => :activate_banner
+  match 'banners/:id/deactivate' => 'banners#deactivate', :as => :deactivate_banner
+
+  namespace :admin do
+    resources :promo_place
+  end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

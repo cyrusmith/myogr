@@ -1,0 +1,45 @@
+class Admin::PromoPlaceController < Admin::AdminController
+  def index
+    @promo_list = PromoPlace.all
+  end
+
+  def create
+    @promo_place = PromoPlace.new(params[:promo_place])
+    if @promo_place.save
+      flash[:success] = "Success"
+      redirect_to admin_promo_place_index_path
+    else
+      render 'new'
+    end
+  end
+
+  def new
+    @promo_place = PromoPlace.new
+  end
+
+  def edit
+
+  end
+
+  def show
+
+  end
+
+  def update
+    if PromoPlace.where(:key => params[:promo_place][:key]).update(params[:promo_place])
+      flash[:success] = "Success"
+      redirect_to admin_promo_place_index_path
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    if PromoPlace.find(params[:id]).delete
+      flash[:success] = "Success"
+      redirect_to admin_promo_place_index_path
+    else
+      render 'edit'
+    end
+  end
+end

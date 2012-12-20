@@ -2,11 +2,11 @@
 %html
   %head
     %title Гипермаркет "Огромно"
-    = stylesheet_link_tag "kickstart/kickstart.css", :media => "all"
+    -#= stylesheet_link_tag "kickstart/kickstart.css", :media => "all"
     = stylesheet_link_tag "application", :media => "all"
     = stylesheet_link_tag 'http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic', :media => "all"
     = javascript_include_tag "jquery-1.8.3.min.js"
-    = javascript_include_tag "kickstart/kickstart.js"
+    -#= javascript_include_tag "kickstart/kickstart.js"
     = javascript_include_tag "jquery.moodular.js"
     = javascript_include_tag "application"
     = csrf_meta_tags
@@ -24,20 +24,8 @@
         = render 'shared/banners'
         = yield
       #right-sidebar
-        <!--  AdRiver code START. Type:160x600 Site: ogromno PZ: 0 BN: 0 -->
-        <script language="javascript" type="text/javascript"><!--
-        var RndNum4NoCash = Math.round(Math.random() * 1000000000);
-        var ar_Tail='unknown'; if (document.referrer) ar_Tail = escape(document.referrer);
-        document.write(
-        '<iframe src="http://ad.adriver.ru/cgi-bin/erle.cgi?'
-        + 'sid=132658&target=top&bt=29&pz=0&rnd=' + RndNum4NoCash + '&tail256=' + ar_Tail
-        + '" frameborder=0 vspace=0 hspace=0 width=160 height=600 marginwidth=0'
-        + ' marginheight=0 scrolling=no></iframe>'); //--></script>
-        <noscript>
-        <a href="http://ad.adriver.ru/cgi-bin/click.cgi?sid=132658&bt=29&pz=0&rnd=295156530" target=_top>
-        <img src="http://ad.adriver.ru/cgi-bin/rle.cgi?sid=132658&bt=29&pz=0&rnd=295156530" alt="-AdRiver-" border=0 width=160 height=600></a>
-        </noscript>
-        <!--AdRiver code END-->
+        %ul
+          %li= link_to t("banner.my_banners"), banners_path
       .clear
 
     = render 'shared/footer'

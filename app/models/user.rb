@@ -6,11 +6,13 @@ class User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  has_many :banners
+
   ## Database authenticatable
   field :username,           :type => String,   :default => ""
   field :email,              :type => String,   :default => ""
   field :encrypted_password, :type => String,   :default => ""
-  field :roles,              :type => Array,    :default => ["user"]
+  field :roles,              :type => Array,    :default => [:user]
   field :forum_id,           :type => Integer,  :default => 0
   field :forum_data,         :type => Hash
 
@@ -48,6 +50,18 @@ class User
   attr_accessor :login
 
   ROLES = [:user, :verified_user, :moderator, :admin]
+
+  def admin?
+    self.roles.include? "admin"
+  end
+
+  def moderator?
+    self.roles.include? "moderator"
+  end
+
+  def verified?
+    self.roles.include? "verified_user"
+  end
 
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup

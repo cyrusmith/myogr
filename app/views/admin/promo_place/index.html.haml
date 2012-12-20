@@ -1,0 +1,5 @@
+%h1 Promo page list
+- @promo_list.each do |promo|
+  = link_to promo.title, edit_admin_promo_place_path(promo)
+  = link_to t("actions.delete"), admin_promo_place_path(promo), :method => :delete, :confirm => "You sure?",
+                                                            :title => "Delete #{promo.title}"
