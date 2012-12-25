@@ -1,6 +1,7 @@
 class Banner
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Origin::Queryable
 
   after_update :scale
 
@@ -30,12 +31,12 @@ class Banner
 
   def activate
     is_active = true
-    activation_time = Time.now
-    save
+    activation_time = Time.zone.now
+    #save
   end
 
   def deactivate
     is_active = false
-    save
+    #save
   end
 end

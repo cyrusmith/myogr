@@ -10,7 +10,7 @@
     %tr
       %td= banner.title
       %td= banner.type
-      -if banner.active?
+      -if banner.is_active
         %td= link_to "", deactivate_banner_path(banner), {:class => "icon medium green", :data => {:icon => "C"}}
         %td= banner.activation_time
         %td= banner.days_active

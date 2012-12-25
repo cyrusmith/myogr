@@ -20,7 +20,8 @@
     = f.file_field :banner_image
     = f.hidden_field :banner_image_cache
 
-    = f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
+    -#= f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
+    -#= f.hidden_field :type, :value => @banner.class
     - if @promo_place
       = f.hidden_field :height, :value => @promo_place.height
       = f.hidden_field :width, :value => @promo_place.width

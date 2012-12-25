@@ -66,7 +66,7 @@ class BannersController < ApplicationController
 
   def create_step2
     @promo_place = PromoPlace.find_by(:key => params[:type])
-    @banner = Banner.new
+    @banner = class_eval "#{params[:type]}.new"
   end
 
   # PUT /banners/1
