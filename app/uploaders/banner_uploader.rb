@@ -1,11 +1,11 @@
 # encoding: utf-8
-require 'carrierwave/processing/rmagick'
+require 'carrierwave/processing/mini_magick'
 
 class BannerUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
-  include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  #include CarrierWave::RMagick
+  include CarrierWave::MiniMagick
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
   # include Sprockets::Helpers::RailsHelper

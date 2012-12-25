@@ -3,7 +3,12 @@ class BannersController < ApplicationController
   # GET /banners.json
   load_and_authorize_resource
   def index
-    @banners = current_user.banners
+    if current_user
+      @banners = current_user.banners
+    else
+      flash[:notice] = t "must_login"
+      return redirect_to root_path
+    end
 
     respond_to do |format|
       format.html # index.html.erb

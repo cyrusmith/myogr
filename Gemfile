@@ -18,7 +18,7 @@ gem "mongoid"
 gem "origin"
 gem "devise", ">= 1.3.3"
 gem "cancan"
-gem 'rmagick'
+gem 'mini_magick'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid',
     :git => "https://github.com/jnicklas/carrierwave-mongoid.git", :branch => "mongoid-3.0"
 gem "ruby-debug19"
@@ -45,7 +45,7 @@ gem 'jquery-rails'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-gem 'unicorn'
+#gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'

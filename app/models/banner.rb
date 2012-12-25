@@ -11,7 +11,7 @@ class Banner
   field :title, :type => String
   field :description, :type => String
   field :type, :type => String
-  field :active?, :type => Boolean, :default => false
+  field :is_active, :type => Boolean, :default => false
   field :activation_time, :type => DateTime
   field :days_active, :type => Integer, :default => 0
 
@@ -26,5 +26,16 @@ class Banner
 
   def scale
     banner_image.recreate_versions! if width.present?
+  end
+
+  def activate
+    is_active = true
+    activation_time = Time.now
+    save
+  end
+
+  def deactivate
+    is_active = false
+    save
   end
 end
