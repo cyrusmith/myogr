@@ -1,6 +1,7 @@
 class PromoPlace
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Origin::Queryable
 
   field :key, :type => String
   field :title, :type => String

@@ -26,7 +26,7 @@ class Admin::PromoPlaceController < Admin::AdminController
   end
 
   def update
-    if PromoPlace.where(:key => params[:promo_place][:key]).update(params[:promo_place])
+    if PromoPlace.find(params[:promo_place][:_id]).update_attributes(params[:promo_place])
       flash[:success] = "Success"
       redirect_to admin_promo_place_index_path
     else
