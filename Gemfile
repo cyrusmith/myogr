@@ -8,6 +8,9 @@ gem 'rails', '3.2.8'
 gem 'mysql2'
 gem 'haml-rails'
 gem 'rspec-rails'
+gem 'russian'
+gem 'settingslogic'
+#gem 'open-uri'
 gem "mongoid-rspec", ">= 1.4.1", :group => :test
 gem "factory_girl_rails", ">= 1.1.beta1", :group => :test
 gem "cucumber-rails", ">= 0.4.1", :group => :test

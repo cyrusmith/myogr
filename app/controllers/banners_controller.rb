@@ -2,6 +2,7 @@ class BannersController < ApplicationController
   # GET /banners
   # GET /banners.json
   load_and_authorize_resource
+
   def index
     if current_user
       @banners = current_user.banners
@@ -46,12 +47,14 @@ class BannersController < ApplicationController
   # POST /banners
   # POST /banners.json
   def create
-
-    @banner = current_user.banners.create(params[:banner])
+    @banner = Factory::BannerFactory.new params[:banner][:type]
+    @banner.update_attributes params[:banner]
+    @banner.save
+    current_user.banners << @banner
 
     respond_to do |format|
       if @banner.save
-        format.html { redirect_to @banner, notice: 'Banner was successfully created.' }
+        format.html { redirect_to banners_path, notice: 'Banner was successfully created.' }
         format.json { render json: @banner, status: :created, location: @banner }
       else
         format.html { render action: "new" }
@@ -89,6 +92,7 @@ class BannersController < ApplicationController
   # DELETE /banners/1.json
   def destroy
     @banner = Banner.find(params[:id])
+    @banner.deactivate if @banner.is_activated
     @banner.destroy
 
     respond_to do |format|
@@ -99,13 +103,21 @@ class BannersController < ApplicationController
 
   def activate
     banner = Banner.find params[:id]
-
-    require "ipb_forum/promo_button"
-    Forum::PromoButton.add banner.id, banner.link, banner.banner_image.url
-    redirect_to banners_path
+    if banner.is_active
+      redirect_to banners_path, :alert => t("banner.already_activated")
+    else
+      banner.activate
+      redirect_to banners_path
+    end
   end
 
   def deactivate
-
+    banner = Banner.find params[:id]
+    unless banner.is_active
+      redirect_to banners_path, :alert => t("banner.already_deactivated")
+    else
+      banner.deactivate
+      redirect_to banners_path
+    end
   end
 end
