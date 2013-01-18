@@ -1,6 +1,5 @@
 class SessionsController < Devise::SessionsController
   def create
-    require 'forum_user'
     login = params[:user][:login]
     unless User.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
       forum_user = ForumUser.find(login)

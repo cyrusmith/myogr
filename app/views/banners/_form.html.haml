@@ -1,5 +1,6 @@
 .col_4
-  = form_for @banner do |f|
+  = form_for @banner.becomes(Banner) do |f|
+    - f.object = @banner.becomes(@banner.class)
     - if @banner.errors.any?
       #error_explanation
         %h2= "#{pluralize(@banner.errors.count, "error")} prohibited this banner from being saved:"
@@ -7,7 +8,7 @@
           - @banner.errors.full_messages.each do |msg|
             %li= msg
     = f.label :link, t("banner.link")
-    = f.text_field :link
+    = f.text_field :link, :required => true
 
     = f.label :title, t("banner.title")
     = f.text_field :title
@@ -15,15 +16,17 @@
     = f.label :description, t("banner.description")
     = f.text_field :description
 
-    = image_tag (@banner.banner_image_url) if @banner.banner_image.present?
-    = f.label :banner_image
-    = f.file_field :banner_image
-    = f.hidden_field :banner_image_cache
+    = image_tag (@banner.image_url) if @banner.image.present?
+    = f.label t("common.image")
+    = f.file_field :image
+    = f.hidden_field :image_cache
 
-    = f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
+    -#= f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
+    -#= f.hidden_field :type, :value => @banner.class
     - if @promo_place
       = f.hidden_field :height, :value => @promo_place.height
       = f.hidden_field :width, :value => @promo_place.width
+      %p= "Формат изображения для данного типа рекламы - #{@promo_place.width} на #{@promo_place.height}. Если иозбражение будет больше размером - мы уменьшим его до требуемых"
 
     .actions
       = f.submit 'Save'

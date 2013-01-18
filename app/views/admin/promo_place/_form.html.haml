@@ -1,10 +1,4 @@
-%h1 Редактирование рекламного профиля
-
--if @promo_place.errors.any?
-  -@promo_place.errors.full_messages.each do |error|
-    %p= error
-
-= form_for @promo_place, :url => { :action => "update", :method => 'put' }, :html => {:class => "col_4 vertical"} do |form|
+= form_for [:admin, @promo_place], :html => {:class => "col_4 vertical"} do |form|
   = form.label :key, t("promo_place.key") + ": "
   = form.text_field :key
 
@@ -26,6 +20,4 @@
   = form.label :price_per_day, t("price_per_day")
   = form.text_field :price_per_day
 
-  = form.hidden_field :_id
-
-  = form.submit t("promo_place.update")
+  = form.submit t("promo_place.create")

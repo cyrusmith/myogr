@@ -1,0 +1,12 @@
+# config/application.yml
+defaults: &defaults
+  host_url: http://localhost:3000
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

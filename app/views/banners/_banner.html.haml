@@ -1,0 +1,11 @@
+%tr
+  %td= banner.title
+  %td Баннер
+  -if banner.is_active
+    %td= link_to "", deactivate_banner_path(banner), {:class => "icon medium green", :data => {:icon => "C"}}
+    %td= banner.activation_time
+    %td= banner.days_active
+  -else
+    %td= link_to "", activate_banner_path(banner), {:class => "icon medium red", :data => {:icon => "x"}}
+  %td= link_to 'Edit', edit_banner_path(banner)  unless banner.is_active
+  %td= link_to 'Destroy', banner_path(banner), method: :delete, data: { confirm: t("banner.confirm_delete") }

@@ -1,0 +1,11 @@
+%tr
+  %td= forum_banner.title
+  %td Кнопка на форуме
+  -if forum_banner.is_active
+    %td= link_to "", deactivate_banner_path(forum_banner), :confirm => t("banner.confirm_deactivation"), :class => "icon medium green", :title => t("banner.active"), :data => {:icon => "C"}
+    %td= Russian::strftime forum_banner.activation_time.to_date
+    %td= forum_banner.days_active
+  -else
+    %td= link_to "", activate_banner_path(forum_banner), :confirm => t("banner.confirm_activation"), :class => "icon medium red", :title => t("banner.unactive"),  :data => {:icon => "x"}
+  %td= link_to t("actions.update"), edit_banner_path(forum_banner) unless forum_banner.is_active
+  %td= link_to t("actions.delete"), banner_path(forum_banner), method: :delete, data: { confirm: t("banner.confirm_delete") }

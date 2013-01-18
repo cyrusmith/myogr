@@ -8,6 +8,9 @@ gem 'rails', '3.2.8'
 gem 'mysql2'
 gem 'haml-rails'
 gem 'rspec-rails'
+gem 'russian'
+gem 'settingslogic'
+#gem 'open-uri'
 gem "mongoid-rspec", ">= 1.4.1", :group => :test
 gem "factory_girl_rails", ">= 1.1.beta1", :group => :test
 gem "cucumber-rails", ">= 0.4.1", :group => :test
@@ -18,7 +21,7 @@ gem "mongoid"
 gem "origin"
 gem "devise", ">= 1.3.3"
 gem "cancan"
-gem 'rmagick'
+gem 'mini_magick'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid',
     :git => "https://github.com/jnicklas/carrierwave-mongoid.git", :branch => "mongoid-3.0"
 gem "ruby-debug19"
@@ -45,7 +48,7 @@ gem 'jquery-rails'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-gem 'unicorn'
+#gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
