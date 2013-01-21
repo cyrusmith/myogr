@@ -92,7 +92,7 @@ class BannersController < ApplicationController
   # DELETE /banners/1.json
   def destroy
     @banner = Banner.find(params[:id])
-    @banner.deactivate if @banner.is_activated
+    @banner.deactivate if @banner.is_active
     @banner.destroy
 
     respond_to do |format|
