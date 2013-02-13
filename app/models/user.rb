@@ -75,4 +75,8 @@ class User
     end
   end
 
+  def generate_forum_token
+    self.forum_data
+  end
+
 end

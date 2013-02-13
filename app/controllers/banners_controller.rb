@@ -6,6 +6,7 @@ class BannersController < ApplicationController
   def index
     if current_user
       @banners = current_user.banners
+      @accounts = Billing::Account.all
     else
       flash[:notice] = t "must_login"
       return redirect_to root_path
@@ -42,6 +43,7 @@ class BannersController < ApplicationController
   # GET /banners/1/edit
   def edit
     @banner = Banner.find(params[:id])
+    @promo_place = PromoPlace.find_by(:key => @banner[:type])
   end
 
   # POST /banners
@@ -79,7 +81,7 @@ class BannersController < ApplicationController
 
     respond_to do |format|
       if @banner.update_attributes(params[:banner])
-        format.html { redirect_to @banner, notice: 'Banner was successfully updated.' }
+        format.html { redirect_to banners_path, notice: 'Banner was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
