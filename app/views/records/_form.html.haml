@@ -1,0 +1,22 @@
+= form_for @record do |f|
+  - if @record.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@record.errors.count, "error")} prohibited this record from being saved:"
+      %ul
+        - @record.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :user
+    = f.text_field :user
+  .field
+    = f.label :datetime
+    = f.datetime_select :datetime
+  .field
+    = f.label :procedures
+    = f.text_field :procedures
+  .field
+    = f.label :employee
+    = f.text_field :employee
+  .actions
+    = f.submit 'Save'

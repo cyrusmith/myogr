@@ -7,6 +7,7 @@ class Ability
       can :manage, :all
     else
       can :manage, Banner
+      can :manage, Record
     end
     # Define abilities for the passed in user here. For example:
     #

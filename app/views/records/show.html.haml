@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @record.user
+%p
+  %b Datetime:
+  = @record.datetime
+%p
+  %b Procedures:
+  = @record.procedures
+%p
+  %b Employee:
+  = @record.employee
+
+= link_to 'Edit', edit_record_path(@record)
+\|
+= link_to 'Back', records_path

@@ -1,5 +1,8 @@
 Ogromno::Application.routes.draw do
 
+  resources :records
+
+  resources :schedules
 
   get "sessions/new"
 
@@ -27,6 +30,9 @@ Ogromno::Application.routes.draw do
 
   namespace :admin do
     resources :promo_place
+    namespace :salon do
+      resources :employees
+    end
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.
