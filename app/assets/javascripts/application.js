@@ -12,9 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require_tree .
 //= require rails.validations
-
-$(document).ready(function () {
-    jQuery("#carousel").moodular();
-});
