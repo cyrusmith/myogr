@@ -20,6 +20,7 @@ gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid',
     :git => 'https://github.com/jnicklas/carrierwave-mongoid.git', :branch => 'mongoid-3.0'
 gem 'money-rails'
 gem 'ruby-debug19'
+gem 'chronic'
 
 
 group :development do

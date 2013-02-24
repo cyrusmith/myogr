@@ -15,5 +15,8 @@
   .field
     = f.label :position
     = f.text_field :position
+  .field
+    = f.label :specialization
+    = f.select :specialization, Admin::Salon::Procedure.possible_groups
   .actions
     = f.submit 'Save'

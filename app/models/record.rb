@@ -3,6 +3,9 @@ class Record
   include Mongoid::Paranoia
   include Mongoid::Timestamps
 
+  belongs_to :user
+  belongs_to :employee
+
   field :user, type: String
   field :record_date, type: Date
   field :record_time, type: Time

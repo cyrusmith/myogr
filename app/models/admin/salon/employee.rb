@@ -5,6 +5,7 @@ module Admin
       field :first_name, type: String
       field :last_name, type: String
       field :position, type: String
+      field :specialization, type: String
     end
   end
 end

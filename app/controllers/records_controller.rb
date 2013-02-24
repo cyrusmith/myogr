@@ -25,7 +25,9 @@ class RecordsController < AuthorizedController
   # GET /records/new.json
   def new
     @record = Record.new
-
+    @start_time = Time.parse Admin::Salon::Settings.schedule.mon.from
+    @end_time = Time.parse Admin::Salon::Settings.schedule.mon.till
+    @time_range = @start_time.split_by 30.minutes, @end_time
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @record }

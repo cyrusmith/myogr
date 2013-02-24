@@ -32,6 +32,7 @@ Ogromno::Application.routes.draw do
     resources :promo_place
     namespace :salon do
       resources :employees
+      resources :procedures
     end
   end
   # The priority is based upon order of creation:
