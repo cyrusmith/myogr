@@ -1,0 +1,25 @@
+= form_for @salon_procedure do |f|
+  - if @salon_procedure.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@salon_procedure.errors.count, "error")} prohibited this admin_salon_procedure from being saved:"
+      %ul
+        - @salon_procedure.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :duration
+    = f.text_field :duration
+  .field
+    = f.label :price
+    = f.text_field :price
+  .field
+    = f.label :comment
+    = f.text_field :comment
+  .field
+    = f.label :group
+    = f.select(:group, @group_array)
+  .actions
+    = f.submit 'Save'
