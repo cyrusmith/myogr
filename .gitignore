@@ -10,9 +10,6 @@
 # Ignore bundler config
 /.bundle
 
-# Ignore idea project config
-/.idea
-
 # Ignore the default SQLite database.
 /db/*.sqlite3
 

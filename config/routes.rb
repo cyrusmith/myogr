@@ -1,6 +1,9 @@
 Ogromno::Application.routes.draw do
 
   resources :records
+  match 'record/step1' => 'records#create_step1', :as => :create_record_step1
+  match 'record/step2/:group' => 'records#create_step2', :as => :create_record_step2
+  match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
   resources :schedules
 

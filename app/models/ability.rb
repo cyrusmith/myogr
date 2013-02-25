@@ -5,6 +5,7 @@ class Ability
     user ||= User.new
     if user.admin?
       can :manage, :all
+    elsif user.new_record?
     else
       can :manage, Banner
       can :manage, Record
