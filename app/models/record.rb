@@ -16,6 +16,7 @@ class Record
 
   before_save :count_total_duration
 
+  # Округлять до 0,5 или целого числа
   def count_total_duration
     self.total_duration = 0
     self.procedures.each do |procedure|

@@ -44,7 +44,8 @@ class RecordsController < AuthorizedController
   def create
     @record = Record.new(params[:record])
     @record.record_time = Time.parse (params[:record][:full_time])
-    @record.employee = choose_employee params[:record][:group] if params[:record][:employee]
+    # ?????
+    @record.employee = choose_employee params[:record][:group] if params[:record][:employee] == 'any'
     current_user.records << @record
 
     respond_to do |format|
@@ -117,13 +118,7 @@ class RecordsController < AuthorizedController
     @time_range = @start_time.split_by 30.minutes, @end_time
     employee = Admin::Salon::Employee.find(params[:employee])
 
-    render :json => employee.busy_time(params[:date]).map { |time| Russian::strftime(time, '%H%M') }.to_json
-  end
-
-  protected
-
-  def get_avaliable_time(date, employee)
-
+    render :json => employee.avaliable_time(params[:date]).map { |time| Russian::strftime(time, '%H%M') }.to_json
   end
 
 end

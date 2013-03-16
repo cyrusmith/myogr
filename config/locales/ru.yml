@@ -302,3 +302,10 @@ ru:
     title: Заголовок объявления
     description: Описание
   nails: Ногтевой сервис
+
+  record:
+    record_date: Записаться на
+    employee: "К какому мастеру вы желаете записаться?"
+  tommorow: "завтра"
+  day_after_tommorow: "послезавтра"
+  other_day: "другой день"

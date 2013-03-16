@@ -14,29 +14,33 @@
           = procedure.name
           %span= procedure.duration.to_s
 
+  %p= t('record.record_date')
+  .field
+    = f.radio_button :record_date, Date.today + 1.day
+    = f.label 'record_date_' + (Date.today + 1.day).to_s, t('tommorow')
+    = f.radio_button :record_date, Date.today + 1.day
+    = f.label 'record_date_' + (Date.today + 1.day).to_s, t('day_after_tommorow')
+    = f.radio_button :record_date, Date.today + 2.days
+    = f.label 'record_date_' + (Date.today + 2.days).to_s, t('other_day')
+
+  %p= t('record.employee')
   %ul#employees
+    %li
+      = f.radio_button :employee, 'any', checked:true
+      = f.label :employee, "Любой мастер"
     - @employees.each do |employee|
       %li
-        - radio_button_hash = @employees.size == 1 ? {checked: true} : {}
-        = f.radio_button :employee, employee.id, radio_button_hash
+        = f.radio_button :employee, employee.id, {}
         = f.label :employee do
           = employee.first_name
           %span= employee.position
-    -#%li
-    -#  = f.radio_button :employee, 'any'
-    -#  = f.label :employee, "Любой мастер"
-
-  .field
-    = f.label :record_date
-    = f.text_field :record_date
 
   %ul#avaliable_time
     - @time_range.each do |time|
-      - clock_time = Russian::strftime(time, '%H%M')
-      %li{class: "time_#{clock_time}"}
-        = radio_button_tag "time", clock_time
-        = label_tag "time_#{clock_time}", Russian::strftime(time, '%H:%M')
-
+      - clock_time = Russian::strftime(time, '%H:%M')
+      %li{class: "time_#{Russian::strftime(time, '%H%M')}"}
+        = radio_button_tag "time", clock_time, false, disabled: true
+        = label_tag "time_#{clock_time}", clock_time, :class => 'disabled'
   .hidden
     = hidden_field_tag 'record[group]', @group
     = hidden_field_tag 'record[full_time]'

@@ -19,14 +19,11 @@ module Admin
         busy_time = []
         day_records = Record.where(record_date: date, employee: self.id)
         day_records.each do |record|
-          time = record.record_time + (record.total_duration).hours
-          #busy_time += .split_by(30.minutes, time)
-          #TODO разобраться почему не работает из класса Time - проблема с UTC
-          busy_time = busy_time + [record.record_time].tap do |array|
-            array << array.last + 30.minutes while array.last < time
-          end
+          split_period = 30.minutes
+          time = record.record_time + (record.total_duration).hours - split_period
+          busy_time = busy_time + record.record_time.localtime.split_by(30.minutes, time)
         end
-        return busy_time
+        busy_time
       end
 
     end
