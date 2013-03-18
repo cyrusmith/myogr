@@ -68,9 +68,9 @@ class User
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
       result = self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
-      return result if result
-      require "forum_user"
-      ForumUser.find(login)
+      #return result if result
+      #require "forum_user"
+      #ForumUser.find(login)
     else
       super
     end

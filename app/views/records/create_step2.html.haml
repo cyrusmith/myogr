@@ -15,13 +15,13 @@
           %span= procedure.duration.to_s
 
   %p= t('record.record_date')
-  .field
+  %div#record_dates.field
     = f.radio_button :record_date, Date.today + 1.day
     = f.label 'record_date_' + (Date.today + 1.day).to_s, t('tommorow')
-    = f.radio_button :record_date, Date.today + 1.day
-    = f.label 'record_date_' + (Date.today + 1.day).to_s, t('day_after_tommorow')
-    = f.radio_button :record_date, Date.today + 2.days
-    = f.label 'record_date_' + (Date.today + 2.days).to_s, t('other_day')
+    = f.radio_button :record_date, Date.today + 2.day
+    = f.label 'record_date_' + (Date.today + 2.day).to_s, t('day_after_tommorow')
+    = f.radio_button :record_date, 'other'
+    = f.label 'record_date_other', t('other_day')
 
   %p= t('record.employee')
   %ul#employees
@@ -38,11 +38,12 @@
   %ul#avaliable_time
     - @time_range.each do |time|
       - clock_time = Russian::strftime(time, '%H:%M')
-      %li{class: "time_#{Russian::strftime(time, '%H%M')}"}
-        = radio_button_tag "time", clock_time, false, disabled: true
-        = label_tag "time_#{clock_time}", clock_time, :class => 'disabled'
+      - plain_time = Russian::strftime(time, '%H%M')
+      %li{class: "time_#{plain_time}"}
+        = radio_button_tag 'time', plain_time, false, disabled: true
+        = label_tag "time_#{plain_time}", clock_time, :class => 'disabled'
   .hidden
     = hidden_field_tag 'record[group]', @group
     = hidden_field_tag 'record[full_time]'
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save', id: 'submit', disabled: true

@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.all
+//= require jquery.ui.datepicker-ru
 //= require_tree .
 //= require rails.validations
 $(document).ready(function () {

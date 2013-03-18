@@ -9,10 +9,17 @@ module Admin
       field :specialization, type: String
 
       def avaliable_time(date)
-        start_time = Time.parse Admin::Salon::Settings.schedule.mon.from
-        end_time = Time.parse Admin::Salon::Settings.schedule.mon.till
+        start_time = Time.parse (date + ' ' + Admin::Salon::Settings.schedule.mon.from)
+        end_time = Time.parse date + ' ' + Admin::Salon::Settings.schedule.mon.till
         time_range = start_time.split_by 30.minutes, end_time
-        time_range - busy_time(date)
+        plain_busy_time = busy_time(date).flatten << end_time
+        avaliable_time = []
+        time_range.chunk{
+            |time| plain_busy_time.include? time
+        }.each{
+            |key, array| avaliable_time << array unless key
+        }
+        avaliable_time
       end
 
       def busy_time(date)
@@ -21,7 +28,7 @@ module Admin
         day_records.each do |record|
           split_period = 30.minutes
           time = record.record_time + (record.total_duration).hours - split_period
-          busy_time = busy_time + record.record_time.localtime.split_by(30.minutes, time)
+          busy_time = busy_time + [record.record_time.localtime.split_by(30.minutes, time)]
         end
         busy_time
       end
