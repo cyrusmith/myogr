@@ -53,15 +53,15 @@ class User
   ROLES = [:user, :verified_user, :moderator, :admin]
 
   def admin?
-    self.roles.include? "admin"
+    self.roles.include? 'admin'
   end
 
   def moderator?
-    self.roles.include? "moderator"
+    self.roles.include? 'moderator'
   end
 
   def verified?
-    self.roles.include? "verified_user"
+    self.roles.include? 'verified_user'
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)

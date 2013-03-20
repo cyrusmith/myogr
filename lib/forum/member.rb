@@ -1,4 +1,4 @@
-require "ipb_forum/connect/connectable"
+require 'forum/connect/connectable'
 
 module Forum
   class Member
