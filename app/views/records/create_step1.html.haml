@@ -8,4 +8,4 @@
 -#    %a= procedure.name + " " + procedure.duration.to_s
 %ul
   - @groups.each do |group|
-    %li= link_to t(group), create_record_step2_path(group)
+    %li= link_to t(group).first, create_record_step2_path(group)

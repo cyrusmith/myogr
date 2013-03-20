@@ -2,7 +2,7 @@ class RecordsController < AuthorizedController
   # GET /records
   # GET /records.json
   def index
-    @records = current_user.records
+    @records = current_user.records.select{|record| record.record_date > Date.today}
 
     respond_to do |format|
       format.html # index.html.erb

@@ -302,8 +302,12 @@ ru:
     title: Заголовок объявления
     description: Описание
   nails: Ногтевой сервис
+  barbery: Парикмахерская
+  massage: Массаж
+  cosmetology: Косметология
 
   record:
+    my_records: Салон красоты "Для своих"
     record_date: Записаться на
     employee: "К какому мастеру вы желаете записаться?"
   tommorow: "завтра"

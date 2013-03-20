@@ -1,25 +1,21 @@
-%h1 Listing records
+%h1 Ваши записи в салон красоты
 
 %table
   %tr
-    %th User
-    %th Datetime
-    %th Procedures
-    %th Employee
-    %th
-    %th
+    %th Дата
+    %th Процедуры
+    -#%th Продолжительность
     %th
 
   - @records.each do |record|
     %tr
-      %td= record.user
-      %td= Russian::strftime(record.record_time)
-      %td= record.procedures
-      %td= record.employee
-      %td= link_to 'Show', record
-      %td= link_to 'Edit', edit_record_path(record)
-      %td= link_to 'Destroy', record, method: :delete, data: { confirm: 'Are you sure?' }
+      %td= Russian::strftime(record.record_time, '%d %B %H:%M')
+      - procedures = record.procedures.map { |procedure| Admin::Salon::Procedure.find(procedure)}
+      - procedures.each do|procedure| procedure.name
+        %td= procedure.name
+      -#%td= record.employee
+      %td= link_to 'Отменить', record, method: :delete, data: { confirm: 'Вы уверены, что хотите отменить запись?' }
 
 %br
 
-= link_to 'New Record', new_record_path
+= link_to 'New Record', create_record_step1_path
