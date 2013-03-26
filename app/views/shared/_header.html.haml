@@ -13,13 +13,13 @@
       #search-input-div
         %input{:type=>'text', :name => 'search-input', :id => 'search-input', :placeholder=> 'Поиск по товарам и магазинам' }
       #login
-        - if user_signed_in?
+        - if current_user
           %p Вы вошли как
-          = current_user.username + '.'
-          = link_to('Выйти?', destroy_user_session_path)
+          = current_user.name + '.'
+          = link_to('Выйти?', logout_path)
         -else
           %p Привет!
-          = link_to('Войти', new_user_session_path) + ' или '
-          = link_to('зарегистрироваться', new_user_registration_path)
+          = link_to('Войти', login_path) + ' или '
+          -#= link_to('зарегистрироваться', signup_path)
       #cgp-logo= link_to image_tag('logo_cgp.png'), 'http://info-torg.ru/?page=ogromno&city=343'
 

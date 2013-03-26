@@ -6,8 +6,8 @@ Ogromno::Application.routes.draw do
   match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
   resources :schedules
-
-  get "sessions/new"
+  resources :users
+  resources :sessions
 
   root :to => "home#index"
 
@@ -17,13 +17,17 @@ Ogromno::Application.routes.draw do
   get 'agreement', :to => 'home#agreement'
   get 'offer', :to => 'home#offer'
 
-  devise_for :user
+  #devise_for :user
+  #
+  #devise_scope :user do
+  #  get "sign_in", :to => "devise/sessions#new"
+  #  post "sign_in", :to => "sessions#create", :as => "post_user_session"
+  #  get "sign_out", :to => "devise/sessions#destroy"
+  #end
 
-  devise_scope :user do
-    get "sign_in", :to => "devise/sessions#new"
-    post "sign_in", :to => "sessions#create", :as => "post_user_session"
-    get "sign_out", :to => "devise/sessions#destroy"
-  end
+  #get "signup", to: "users#new", as: "signup"
+  get 'login', :to => 'sessions#new', as: 'login'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
 
   resources :banners
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
