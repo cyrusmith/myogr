@@ -2,8 +2,12 @@ class Record
   include Mongoid::Document
   include Mongoid::Paranoia
   include Mongoid::Timestamps
+  include Origin::Queryable
+  include Tenacity
 
-  belongs_to :user
+  default_scope asc(:record_date)
+
+  t_belongs_to :user
   belongs_to :admin_salon_employee, :class_name => 'Admin::Salon::Employee'
 
   field :user, type: String

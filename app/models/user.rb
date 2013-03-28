@@ -1,9 +1,17 @@
 class User < ForumModels
+  include Tenacity
+
+  after_save :create_credential
+
   self.table_name = 'ibf_members'
   has_one :credential, foreign_key: 'converge_id', readonly: true
   has_one :extra, foreign_key: 'id'
+  t_has_many :banners
+  t_has_many :records
 
-  attr_accessible :name, :email, :phone
+  attr_accessor :password
+  attr_accessible :name, :email, :password
+
 
   #include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -12,8 +20,6 @@ class User < ForumModels
   #devise :database_authenticatable, :registerable,
   #       :recoverable, :rememberable, :trackable, :validatable
   #
-  #has_many :banners
-  #has_many :records
   #
   ### Database authenticatable
   #field :username,           :type => String,   :default => ""
@@ -86,8 +92,21 @@ class User < ForumModels
   #  self.forum_data
   #end
 
+  def admin?
+    false
+  end
+
   def valid_password?(password)
     self.credential.valid_password? password
   end
+
+  #def create_credential
+  #  credential = Credential.new(self.email, self.password)
+  #  credential.save
+  #end
+
+  #def create_extra
+  #  self.extra << Extra.create!
+  #end
 
 end
