@@ -18,12 +18,12 @@ class SessionsController < ApplicationController
 
   def create
     warden.authenticate!
-    redirect_to root_url, notice: 'Вы успешно вошли в систему!'
+    redirect_to root_url, notice: t('login_success')
   end
 
   def destroy
     warden.logout
-    redirect_to root_url, notice: 'Спасибо за посещение!'
+    redirect_to root_url, notice: t('logout_success')
   end
 
 end

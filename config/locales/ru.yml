@@ -313,3 +313,5 @@ ru:
   tommorow: "завтра"
   day_after_tommorow: "послезавтра"
   other_day: "другой день"
+  login_success: "Вы успешно вошли в систему!"
+  logout_success: "Спасибо за посещение!"
