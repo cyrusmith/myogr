@@ -1,7 +1,13 @@
 Ogromno::Application.routes.draw do
 
+  resources :records
+  match 'record/step1' => 'records#create_step1', :as => :create_record_step1
+  match 'record/step2/:group' => 'records#create_step2', :as => :create_record_step2
+  match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
-  get "sessions/new"
+  resources :schedules
+  resources :users
+  resources :sessions
 
   root :to => "home#index"
 
@@ -11,13 +17,17 @@ Ogromno::Application.routes.draw do
   get 'agreement', :to => 'home#agreement'
   get 'offer', :to => 'home#offer'
 
-  devise_for :user
+  #devise_for :user
+  #
+  #devise_scope :user do
+  #  get "sign_in", :to => "devise/sessions#new"
+  #  post "sign_in", :to => "sessions#create", :as => "post_user_session"
+  #  get "sign_out", :to => "devise/sessions#destroy"
+  #end
 
-  devise_scope :user do
-    get "sign_in", :to => "devise/sessions#new"
-    post "sign_in", :to => "sessions#create", :as => "post_user_session"
-    get "sign_out", :to => "devise/sessions#destroy"
-  end
+  get 'signup', to: 'users#new', as: 'signup'
+  get 'login', :to => 'sessions#new', as: 'login'
+  get 'logout', to: 'sessions#destroy', as: 'logout'
 
   resources :banners
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
@@ -27,6 +37,10 @@ Ogromno::Application.routes.draw do
 
   namespace :admin do
     resources :promo_place
+    namespace :salon do
+      resources :employees
+      resources :procedures
+    end
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.

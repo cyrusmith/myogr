@@ -1,6 +1,5 @@
 .col_4
-  = form_for @banner.becomes(Banner) do |f|
-    - f.object = @banner.becomes(@banner.class)
+  = form_for @banner, :as => :banner, :url => {:controller => "banners",:action => "create"}, :validate => true do |f|
     - if @banner.errors.any?
       #error_explanation
         %h2= "#{pluralize(@banner.errors.count, "error")} prohibited this banner from being saved:"
@@ -8,7 +7,7 @@
           - @banner.errors.full_messages.each do |msg|
             %li= msg
     = f.label :link, t("banner.link")
-    = f.text_field :link, :required => true
+    = f.text_field :link
 
     = f.label :title, t("banner.title")
     = f.text_field :title
@@ -21,7 +20,7 @@
     = f.file_field :image
     = f.hidden_field :image_cache
 
-    -#= f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
+    = f.hidden_field :type, :value => @promo_place ? @promo_place.key : @banner.type
     -#= f.hidden_field :type, :value => @banner.class
     - if @promo_place
       = f.hidden_field :height, :value => @promo_place.height

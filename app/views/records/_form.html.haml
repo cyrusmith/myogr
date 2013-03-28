@@ -1,0 +1,25 @@
+= form_for @record do |f|
+  - if @record.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@record.errors.count, "error")} prohibited this record from being saved:"
+      %ul
+        - @record.errors.full_messages.each do |msg|
+          %li= msg
+
+  %ul
+    - @time_range.each do |time|
+      %li= Russian::strftime(time, '%H:%M')
+  .field
+    = f.label :record_date
+    = f.text_field :record_date
+  .field
+    = f.label :record_time
+    = f.text_field :record_time
+  .field
+    = f.label :procedures
+    = f.text_field :procedures
+  .field
+    = f.label :employee
+    = f.text_field :employee
+  .actions
+    = f.submit 'Save'

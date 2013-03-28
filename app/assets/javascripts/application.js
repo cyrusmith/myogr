@@ -12,8 +12,25 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
+//= require jquery.ui.datepicker-ru
 //= require_tree .
-
+//= require rails.validations
 $(document).ready(function () {
-    jQuery("#carousel").moodular();
+    jQuery.fn.reverseEach = (function () {
+        var list = jQuery([1]);
+        return function (c) {
+            var el, i = this.length;
+            try {
+                while (i-- > 0 && (el = list[0] = this[i]) && c.call(list, i, el) !== false);
+            }
+            catch (e) {
+                delete list[0];
+                throw e;
+            }
+            delete list[0];
+            return this.get(0);
+        };
+    }());
+//    $(':password').showPassword();
 });

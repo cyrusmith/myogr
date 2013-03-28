@@ -1,78 +1,112 @@
-class User
-  include Mongoid::Document
+class User < ForumModels
+  include Tenacity
+
+  after_save :create_credential
+
+  self.table_name = 'ibf_members'
+  has_one :credential, foreign_key: 'converge_id', readonly: true
+  has_one :extra, foreign_key: 'id'
+  t_has_many :banners
+  t_has_many :records
+
+  attr_accessor :password
+  attr_accessible :name, :email, :password
+
+
+  #include Mongoid::Document
   # Include default devise modules. Others available are:
   # :token_authenticatable,      , :confirmable
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  has_many :banners
-
-  ## Database authenticatable
-  field :username,           :type => String,   :default => ""
-  field :email,              :type => String,   :default => ""
-  field :encrypted_password, :type => String,   :default => ""
-  field :roles,              :type => Array,    :default => [:user]
-  field :forum_id,           :type => Integer,  :default => 0
-  field :forum_data,         :type => Hash
-
-  validates_presence_of :username
-  validates_presence_of :email
-  validates_presence_of :encrypted_password
-
-  ## Recoverable
-  field :reset_password_token,   :type => String
-  field :reset_password_sent_at, :type => Time
-
-  ## Rememberable
-  field :remember_created_at, :type => Time
-
-  ## Trackable
-  field :sign_in_count,      :type => Integer, :default => 0
-  field :current_sign_in_at, :type => Time
-  field :last_sign_in_at,    :type => Time
-  field :current_sign_in_ip, :type => String
-  field :last_sign_in_ip,    :type => String
-
-  ## Confirmable
-  field :confirmation_token,   :type => String
-  field :confirmed_at,         :type => Time
-  field :confirmation_sent_at, :type => Time
-  field :unconfirmed_email,    :type => String # Only if using reconfirmable
-
-  ## Lockable
-  # field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
-  # field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
-  # field :locked_at,       :type => Time
-
-  ## Token authenticatable
-  # field :authentication_token, :type => String
-  attr_accessor :login
-
-  ROLES = [:user, :verified_user, :moderator, :admin]
+  #devise :database_authenticatable, :registerable,
+  #       :recoverable, :rememberable, :trackable, :validatable
+  #
+  #
+  ### Database authenticatable
+  #field :username,           :type => String,   :default => ""
+  #field :email,              :type => String,   :default => ""
+  #field :encrypted_password, :type => String,   :default => ""
+  #field :roles,              :type => Array,    :default => [:user]
+  #field :forum_id,           :type => Integer,  :default => 0
+  #field :forum_data,         :type => Hash
+  #
+  #validates_presence_of :username
+  #validates_presence_of :email
+  #validates_presence_of :encrypted_password
+  #
+  ### Recoverable
+  #field :reset_password_token,   :type => String
+  #field :reset_password_sent_at, :type => Time
+  #
+  ### Rememberable
+  #field :remember_created_at, :type => Time
+  #
+  ### Trackable
+  #field :sign_in_count,      :type => Integer, :default => 0
+  #field :current_sign_in_at, :type => Time
+  #field :last_sign_in_at,    :type => Time
+  #field :current_sign_in_ip, :type => String
+  #field :last_sign_in_ip,    :type => String
+  #
+  ### Confirmable
+  #field :confirmation_token,   :type => String
+  #field :confirmed_at,         :type => Time
+  #field :confirmation_sent_at, :type => Time
+  #field :unconfirmed_email,    :type => String # Only if using reconfirmable
+  #
+  ### Lockable
+  ## field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
+  ## field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
+  ## field :locked_at,       :type => Time
+  #
+  ### Token authenticatable
+  ## field :authentication_token, :type => String
+  #attr_accessor :login
+  #
+  #ROLES = [:user, :verified_user, :moderator, :admin]
+  #
+  #def admin?
+  #  self.roles.include? 'admin'
+  #end
+  #
+  #def moderator?
+  #  self.roles.include? 'moderator'
+  #end
+  #
+  #def verified?
+  #  self.roles.include? 'verified_user'
+  #end
+  #
+  #def self.find_first_by_auth_conditions(warden_conditions)
+  #  conditions = warden_conditions.dup
+  #  if login = conditions.delete(:login)
+  #    result = self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
+  #    #return result if result
+  #    #require "forum_user"
+  #    #ForumUser.find(login)
+  #  else
+  #    super
+  #  end
+  #end
+  #
+  #def generate_forum_token
+  #  self.forum_data
+  #end
 
   def admin?
-    self.roles.include? "admin"
+    false
   end
 
-  def moderator?
-    self.roles.include? "moderator"
+  def valid_password?(password)
+    self.credential.valid_password? password
   end
 
-  def verified?
-    self.roles.include? "verified_user"
-  end
+  #def create_credential
+  #  credential = Credential.new(self.email, self.password)
+  #  credential.save
+  #end
 
-  def self.find_first_by_auth_conditions(warden_conditions)
-    conditions = warden_conditions.dup
-    if login = conditions.delete(:login)
-      result = self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
-      return result if result
-      require "forum_user"
-      ForumUser.find(login)
-    else
-      super
-    end
-  end
+  #def create_extra
+  #  self.extra << Extra.create!
+  #end
 
 end

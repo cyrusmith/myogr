@@ -1,0 +1,23 @@
+%h1 Listing admin_salon_employees
+
+%table
+  %tr
+    %th First name
+    %th Last name
+    %th Position
+    %th
+    %th
+    %th
+
+  - @admin_salon_employees.each do |admin_salon_employee|
+    %tr
+      %td= admin_salon_employee.first_name
+      %td= admin_salon_employee.last_name
+      %td= admin_salon_employee.position
+      %td= link_to 'Show', admin_salon_employee
+      %td= link_to 'Edit', edit_admin_salon_employee_path(admin_salon_employee)
+      %td= link_to 'Destroy', admin_salon_employee, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Employee', new_admin_salon_employee_path

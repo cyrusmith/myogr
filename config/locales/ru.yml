@@ -301,3 +301,17 @@ ru:
     link: Ссылка
     title: Заголовок объявления
     description: Описание
+  nails: Ногтевой сервис
+  barbery: Парикмахерская
+  massage: Массаж
+  cosmetology: Косметология
+
+  record:
+    my_records: Салон красоты
+    record_date: Записаться на
+    employee: "К какому мастеру вы желаете записаться?"
+  tommorow: "завтра"
+  day_after_tommorow: "послезавтра"
+  other_day: "другой день"
+  login_success: "Вы успешно вошли в систему!"
+  logout_success: "Спасибо за посещение!"

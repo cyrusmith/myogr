@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Date:
+  = @schedule.date
+%p
+  %b Working from:
+  = @schedule.working_from
+%p
+  %b Working till:
+  = @schedule.working_till
+
+= link_to 'Edit', edit_schedule_path(@schedule)
+\|
+= link_to 'Back', schedules_path

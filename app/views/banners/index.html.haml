@@ -9,3 +9,9 @@
   = render @banners
 
 = link_to 'New Banner', create_banner_step1_path
+
+- @accounts.each do |account|
+  %tr
+    %td= account.owner
+    %td= account.balance
+    %td= account.created_at

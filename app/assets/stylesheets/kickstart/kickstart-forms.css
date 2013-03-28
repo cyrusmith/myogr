@@ -288,18 +288,18 @@ left:0;
 	text-shadow:0px 1px 0px #fff;
 	}
 	
-	a.rte-bold			{background:url(img/rte/text_bold.png) no-repeat center center;}
-	a.rte-italic		{background:url(img/rte/text_italic.png) no-repeat center center;}
-	a.rte-ul			{background:url(img/rte/text_list_bullets.png) no-repeat center center;}
-	a.rte-ol			{background:url(img/rte/text_list_numbers.png) no-repeat center center;}
-	a.rte-img			{background:url(img/rte/picture_empty.png) no-repeat center center;}
-	a.rte-link			{background:url(img/rte/link.png) no-repeat center center;}
-	a.rte-unlink		{background:url(img/rte/link_break.png) no-repeat center center;}
-	a.rte-justifyleft	{background:url(img/rte/text_align_left.png) no-repeat center center;}
-	a.rte-justifycenter	{background:url(img/rte/text_align_center.png) no-repeat center center;}
-	a.rte-justifyright	{background:url(img/rte/text_align_right.png) no-repeat center center;}
-	a.rte-sub			{background:url(img/rte/text_subscript.png) no-repeat center center;}
-	a.rte-sup			{background:url(img/rte/text_superscript.png) no-repeat center center;}
+	a.rte-bold			{background:url(kickstart/img/rte/text_bold.png) no-repeat center center;}
+	a.rte-italic		{background:url(kickstart/img/rte/text_italic.png) no-repeat center center;}
+	a.rte-ul			{background:url(kickstart/img/rte/text_list_bullets.png) no-repeat center center;}
+	a.rte-ol			{background:url(kickstart/img/rte/text_list_numbers.png) no-repeat center center;}
+	a.rte-img			{background:url(kickstart/img/rte/picture_empty.png) no-repeat center center;}
+	a.rte-link			{background:url(kickstart/img/rte/link.png) no-repeat center center;}
+	a.rte-unlink		{background:url(kickstart/img/rte/link_break.png) no-repeat center center;}
+	a.rte-justifyleft	{background:url(kickstart/img/rte/text_align_left.png) no-repeat center center;}
+	a.rte-justifycenter	{background:url(kickstart/img/rte/text_align_center.png) no-repeat center center;}
+	a.rte-justifyright	{background:url(kickstart/img/rte/text_align_right.png) no-repeat center center;}
+	a.rte-sub			{background:url(kickstart/img/rte/text_subscript.png) no-repeat center center;}
+	a.rte-sup			{background:url(kickstart/img/rte/text_superscript.png) no-repeat center center;}
 	.rte-toolbar li a:hover{color:#333;background-color:#efefef;}
 	
 	/* show/hide tools */

@@ -2,7 +2,7 @@ class Banner
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  #after_update :scale
+  after_update :scale
 
   attr_accessible :link, :title, :description, :type, :is_active, :image, :image_cache, :width, :height
   belongs_to :user
@@ -23,10 +23,6 @@ class Banner
   validates :type, :presence => true
   #validates :image, :presence => true
 
-  def scale
-    self.banner_image.recreate_versions! if width.present?
-  end
-
   def activate
     self.is_active = true
     self.activation_time = Time.now
@@ -37,4 +33,11 @@ class Banner
     self.is_active = false
     save
   end
+
+  protected
+
+  def scale
+    self.image.recreate_versions! if self.width.present?
+  end
+
 end

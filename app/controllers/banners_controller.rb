@@ -1,11 +1,11 @@
-class BannersController < ApplicationController
+class BannersController < AuthorizedController
   # GET /banners
   # GET /banners.json
-  load_and_authorize_resource
 
   def index
     if current_user
       @banners = current_user.banners
+      @accounts = Billing::Account.all
     else
       flash[:notice] = t "must_login"
       return redirect_to root_path
@@ -42,6 +42,7 @@ class BannersController < ApplicationController
   # GET /banners/1/edit
   def edit
     @banner = Banner.find(params[:id])
+    @promo_place = PromoPlace.find_by(:key => @banner[:type])
   end
 
   # POST /banners
@@ -79,7 +80,7 @@ class BannersController < ApplicationController
 
     respond_to do |format|
       if @banner.update_attributes(params[:banner])
-        format.html { redirect_to @banner, notice: 'Banner was successfully updated.' }
+        format.html { redirect_to banners_path, notice: 'Banner was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -92,7 +93,7 @@ class BannersController < ApplicationController
   # DELETE /banners/1.json
   def destroy
     @banner = Banner.find(params[:id])
-    @banner.deactivate if @banner.is_activated
+    @banner.deactivate if @banner.is_active
     @banner.destroy
 
     respond_to do |format|

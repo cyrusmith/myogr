@@ -1,4 +1,4 @@
-require "ipb_forum/connect/connectable"
+require "forum/connect/connectable"
 require 'nokogiri'
 
 class ForumBanner < Banner

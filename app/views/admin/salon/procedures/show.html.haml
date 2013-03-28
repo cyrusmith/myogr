@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @salon_procedure.name
+%p
+  %b Duration:
+  = @salon_procedure.duration
+%p
+  %b Price:
+  = @salon_procedure.price
+%p
+  %b Comment:
+  = @salon_procedure.comment
+%p
+  %b Group:
+  = @salon_procedure.group
+
+= link_to 'Edit', edit_admin_salon_procedure_path(@salon_procedure)
+\|
+= link_to 'Back', admin_salon_procedures_path

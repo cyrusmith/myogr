@@ -11,6 +11,8 @@
     %li= link_to 'Продукты', 'http://ogromno.com/index.php?showforum=134#subforum'
     %li= link_to 'Покупки в иностранных интернет-магазинах', 'http://ogromno.com/index.php?showforum=183#subforum'
 
--if (current_user && current_user.roles.include?("admin"))
-  %p Ты админ
+%p= current_user.inspect
+-#
+-#-if (current_user && current_user.roles.include?("admin"))
+-#  %p Ты админ
 

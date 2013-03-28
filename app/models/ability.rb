@@ -5,8 +5,10 @@ class Ability
     user ||= User.new
     if user.admin?
       can :manage, :all
+    elsif user.new_record?
     else
       can :manage, Banner
+      can :manage, Record
     end
     # Define abilities for the passed in user here. For example:
     #

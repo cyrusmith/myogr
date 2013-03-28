@@ -10,8 +10,8 @@
  *
  *= require_self
  *= require_tree .
+ *= require jquery.ui.all
  */
-
 //dimensions
 $total_width: 1060px
 
@@ -19,7 +19,7 @@ $total_width: 1060px
 $dark_grey: #353936
 $grey: #C4C4C4
 $light_grey: #F0F0F0
-$green:#94C943
+$green: #94C943
 $logo_green: #B4D77F
 
 html
@@ -122,9 +122,8 @@ footer
   background: url("foot_bg.png") repeat-x
   height: 194px
   width: 100%
-  //margin: -209px auto 0
-  //position: relative
-
+//margin: -209px auto 0
+//position: relative
 #footer-wrapper
   @extend .wrapper
 
@@ -178,3 +177,12 @@ ol ol ol ol
 ol ol ol ol li:before
   counter-increment: list4
   content: counter(list1) "." counter(list2) "." counter(list3) "." counter(list4) ". "
+
+.show-password-link
+  display: block
+  position: absolute
+  z-index: 11
+
+.password-showing
+  position: absolute
+  z-index: 10

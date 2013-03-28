@@ -1,0 +1,33 @@
+# Salon properties
+# config/salon.yml
+defaults: &defaults
+  schedule:
+    mon:
+      from: '10:00:00'
+      till: '21:00:00'
+    tue:
+      from: 10:00
+      till: 21:00
+    wed:
+      from: 10:00
+      till: 21:00
+    thu:
+      from: 10:00
+      till: 21:00
+    fri:
+      from: 10:00
+      till: 21:00
+    sat:
+      from: 10:00
+      till: 21:00
+    sun:
+      from: 10:00
+      till: 21:00
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

@@ -1,7 +1,7 @@
 module Factory
   class ObjectFactory
     def self.new class_name
-      if class_name.classname?
+      if class_name.to_s.classname?
         class_eval "#{class_name}.new"
       else
         default_object.new

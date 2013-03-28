@@ -15,6 +15,11 @@ class Admin::PromoPlaceController < Admin::AdminController
 
   def new
     @promo_place = PromoPlace.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @promo_place }
+    end
   end
 
   def edit
