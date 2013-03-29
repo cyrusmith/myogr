@@ -1,7 +1,8 @@
 class User < ForumModels
   include Tenacity
 
-  after_save :create_credential
+  before_save :create_credential
+  after_commit :create_extra
 
   self.table_name = 'ibf_members'
   has_one :credential, foreign_key: 'converge_id', readonly: true
@@ -100,13 +101,14 @@ class User < ForumModels
     self.credential.valid_password? password
   end
 
-  #def create_credential
-  #  credential = Credential.new(self.email, self.password)
-  #  credential.save
-  #end
+  def create_credential
+    credential = Credential.create!(converge_password: self.password, converge_email: self.email)
+    self.credential = credential
+    self.id = credential.id
+  end
 
-  #def create_extra
-  #  self.extra << Extra.create!
-  #end
+  def create_extra
+    self.extra = Extra.create! id: self.credential.id
+  end
 
 end
