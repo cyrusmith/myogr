@@ -6,7 +6,7 @@ class Credential < ForumModels
 
   belongs_to :member, foreign_key: 'id'
 
-  attr_accessible :converge_id, :converge_email, :converge_joined, :converge_pass_hash,	:converge_pass_salt, :converge_password
+  attr_accessible :converge_email, :converge_joined, :converge_pass_hash,	:converge_pass_salt, :converge_password
 
   def converge_password=(password)
     self.converge_pass_salt = generate_salt
@@ -14,8 +14,9 @@ class Credential < ForumModels
   end
 
   def generate_password_hash(password)
-    encoded_password = Digest::MD5.hexdigest(password)
-    Digest::MD5.hexdigest(Digest::MD5.hexdigest(self.converge_pass_salt) + encoded_password)
+    password = password.encode('cp1251')
+    encoded_password = Digest::MD5.hexdigest(password).encode('cp1251')
+    Digest::MD5.hexdigest(Digest::MD5.hexdigest(self.converge_pass_salt) + encoded_password).encode('cp1251')
   end
 
   def valid_password?(password)
@@ -28,7 +29,7 @@ class Credential < ForumModels
 
   # TODO подумать, как сделать лучше
   def generate_salt
-    SecureRandom.hex(3)[0..4]
+    SecureRandom.hex(3)[0..4].encode('cp1251')
   end
 
   def set_timestamp

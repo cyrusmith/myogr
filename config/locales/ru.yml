@@ -315,3 +315,8 @@ ru:
   other_day: "другой день"
   login_success: "Вы успешно вошли в систему!"
   logout_success: "Спасибо за посещение!"
+
+  session:
+    login: Имя пользователя/эл.почта
+    password: Пароль
+    sign_in: Войти!
