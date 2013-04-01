@@ -13,6 +13,12 @@ module Forum
     def valid?
       params['login'] && params['password']
     end
+
+    def success!(user, message=nil)
+      super user, message
+    end
+
+
   end
 end
 

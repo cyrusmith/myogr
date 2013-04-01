@@ -1,17 +1,24 @@
 class User < ForumModels
   include Tenacity
-
-  after_save :create_credential
-
   self.table_name = 'ibf_members'
+
+  before_create :create_credential, :create
+  after_create :create_extra, :create
+
   has_one :credential, foreign_key: 'converge_id', readonly: true
   has_one :extra, foreign_key: 'id'
   t_has_many :banners
   t_has_many :records
 
-  attr_accessor :password
-  attr_accessible :name, :email, :password
+  attr_accessor :password, :username
+  attr_accessible :username, :email, :password, :member_login_key, :member_login_key_expire
 
+  def username=(value)
+    self.name = value
+    self.members_l_display_name = value
+    self.members_l_username = value
+    self.members_display_name = value
+  end
 
   #include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -100,13 +107,21 @@ class User < ForumModels
     self.credential.valid_password? password
   end
 
-  #def create_credential
-  #  credential = Credential.new(self.email, self.password)
-  #  credential.save
-  #end
+  def generate_remember_token
+    expire_time = 1.year.from_now
+    token = SecureRandom.hex(16)
+    self.update_attributes(member_login_key: token, member_login_key_expire: expire_time)
+    { value: token, expires: expire_time }
+  end
 
-  #def create_extra
-  #  self.extra << Extra.create!
-  #end
+  def create_credential
+    c = Credential.create!(converge_password: self.password, converge_email: self.email)
+    self.credential = c
+    self.id = c.changed_attributes[Credential.primary_key]
+  end
+
+  def create_extra
+    self.extra = Extra.create!(id: self.credential.id)
+  end
 
 end
