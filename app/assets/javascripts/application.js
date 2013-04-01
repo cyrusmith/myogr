@@ -16,6 +16,7 @@
 //= require jquery.ui.datepicker-ru
 //= require_tree .
 //= require rails.validations
+
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {
         var list = jQuery([1]);

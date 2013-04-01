@@ -39,7 +39,7 @@ Warden::Manager.after_authentication do |user, auth, opts|
 end
 
 Warden::Manager.before_logout do |user, auth, opts|
-  user.update_attribute :member_login_key, nil
+  auth.env['action_dispatch.cookies']['user.remember.token'] = nil
 end
 
 Warden::Strategies.add :forum_auth, Forum::Auth
