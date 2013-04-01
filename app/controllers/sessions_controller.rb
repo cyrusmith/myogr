@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  skip_before_filter :authentificate, :except => :destroy
   #def create
   #  login = params[:user][:login]
   #  #unless User.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first

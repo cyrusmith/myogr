@@ -20,8 +20,8 @@ class Credential < ForumModels
   end
 
   def valid_password?(password)
-    encoded_password = Digest::MD5.hexdigest(password)
-    encoded_password = Digest::MD5.hexdigest(Digest::MD5.hexdigest(self.converge_pass_salt) + encoded_password)
+    encoded_password = Digest::MD5.hexdigest(password.encode('cp1251')).encode('cp1251')
+    encoded_password = Digest::MD5.hexdigest(Digest::MD5.hexdigest(self.converge_pass_salt.encode('cp1251')) + encoded_password).encode('cp1251')
     encoded_password.eql? self.converge_pass_hash
   end
 
