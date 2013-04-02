@@ -4,7 +4,7 @@ module Admin
       include Mongoid::Document
       field :name, type: String
       field :duration, type: Float
-      field :price, type: Money
+      field :price, type: Integer
       field :comment, type: String
       field :group, type: String
 
