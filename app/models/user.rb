@@ -2,8 +2,8 @@ class User < ForumModels
   include Tenacity
   self.table_name = 'ibf_members'
 
-  before_create :create_credential, :create
-  after_create :create_extra, :create
+  before_create :create_credential, :set_default_values
+  after_create :create_extra
 
   has_one :credential, foreign_key: 'converge_id', readonly: true
   has_one :extra, foreign_key: 'id'
@@ -11,14 +11,7 @@ class User < ForumModels
   t_has_many :records
 
   attr_accessor :password, :username
-  attr_accessible :username, :email, :password, :member_login_key, :member_login_key_expire
-
-  def username=(value)
-    self.name = value
-    self.members_l_display_name = value
-    self.members_l_username = value
-    self.members_display_name = value
-  end
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire
 
   #include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -121,7 +114,15 @@ class User < ForumModels
   end
 
   def create_extra
-    self.extra = Extra.create!(id: self.credential.id)
+    self.extra = Extra.create!(id: self.credential.changed_attributes[Credential.primary_key])
+  end
+
+  def set_default_values
+    self.members_l_display_name = self.name
+    self.members_l_username = self.name
+    self.members_display_name = self.name
+    self.mgroup = 3
+    self.joined = Time.now.to_i
   end
 
 end
