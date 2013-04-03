@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    warden.user || User.new
+    warden.user
   end
 
   def authentificate

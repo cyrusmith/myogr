@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    if current_user.admin?
+    if current_user.present? and current_user.admin?
       @users = User.all
 
       respond_to do |format|
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    if current_user.id == @user.id
+    if current_user.present? and current_user.id == @user.id
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @user }
@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
-    not_found unless current_user.id == @user.id
+    not_found unless current_user.present? and current_user.id == @user.id
   end
 
   # GET /users/verify/:verification_code
