@@ -3,3 +3,8 @@
 
 en:
   hello: "Hello world"
+  user:
+    verification_success: "User was successfully verified."
+    verification_failed: "Varification code expired or wrong."
+    create_success: "User was successfully created."
+    update_success: "User was successfully updated."

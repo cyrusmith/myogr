@@ -2,6 +2,9 @@ class User < ForumModels
   include Tenacity
   self.table_name = 'ibf_members'
 
+  scope :verified, where(is_verified: true)
+  scope :not_verified, where(is_verified: false)
+
   before_create :create_credential, :set_default_values
   after_create :create_extra
 
@@ -10,87 +13,38 @@ class User < ForumModels
   t_has_many :banners
   t_has_many :records
 
-  attr_accessor :password, :username
-  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire
+  attr_accessor :password
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name
+  attr_readonly :verification_code
 
-  #include Mongoid::Document
-  # Include default devise modules. Others available are:
-  # :token_authenticatable,      , :confirmable
-  # :lockable, :timeoutable and :omniauthable
-  #devise :database_authenticatable, :registerable,
-  #       :recoverable, :rememberable, :trackable, :validatable
-  #
-  #
-  ### Database authenticatable
-  #field :username,           :type => String,   :default => ""
-  #field :email,              :type => String,   :default => ""
-  #field :encrypted_password, :type => String,   :default => ""
-  #field :roles,              :type => Array,    :default => [:user]
-  #field :forum_id,           :type => Integer,  :default => 0
-  #field :forum_data,         :type => Hash
-  #
-  #validates_presence_of :username
-  #validates_presence_of :email
-  #validates_presence_of :encrypted_password
-  #
-  ### Recoverable
-  #field :reset_password_token,   :type => String
-  #field :reset_password_sent_at, :type => Time
-  #
-  ### Rememberable
-  #field :remember_created_at, :type => Time
-  #
-  ### Trackable
-  #field :sign_in_count,      :type => Integer, :default => 0
-  #field :current_sign_in_at, :type => Time
-  #field :last_sign_in_at,    :type => Time
-  #field :current_sign_in_ip, :type => String
-  #field :last_sign_in_ip,    :type => String
-  #
-  ### Confirmable
-  #field :confirmation_token,   :type => String
-  #field :confirmed_at,         :type => Time
-  #field :confirmation_sent_at, :type => Time
-  #field :unconfirmed_email,    :type => String # Only if using reconfirmable
-  #
-  ### Lockable
-  ## field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
-  ## field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
-  ## field :locked_at,       :type => Time
-  #
-  ### Token authenticatable
-  ## field :authentication_token, :type => String
-  #attr_accessor :login
-  #
-  #ROLES = [:user, :verified_user, :moderator, :admin]
-  #
-  #def admin?
-  #  self.roles.include? 'admin'
-  #end
-  #
-  #def moderator?
-  #  self.roles.include? 'moderator'
-  #end
-  #
-  #def verified?
-  #  self.roles.include? 'verified_user'
-  #end
-  #
-  #def self.find_first_by_auth_conditions(warden_conditions)
-  #  conditions = warden_conditions.dup
-  #  if login = conditions.delete(:login)
-  #    result = self.any_of({ :username =>  /^#{Regexp.escape(login)}$/i }, { :email =>  /^#{Regexp.escape(login)}$/i }).first
-  #    #return result if result
-  #    #require "forum_user"
-  #    #ForumUser.find(login)
-  #  else
-  #    super
-  #  end
-  #end
-  #
-  #def generate_forum_token
-  #  self.forum_data
-  #end
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}, :length => {minimum: 4, maximum: 30}
+  validates :password, :length => {:minimum => 6, maximum: 30}, :on => :create
+
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
+    self.verification_code = Digest::MD5.hexdigest(self.email + Time.now.to_i.to_s)
+    self.verification_code_sent = Time.now.to_i
+  end
+
+  def verification_code_sent
+    Time.at attributes['verification_code_sent']
+  end
+
+  def display_name=(value)
+    self.members_display_name = value
+    self.members_l_display_name = value
+  end
+
+  def display_name
+    self.members_display_name
+  end
+
+  def self.verify(verification_code)
+    return false unless verification_code.size == 32
+    user = find_by_verification_code verification_code
+    return false if Time.now > user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
+    user.update_attribute :is_verified, true
+  end
 
   def admin?
     false
@@ -104,7 +58,7 @@ class User < ForumModels
     expire_time = 1.year.from_now
     token = SecureRandom.hex(16)
     self.update_attributes(member_login_key: token, member_login_key_expire: expire_time)
-    { value: token, expires: expire_time }
+    {value: token, expires: expire_time}
   end
 
   def create_credential
@@ -118,10 +72,9 @@ class User < ForumModels
   end
 
   def set_default_values
-    self.members_l_display_name = self.name
     self.members_l_username = self.name
-    self.members_display_name = self.name
     self.mgroup = 3
+    self.time_offset = 5
     self.joined = Time.now.to_i
   end
 
