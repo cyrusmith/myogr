@@ -4,8 +4,12 @@ class ApplicationController < ActionController::Base
 
   before_filter :authentificate
 
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   def current_user
-    warden.user
+    warden.user || User.new
   end
 
   def authentificate
