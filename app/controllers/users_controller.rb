@@ -37,14 +37,27 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  # GET /users/verify/:verification_code
+  def verification
+    respond_to do |format|
+      if User.verify params[:verification_code]
+        format.html { redirect_to root_path, flash: {success: t('user.verification_success')} }
+        format.json { render json: @user, status: :created, location: @user }
+      else
+        format.html { redirect_to root_path, alert: t('user.verification_failed') }
+        format.json { render json: @user, status: :precondition_failed }
+      end
+    end
+  end
+
   # POST /users
   # POST /users.json
   def create
     @user = User.new(params[:user])
     respond_to do |format|
       if @user.save
-        StandartMailer.welcome_email(@user).deliver
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
+        UserMailer.verification_email(@user).deliver
+        format.html { redirect_to @user, flash: { success: t('user.create_success')} }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -61,7 +74,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to @user, flash: { success: t('user.update_success')} }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

@@ -6,8 +6,6 @@ Ogromno::Application.routes.draw do
   match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
   resources :schedules
-  resources :users
-  resources :sessions
 
   root :to => "home#index"
 
@@ -25,8 +23,13 @@ Ogromno::Application.routes.draw do
   #  get "sign_out", :to => "devise/sessions#destroy"
   #end
 
+  resources :users
+  match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, via: 'get'
   get 'signup', to: 'users#new', as: 'signup'
-  get 'login', :to => 'sessions#new', as: 'login'
+
+
+  resources :sessions
+  get 'login', to: 'sessions#new', as: 'login'
   get 'logout', to: 'sessions#destroy', as: 'logout'
 
   resources :banners

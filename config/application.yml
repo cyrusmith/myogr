@@ -5,6 +5,7 @@ defaults: &defaults
     url: http://localhost:3001
     login: ogromno
     password: 123456789
+  verification_code_valid_time_in_hours: 24
 
 development:
   <<: *defaults
