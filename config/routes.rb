@@ -23,7 +23,7 @@ Ogromno::Application.routes.draw do
   #  get "sign_out", :to => "devise/sessions#destroy"
   #end
 
-  resources :users
+  resources :users, :except => :destroy
   match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, via: 'get'
   get 'signup', to: 'users#new', as: 'signup'
 

@@ -2,11 +2,15 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    if current_user.admin?
+      @users = User.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @users }
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @users }
+      end
+    else
+      not_found
     end
   end
 
@@ -14,10 +18,13 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
+    if current_user.id == @user.id
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @user }
+      end
+    else
+      not_found
     end
   end
 
@@ -35,6 +42,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    not_found unless current_user.id == @user.id
   end
 
   # GET /users/verify/:verification_code
@@ -57,7 +65,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         UserMailer.verification_email(@user).deliver
-        format.html { redirect_to @user, flash: { success: t('user.create_success')} }
+        format.html { redirect_to @user, flash: {success: t('user.create_success')} }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -74,24 +82,12 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, flash: { success: t('user.update_success')} }
+        format.html { redirect_to @user, flash: {success: t('user.update_success')} }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { head :no_content }
     end
   end
 end
