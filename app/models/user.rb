@@ -17,8 +17,9 @@ class User < ForumModels
   attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name
   attr_readonly :verification_code
 
-  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}, :length => {minimum: 4, maximum: 30}
-  validates :password, :length => {:minimum => 6, maximum: 30}, :on => :create
+  validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
+  validates :password, length: {minimum: 6, maximum: 30}, on: :create
+  validates :members_l_display_name, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 60}
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
