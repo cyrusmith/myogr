@@ -6,10 +6,22 @@
         - @record.errors.full_messages.each do |msg|
           %li= msg
 
+  %p= t('record.employee')
+  %ul#employees
+    %li
+      = f.radio_button :employee, 'any', checked:true
+      = f.label :employee, "Любой мастер"
+    - @employees.each do |employee|
+      %li
+        = f.radio_button :employee, employee.id, {}
+        = f.label :employee do
+          = employee.first_name
+          %span= employee.position
+
   %ul#procedures
     - @procedures.each do |procedure|
       %li{:id => procedure.id}
-        = check_box_tag 'record[procedures][]', procedure.id, false, data: { :duration => procedure.duration.to_s }
+        = radio_button_tag 'record[procedures][]', procedure.id, false, data: { :duration => procedure.duration.to_s }
         = label_tag 'record[procedures]' do
           = procedure.name
           %span= procedure.duration.to_s
@@ -23,18 +35,6 @@
     = f.radio_button :record_date, 'other'
     = f.label 'record_date_other', t('other_day')
 
-  %p= t('record.employee')
-  %ul#employees
-    %li
-      = f.radio_button :employee, 'any', checked:true
-      = f.label :employee, "Любой мастер"
-    - @employees.each do |employee|
-      %li
-        = f.radio_button :employee, employee.id, {}
-        = f.label :employee do
-          = employee.first_name
-          %span= employee.position
-
   %ul#avaliable_time
     - @time_range.each do |time|
       - clock_time = Russian::strftime(time, '%H:%M')
@@ -42,6 +42,9 @@
       %li{class: "time_#{plain_time}"}
         = radio_button_tag 'time', plain_time, false, disabled: true
         = label_tag "time_#{plain_time}", clock_time, :class => 'disabled'
+  .field
+    = f.label :contact_phone
+    = f.text_field :contact_phone, value: @record.contact_phone.blank? ? user.phone : @record.contact_phone
   .hidden
     = hidden_field_tag 'record[group]', @group
     = hidden_field_tag 'record[full_time]'

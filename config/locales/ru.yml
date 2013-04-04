@@ -170,6 +170,8 @@ ru:
         name: Логин
         display_name: Отображать как
         password: Пароль
+      record:
+        contact_phone: Телефон для связи
     select:
       prompt: ! 'Выберите: '
     submit:

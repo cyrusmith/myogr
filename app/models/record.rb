@@ -2,7 +2,6 @@ class Record
   include Mongoid::Document
   include Mongoid::Paranoia
   include Mongoid::Timestamps
-  include Origin::Queryable
   include Tenacity
 
   default_scope asc(:record_date)
@@ -11,6 +10,7 @@ class Record
   belongs_to :admin_salon_employee, :class_name => 'Admin::Salon::Employee'
 
   field :user, type: String
+  field :contact_phone, type: String
   field :record_date, type: Date
   field :record_time, type: Time
   field :procedures, type: Array
