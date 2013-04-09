@@ -24,13 +24,16 @@ Ogromno::Application.routes.draw do
   #end
 
   resources :users, :except => :destroy
-  match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, via: 'get'
-  get 'signup', to: 'users#new', as: 'signup'
+  match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => 'get'
+  match 'user/remind' => 'users#remind', :as => :user_remind
+  match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, via: 'get'
+  match 'user/recover_password/' => 'users#set_new_password', :as => :user_set_new_password, via: 'post'
+  get 'signup', :to => 'users#new', :as => 'signup'
 
 
   resources :sessions
-  get 'login', to: 'sessions#new', as: 'login'
-  get 'logout', to: 'sessions#destroy', as: 'logout'
+  get 'login', :to => 'sessions#new', :as => 'login'
+  get 'logout', :to => 'sessions#destroy', :as => 'logout'
 
   resources :banners
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
