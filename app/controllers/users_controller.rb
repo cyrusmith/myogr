@@ -104,7 +104,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         UserMailer.verification_email(@user).deliver
-        format.html { redirect_to @user, flash: {success: t('user.create_success')} }
+        format.html { redirect_to root_path, flash: {success: t('user.create_success')} }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: 'new' }
