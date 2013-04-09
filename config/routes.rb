@@ -27,7 +27,7 @@ Ogromno::Application.routes.draw do
   match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => 'get'
   match 'user/remind' => 'users#remind', :as => :user_remind
   match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, via: 'get'
-  match 'user/recover_password/' => 'users#set_new_password', :as => :user_set_new_password, via: 'post'
+  match 'user/recover_password' => 'users#set_new_password', :as => :user_set_new_password, via: 'put'
   get 'signup', :to => 'users#new', :as => 'signup'
 
 

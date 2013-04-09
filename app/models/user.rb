@@ -8,14 +8,14 @@ class User < ForumModels
   before_create :create_credential, :set_default_values
   after_create :create_extra
 
-  has_one :credential, foreign_key: 'converge_id', readonly: true
+  has_one :credential, foreign_key: 'converge_id'
   has_one :extra, foreign_key: 'id'
   t_has_many :banners
   t_has_many :records
 
   attr_accessor :password
-  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name
-  attr_readonly :verification_code
+  #TODO выделить атрибуты для редактирования админом attr_protected
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
 
   validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
   validates :password, length: {minimum: 6, maximum: 30}, on: :create
@@ -44,11 +44,15 @@ class User < ForumModels
     self.members_display_name
   end
 
-  def self.verify(verification_code)
+  def self.verify(verification_code, options={})
     return false unless verification_code.size == 32
     user = find_by_verification_code verification_code
-    return false if Time.now > user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
-    user.update_attribute :is_verified, true
+    if Time.now <= user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
+      user.update_attribute(:is_verified, true) if options[:set_user_verified]
+      user
+    else
+      false
+    end
   end
 
   def admin?

@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   # GET /users/verify/:verification_code
   def verification
     respond_to do |format|
-      if User.verify params[:verification_code]
+      if User.verify params[:verification_code], set_user_verified: true
         format.html { redirect_to root_path, flash: {success: t('user.verification_success')} }
         format.json { render json: @user, status: :created, location: @user }
       else
@@ -62,33 +62,39 @@ class UsersController < ApplicationController
   def remind
     if params[:user].present?
       user = User.where('lower(members_display_name) = :value OR lower(email) = :value', value: params[:user][:email]).first
-      respond_to do |format|
-        if user.present?
-          user.generate_verification_data
-          UserMailer.password_recovery_mail(user).deliver
-          format.html { redirect_to login_path, flash: {success: t('notifications.password_recovery_mail_sent')} }
-          format.json { render status: :ok }
-        else
-          format.html { render 'remind', flash: {alert: t('notifications.wrong_credentials')} }
-          format.html { render status: :not_found }
-        end
+      if user.present?
+        user.generate_verification_data
+        user.save
+        UserMailer.password_recovery_mail(user).deliver
+        redirect_to login_path, flash: {success: t('notifications.password_recovery_mail_sent')}
+      else
+        render 'remind', flash: {alert: t('notifications.wrong_credentials')}
       end
     else
       @user = User.new
-      respond_to do |format|
-        format.html
-        format.json { render json: @user }
-      end
     end
   end
 
   # check verification code for user and show new password form
   def recover_password
-
+    @verification_code = params[:verification_code]
+    @user = User.verify @verification_code
+    redirect_to root_url unless @user
   end
 
   def set_new_password
-
+    user = User.find_by_verification_code params[:user][:verification_code]
+    respond_to do |format|
+      if user.present?
+        user.credential.converge_password = params[:user][:password]
+        user.credential.save
+        format.html { redirect_to login_path, flash: {success: t('notifications.new_password_success')} }
+        format.json { render status: :accepted }
+      else
+        format.html { redirect_to remind, flash: {success: t('notifications.wrong_credentials')} }
+        format.json { render status: :not_found }
+      end
+    end
   end
 
   # POST /users
