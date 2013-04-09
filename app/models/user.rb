@@ -14,8 +14,8 @@ class User < ForumModels
   t_has_many :records
 
   attr_accessor :password
-  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name
-  attr_readonly :verification_code
+  #TODO выделить атрибуты для редактирования админом attr_protected
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
 
   validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
   validates :password, length: {minimum: 6, maximum: 30}, on: :create
@@ -49,7 +49,7 @@ class User < ForumModels
     user = find_by_verification_code verification_code
     if Time.now <= user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
       user.update_attribute(:is_verified, true) if options[:set_user_verified]
-      true
+      user
     else
       false
     end

@@ -77,7 +77,9 @@ class UsersController < ApplicationController
 
   # check verification code for user and show new password form
   def recover_password
-    redirect_to root_url unless User.verify params[:verification_code]
+    @verification_code = params[:verification_code]
+    @user = User.verify @verification_code
+    redirect_to root_url unless @user
   end
 
   def set_new_password
@@ -86,10 +88,10 @@ class UsersController < ApplicationController
       if user.present?
         user.credential.converge_password = params[:user][:password]
         user.credential.save
-        format.html redirect_to login_path, flash: {success: t('notifications.new_password_success')}
+        format.html { redirect_to login_path, flash: {success: t('notifications.new_password_success')} }
         format.json { render status: :accepted }
       else
-        format.html redirect_to remind, flash: {success: t('notifications.wrong_credentials')}
+        format.html { redirect_to remind, flash: {success: t('notifications.wrong_credentials')} }
         format.json { render status: :not_found }
       end
     end
