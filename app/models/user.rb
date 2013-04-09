@@ -5,7 +5,7 @@ class User < ForumModels
   scope :verified, where(is_verified: true)
   scope :not_verified, where(is_verified: false)
 
-  before_create :create_credential, :set_default_values
+  before_create :create_credential, :set_default_values, :generate_verification_data
   after_create :create_extra
 
   has_one :credential, foreign_key: 'converge_id'
@@ -17,14 +17,9 @@ class User < ForumModels
   #TODO выделить атрибуты для редактирования админом attr_protected
   attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
 
-  validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
+  #validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
   validates :password, length: {minimum: 6, maximum: 30}, on: :create
   validates :members_l_display_name, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 60}
-
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
-    generate_verification_data()
-  end
 
   def generate_verification_data
     self.verification_code = Digest::MD5.hexdigest(self.email + Time.now.to_i.to_s)
@@ -81,7 +76,8 @@ class User < ForumModels
   end
 
   def set_default_values
-    self.members_l_username = self.name
+    self.name = self.email
+    self.members_l_username = self.email
     self.mgroup = 3
     self.time_offset = 5
     self.joined = Time.now.to_i

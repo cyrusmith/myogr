@@ -23,17 +23,22 @@ Ogromno::Application.routes.draw do
   #  get "sign_out", :to => "devise/sessions#destroy"
   #end
 
+  scope constraints: lambda { |request| request.env['warden'].user.nil? } do
+    get 'login', :to => 'sessions#new', :as => 'login'
+    get 'signup', :to => 'users#new', :as => 'signup'
+    match 'user/remind' => 'users#remind', :as => :user_remind
+    match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, via: 'get'
+    match 'user/recover_password' => 'users#set_new_password', :as => :user_set_new_password, via: 'put'
+  end
+
+  scope constraints: lambda { |request| !request.env['warden'].user.nil? } do
+    get 'logout', :to => 'sessions#destroy', :as => 'logout'
+  end
+
   resources :users, :except => :destroy
   match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => 'get'
-  match 'user/remind' => 'users#remind', :as => :user_remind
-  match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, via: 'get'
-  match 'user/recover_password' => 'users#set_new_password', :as => :user_set_new_password, via: 'put'
-  get 'signup', :to => 'users#new', :as => 'signup'
-
 
   resources :sessions
-  get 'login', :to => 'sessions#new', :as => 'login'
-  get 'logout', :to => 'sessions#destroy', :as => 'logout'
 
   resources :banners
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
