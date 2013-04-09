@@ -45,6 +45,9 @@
   .field
     = f.label :contact_phone
     = f.text_field :contact_phone, value: @record.contact_phone.blank? ? user.phone : @record.contact_phone
+  .field
+    = f.label :contact_name
+    = f.text_field :contact_name
   .hidden
     = hidden_field_tag 'record[group]', @group
     = hidden_field_tag 'record[full_time]'

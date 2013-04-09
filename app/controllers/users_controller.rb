@@ -58,6 +58,39 @@ class UsersController < ApplicationController
     end
   end
 
+  # render remind password form
+  def remind
+    if params[:user].present?
+      user = User.where('lower(members_display_name) = :value OR lower(email) = :value', value: params[:user][:email]).first
+      respond_to do |format|
+        if user.present?
+          user.generate_verification_data
+          UserMailer.password_recovery_mail(user).deliver
+          format.html { redirect_to login_path, flash: {success: t('notifications.password_recovery_mail_sent')} }
+          format.json { render status: :ok }
+        else
+          format.html { render 'remind', flash: {alert: t('notifications.wrong_credentials')} }
+          format.html { render status: :not_found }
+        end
+      end
+    else
+      @user = User.new
+      respond_to do |format|
+        format.html
+        format.json { render json: @user }
+      end
+    end
+  end
+
+  # check verification code for user and show new password form
+  def recover_password
+
+  end
+
+  def set_new_password
+
+  end
+
   # POST /users
   # POST /users.json
   def create
@@ -68,7 +101,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, flash: {success: t('user.create_success')} }
         format.json { render json: @user, status: :created, location: @user }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -85,7 +118,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, flash: {success: t('user.update_success')} }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

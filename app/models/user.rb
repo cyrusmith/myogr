@@ -23,6 +23,10 @@ class User < ForumModels
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
+    generate_verification_data()
+  end
+
+  def generate_verification_data
     self.verification_code = Digest::MD5.hexdigest(self.email + Time.now.to_i.to_s)
     self.verification_code_sent = Time.now.to_i
   end

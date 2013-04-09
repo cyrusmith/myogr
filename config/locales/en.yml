@@ -8,3 +8,6 @@ en:
     verification_failed: "Varification code expired or wrong."
     create_success: "User was successfully created."
     update_success: "User was successfully updated."
+  mail:
+    subject:
+      password_recovery: "Recover your password on Ogromno"

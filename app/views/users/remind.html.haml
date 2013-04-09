@@ -1,0 +1,7 @@
+= form_for @user, url: user_remind_path do |f|
+  .field
+    = f.label :email
+    = f.text_field :email
+
+  .actions
+    = f.submit 'Save'
