@@ -8,7 +8,7 @@ class User < ForumModels
   before_create :create_credential, :set_default_values
   after_create :create_extra
 
-  has_one :credential, foreign_key: 'converge_id', readonly: true
+  has_one :credential, foreign_key: 'converge_id'
   has_one :extra, foreign_key: 'id'
   t_has_many :banners
   t_has_many :records
@@ -44,11 +44,15 @@ class User < ForumModels
     self.members_display_name
   end
 
-  def self.verify(verification_code)
+  def self.verify(verification_code, options={})
     return false unless verification_code.size == 32
     user = find_by_verification_code verification_code
-    return false if Time.now > user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
-    user.update_attribute :is_verified, true
+    if Time.now <= user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
+      user.update_attribute(:is_verified, true) if options[:set_user_verified]
+      true
+    else
+      false
+    end
   end
 
   def admin?
