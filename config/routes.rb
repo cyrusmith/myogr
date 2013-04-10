@@ -20,7 +20,7 @@ Ogromno::Application.routes.draw do
 
   match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => :get
 
-  post 'search', :to => 'searches#index'
+  get 'search', :to => 'searches#index'
 
   resources :records
   match 'record/step1' => 'records#create_step1', :as => :create_record_step1

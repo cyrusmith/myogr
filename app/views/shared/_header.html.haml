@@ -11,9 +11,9 @@
     #middle-header-wrapper
       #logo= show_logo
       #search-input-div
-        = form_tag '/search'
-        = text_field_tag 'search', nil,  id: 'search-input', placeholder: 'Поиск по товарам и магазинам'
-        = submit_tag 'Искать', style: 'display:none'
+        = form_tag '/search', method: :get do
+          = text_field_tag 'search', nil,  id: 'search-input', placeholder: 'Поиск по товарам и магазинам'
+          = submit_tag 'nil', style: 'display:none'
       #login
         - if current_user
           %p
