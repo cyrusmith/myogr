@@ -1,5 +1,27 @@
 Ogromno::Application.routes.draw do
 
+  root :to => 'home#index'
+
+  resources :users, :except => :destroy
+
+  # if user is not logged in, he can log in, sign up and recover his password. Route is not accessible overwise
+  scope constraints: lambda { |request| request.env['warden'].user.nil? } do
+    get 'login', :to => 'sessions#new', :as => 'login'
+    get 'signup', :to => 'users#new', :as => 'signup'
+    match 'user/remind' => 'users#remind', :as => :user_remind, :via => [:get, :post]
+    match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, :via => :get
+    match 'user/recover_password' => 'users#set_new_password', :as => :user_set_new_password, :via => :put
+  end
+
+  # if user is logged in, he can log out. Route is not accessible overwise
+  scope constraints: lambda { |request| !request.env['warden'].user.nil? } do
+    get 'logout', :to => 'sessions#destroy', :as => 'logout'
+  end
+
+  match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => :get
+
+  post 'search', :to => 'searches#index'
+
   resources :records
   match 'record/step1' => 'records#create_step1', :as => :create_record_step1
   match 'record/step2/:group' => 'records#create_step2', :as => :create_record_step2
@@ -7,36 +29,11 @@ Ogromno::Application.routes.draw do
 
   resources :schedules
 
-  root :to => "home#index"
-
   get 'contacts', :to => 'home#contacts'
   get 'advertisment', :to => 'home#advertisment'
   get 'rules', :to => 'home#rules'
   get 'agreement', :to => 'home#agreement'
   get 'offer', :to => 'home#offer'
-
-  #devise_for :user
-  #
-  #devise_scope :user do
-  #  get "sign_in", :to => "devise/sessions#new"
-  #  post "sign_in", :to => "sessions#create", :as => "post_user_session"
-  #  get "sign_out", :to => "devise/sessions#destroy"
-  #end
-
-  scope constraints: lambda { |request| request.env['warden'].user.nil? } do
-    get 'login', :to => 'sessions#new', :as => 'login'
-    get 'signup', :to => 'users#new', :as => 'signup'
-    match 'user/remind' => 'users#remind', :as => :user_remind
-    match 'users/recover_password/:verification_code' => 'users#recover_password', :as => :user_password_recovery, via: 'get'
-    match 'user/recover_password' => 'users#set_new_password', :as => :user_set_new_password, via: 'put'
-  end
-
-  scope constraints: lambda { |request| !request.env['warden'].user.nil? } do
-    get 'logout', :to => 'sessions#destroy', :as => 'logout'
-  end
-
-  resources :users, :except => :destroy
-  match 'users/verify/:verification_code' => 'users#verification', :as => :user_verification, :via => 'get'
 
   resources :sessions
 
@@ -53,60 +50,5 @@ Ogromno::Application.routes.draw do
       resources :procedures
     end
   end
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
 
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
 end
