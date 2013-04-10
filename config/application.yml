@@ -1,6 +1,7 @@
 # config/application.yml
 defaults: &defaults
   host_url: http://localhost:3000
+  forum_url: http://forum.ogromno.ru
   billing:
     url: http://localhost:3001
     login: ogromno
