@@ -1,0 +1,12 @@
+- number_of_results = @results.length
+%h2= "Найдено #{number_of_results} #{Russian.p(number_of_results , 'товар', 'товара', 'товаров')}"
+
+%table
+  %tr
+    %th
+    %th
+
+  - @results.each do |result|
+    %tr
+      %td= image_tag result.small_img, size: '200x200'
+      %td= link_to result.name, Settings.forum_url + "/index.php?showtopic=#{result.tid}"
