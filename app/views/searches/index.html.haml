@@ -9,4 +9,4 @@
   - @results.each do |result|
     %tr
       %td= image_tag result.small_img, size: '200x200'
-      %td= link_to result.name, Settings.forum_url + "/index.php?showtopic=#{result.tid}"
+      %td= link_to result.name, Settings.forum_url + "/index.php?showtopic=#{result.tid}", target: '_blank'
