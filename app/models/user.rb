@@ -43,7 +43,7 @@ class User < ForumModels
   def self.verify(verification_code, options={})
     return false unless verification_code.size == 32
     user = find_by_verification_code verification_code
-    if Time.now <= user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
+    if Time.now <= user.verification_code_sent + eval(Settings.verification_code_valid_time)
       user.update_attribute(:is_verified, true) if options[:set_user_verified]
       user
     else
