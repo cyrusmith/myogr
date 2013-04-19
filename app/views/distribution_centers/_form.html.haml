@@ -1,0 +1,33 @@
+= form_for @distribution_center do |f|
+  - if @distribution_center.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@distribution_center.errors.count, "error")} prohibited this distribution_center from being saved:"
+      %ul
+        - @distribution_center.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label :title, t('distribution_centers.title')
+    = f.text_field :title
+
+  .field
+    = f.label :head_name, t('distribution_centers.head_user')
+    = f.text_field :head_name, data: {autocomplete_source: find_users_path}
+
+  .field
+    = f.label :employees_names
+    = f.text_field :employees_names, data: {autocomplete_source: find_users_path}
+
+  .field
+    = f.label :default_day_package_limit
+    = f.text_field :default_day_package_limit
+
+  .field
+    = f.label :comment, t('distribution_centers.comment')
+    = f.text_field :comment
+
+  .field
+    = f.fields_for @distribution_center.address do |builder|
+      = render 'addresses/fields', f: builder
+
+  .actions
+    = f.submit 'Save'

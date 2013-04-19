@@ -57,7 +57,7 @@ class User < ForumModels
       self.save
       false
     else
-      self.user_role.roles.include?(role_name.to_s)
+      self.user_role.roles.include?(role_name)
     end
   end
 

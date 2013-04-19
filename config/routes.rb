@@ -29,7 +29,7 @@ Ogromno::Application.routes.draw do
   match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
   resources :schedules
-  resources :distribution_centers
+  resources :distribution_centers, as: 'distribution_center_distribution_centers'
   resources :addresses
 
   get 'contacts', :to => 'home#contacts'

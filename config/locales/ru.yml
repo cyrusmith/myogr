@@ -342,6 +342,8 @@ ru:
 
     head_user: "Начальник ЦР"
     comment: "Примечание"
+    index:
+      enter: "Войти в панель управления"
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"
