@@ -11,6 +11,7 @@ class Ability
     else
       can :create, Banner
       can :manage, Record
+      can :manage, DistributionCenter::DistributionCenter
     end
     # Define abilities for the passed in user here. For example:
     #

@@ -19,11 +19,9 @@ gem 'rails_warden'
 gem 'cancan'
 gem 'debugger-linecache'
 gem 'mini_magick'
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid',
-    :git => 'https://github.com/jnicklas/carrierwave-mongoid.git'
+gem 'carrierwave-mongoid'
 gem 'money-rails'
-gem 'chronic'
-
+gem 'kaminari'
 
 group :development do
   gem 'better_errors'

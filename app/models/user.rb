@@ -61,6 +61,11 @@ class User < ForumModels
     end
   end
 
+  def add_role(role_name)
+    self.user_role.roles << role_name
+    self.user_role.save
+  end
+
   def valid_password?(password)
     self.credential.valid_password? password
   end
