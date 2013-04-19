@@ -49,6 +49,7 @@ Ogromno::Application.routes.draw do
   namespace :admin do
     resources :promo_place
     namespace :salon do
+      resources :records
       resources :employees
       resources :procedures
     end

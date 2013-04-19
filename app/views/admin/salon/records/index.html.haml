@@ -1,0 +1,19 @@
+%h1 Записи в салон красоты
+%table
+  %th
+  %th Время
+  %th Имя
+  %th Процедуры
+  %th Контактный телефон
+  - @weekSchedule.keys.sort.each do |date|
+    %tr
+      %td{:nowrap => 'true'}
+        %b= Russian::strftime(date, '%d %B')
+    - @weekSchedule[date].sort.each do |record|
+      %tr 
+        %td
+        %td= Russian::strftime(record.record_time, '%H:%M')
+        %td= record.contact_name
+        - procedure = Admin::Salon::Procedure.find(record.procedure)
+        %td= procedure.name
+        %td= record.contact_phone
