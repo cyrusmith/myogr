@@ -173,6 +173,10 @@ ru:
       record:
         contact_phone: Телефон для связи
         contact_name: Представьтесь
+      address:
+        city: Город
+        district: Район
+        street: Улица, дом
     select:
       prompt: ! 'Выберите: '
     submit:
@@ -344,6 +348,8 @@ ru:
     comment: "Примечание"
     index:
       enter: "Войти в панель управления"
+    employees: "Сотрудники"
+    default_package_limit: "Кол-во заказов к обработке в день"
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"

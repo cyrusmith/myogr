@@ -8,6 +8,8 @@ module DistributionCenter
 
     belongs_to :distribution_center
 
+    attr_accessible :package_limit, :is_closed, :closed_by
+
     def closed?
       self.is_closed
     end

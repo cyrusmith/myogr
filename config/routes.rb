@@ -46,6 +46,8 @@ Ogromno::Application.routes.draw do
   match 'banners/:id/activate' => 'banners#activate', :as => :activate_banner
   match 'banners/:id/deactivate' => 'banners#deactivate', :as => :deactivate_banner
 
+  get '/distribution_center/package_lists/days_off'=> 'distribution_center/package_lists#days_off'
+
   namespace :admin do
     resources :promo_place
     namespace :salon do
