@@ -1,6 +1,6 @@
 #class RecordsController < AuthorizedController
 #Временно убрал проверку на права
-class RecordsController < ApplicationController
+class RecordsController < AuthorizedController
   # GET /records
   # GET /records.json
   def index
