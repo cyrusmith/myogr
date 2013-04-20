@@ -45,7 +45,7 @@ class RecordsController < AuthorizedController
     @record = Record.new(params[:record])
     @record.record_time = Time.parse (params[:record][:full_time])
     @record.employee = choose_employee params[:record][:group] if params[:record][:employee] == 'any'
-    current_user.records << @record
+    @record.user_id = current_user.id
 
     respond_to do |format|
       if @record.save

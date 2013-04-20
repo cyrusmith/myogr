@@ -10,9 +10,8 @@
   - @records.each do |record|
     %tr
       %td= Russian::strftime(record.record_time, '%d %B %H:%M')
-      - procedures = record.procedures.map { |procedure| Admin::Salon::Procedure.find(procedure)}
-      - procedures.each do|procedure| procedure.name
-        %td= procedure.name
+      - procedure = Admin::Salon::Procedure.find(record.procedure)
+      %td= procedure.name
       -#%td= record.employee
       %td= link_to 'Отменить', record, method: :delete, data: { confirm: 'Вы уверены, что хотите отменить запись?' }
 

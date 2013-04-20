@@ -15,15 +15,15 @@
       -if (flash[:success])
         %div{:class => 'notice success'}
           = flash[:success]
-          %a{:href => "#close", :class => "icon close", :data => {:icon => "x"}, :style => "display:inline-block;"}
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
       -if (notice)
         %div{:class => 'notice warning'}
           = notice
-          %a{:href => "#close", :class => "icon close", :data => {:icon => "x"}, :style => "display:inline-block;"}
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
       -if (alert)
         %div{:class => 'notice error'}
           = alert
-          %a{:href => "#close", :class => "icon close", :data => {:icon => "x"}, :style => "display:inline-block;"}
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
       #main-data
         = render 'shared/banners'
         = yield

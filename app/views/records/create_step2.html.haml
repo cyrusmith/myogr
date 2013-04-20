@@ -21,8 +21,8 @@
   %ul#procedures
     - @procedures.each do |procedure|
       %li{:id => procedure.id}
-        = radio_button_tag 'record[procedures][]', procedure.id, false, data: { :duration => procedure.duration.to_s }
-        = label_tag 'record[procedures]' do
+        = radio_button_tag 'record[procedure]', procedure.id, false, data: { :duration => procedure.duration.to_s }
+        = label_tag 'record_procedure_' + procedure.id do
           = procedure.name
           %span= procedure.duration.to_s
 

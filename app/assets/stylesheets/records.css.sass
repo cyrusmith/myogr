@@ -2,17 +2,25 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-$green:#94C943
+$green:#BAD98B
 
 .chosen
   background-color: $green
 
-ul#procedures li
+input[type=radio] + label
+  padding: 10px
+
+input[type=radio]:checked + label
+  background-color: $green
+  border-radius: 5px
+
+ul#procedures > li
   cursor: pointer
   display: block
+  float: none
 
 .unactive
   color: gray
 
-#avaliable_time
+//#avaliable_time
   //display: none

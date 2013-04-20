@@ -12,6 +12,7 @@ class User < ForumModels
   has_one :extra, foreign_key: 'id'
   t_has_many :banners
   t_has_many :records
+  t_has_one :user_role
 
   attr_accessor :password
   #TODO выделить атрибуты для редактирования админом attr_protected
@@ -42,7 +43,7 @@ class User < ForumModels
   def self.verify(verification_code, options={})
     return false unless verification_code.size == 32
     user = find_by_verification_code verification_code
-    if Time.now <= user.verification_code_sent + Ogromno::Application.config.verification_code_valid_time
+    if Time.now <= user.verification_code_sent + eval(Settings.verification_code_valid_time)
       user.update_attribute(:is_verified, true) if options[:set_user_verified]
       user
     else
@@ -50,8 +51,19 @@ class User < ForumModels
     end
   end
 
-  def admin?
-    false
+  def has_role?(role_name)
+    if self.user_role.nil?
+      self.user_role = UserRole.create(user_id: self.id, roles: Array.new)
+      self.save
+      false
+    else
+      self.user_role.roles.include?(role_name)
+    end
+  end
+
+  def add_role(role_name)
+    self.user_role.roles << role_name
+    self.user_role.save
   end
 
   def valid_password?(password)
@@ -72,7 +84,9 @@ class User < ForumModels
   end
 
   def create_extra
-    self.extra = Extra.create!(id: self.credential.changed_attributes[Credential.primary_key])
+    user_id = self.credential.changed_attributes[Credential.primary_key]
+    self.extra = Extra.create!(id: user_id)
+    self.user_role = UserRole.create!(user_id: user_id, roles: Array.new)
   end
 
   def set_default_values

@@ -129,4 +129,9 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def find
+    @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "%#{params[:term]}%")
+    render json: @users.map(&:members_l_display_name)
+  end
 end
