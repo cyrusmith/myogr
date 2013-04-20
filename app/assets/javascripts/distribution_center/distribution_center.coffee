@@ -1,3 +1,14 @@
+window.days_off = []
+window.is_init = false
+
+fetchDaysOff = (year, month) ->
+  start_date = ''
+  if (year? && month?)
+    start_date = new Date(year, month, 1)
+  $.getJSON('/distribution_center/package_lists/days_off', {start_date: start_date}, (data) =>
+    $.each(data, (index, value) =>
+      window.days_off.push(value)))
+
 jQuery ->
   $('#distribution_center_distribution_center_head_name').autocomplete
     minLength: 3
@@ -32,3 +43,31 @@ jQuery ->
       terms.push("")
       this.value = terms.join(", ")
       false
+
+  $('#calendar').datepicker(
+    inline: true
+    dateFormat: 'dd-mm-yy'
+    defaultDate: 0
+    numberOfMonths: [1, 3]
+    maxDate: '+1y'
+    minDate: '+1d'
+    onChangeMonthYear: (year, month) =>
+      fetchDaysOff(year, month)
+    beforeShowDay: (date) =>
+      if (!window.is_init)
+        fetchDaysOff()
+        window.is_init = true
+      if (window.days_off.length > 0)
+        for day_off in days_off
+          if (date.getTime() == new Date().getTime())
+            return [true, "day_off", 'Выходной']
+          else
+            return [true, '', '']
+      else
+        return [true, '', '']
+    onSelect: (date) =>
+
+  )
+
+
+

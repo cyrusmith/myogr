@@ -1,0 +1,10 @@
+= form_for @package_list do |f|
+  - if @package_list.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@package_list.errors.count, "error")} prohibited this package_list from being saved:"
+      %ul
+        - @package_list.errors.full_messages.each do |msg|
+          %li= msg
+
+  .actions
+    = f.submit 'Save'
