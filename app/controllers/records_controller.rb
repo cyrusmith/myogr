@@ -84,9 +84,8 @@ class RecordsController < AuthorizedController
   def destroy
     @record = Record.find(params[:id])
     @record.destroy
-
     respond_to do |format|
-      format.html { redirect_to records_url }
+      format.html { redirect_to :action => :index }
       format.json { head :no_content }
     end
   end
