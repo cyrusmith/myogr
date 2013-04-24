@@ -3,10 +3,11 @@ module Distribution
     # GET /package_lists
     # GET /package_lists.json
     def index
-      @package_lists = PackageList.all
+      @point = Point.find(params[:point_id])
+      @package_lists = @point.package_lists.all
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @package_lists }
+        format.json { render json: PackageListsDatatable.new(view_context) }
       end
     end
 
@@ -93,14 +94,34 @@ module Distribution
     end
 
     def days_off
-      start_date = params[:start_date].blank? ? Date.today : params[:start_date]
-      num_of_months = params[:num_months] ? params[:num_months].to_i.months : 2.month
-      @package_lists = PackageList.where(:date.gte => start_date, :date.lte => start_date + num_of_months)
-      render json: @package_lists.map(&:date)
+      @point = Point.find(params[:point_id])
+      render json: @point.get_marked_days(params[:start_date])
     end
 
     def switch_day_off
-      true
+      @point = Point.find(params[:point_id])
+      date = Date.parse params[:date]
+      @package_list = @point.package_lists.where(date: date).first
+      if @package_list.day_off?
+        @package_list.is_day_off = false
+      else
+        @package_list.is_day_off = true
+      end
+      respond_to do |format|
+        if @package_list.save
+          format.js { render 'show' }
+        end
+      end
+    end
+
+    def change_limit
+      @point = Point.find(params[:point_id])
+      date = Date.parse params[:date]
+      @package_list = @point.package_lists.where(date: date).first
+      if params[:new_limit].present? and params[:new_limit].to_i > @package_list.packages.count
+        @package_list.update_attribute :package_limit, params[:new_limit]
+      end
+      render json: @package_list.package_limit
     end
 
   end

@@ -34,6 +34,16 @@ module Distribution
       self.employees = array.map { |name| User.find_by_members_display_name(name.strip).try(:id) }.delete_if { |x| x.nil? }
     end
 
+    def get_marked_days(start_date=nil, num_months=3.month)
+      start_date = start_date || Date.today.beginning_of_month
+      start_date = Date.parse start_date unless start_date.is_a? Date
+      range_package_lists = self.package_lists.where(:date.gte => start_date, :date.lte => start_date + num_months)
+      days_off = range_package_lists.select { |list| list.is_day_off }.map { |list| {list.date => 'day-off'} }
+      filled_package_lists = range_package_lists.select { |package_list| package_list.packages.count >= package_list.package_limit }.map{|list| {list.date => 'limit-filled'}}
+      closed_package_lists = range_package_lists.select { |list| list.closed? }.map { |list| {list.date => 'closed'} }
+      days_off + filled_package_lists
+    end
+
     accepts_nested_attributes_for :address,
                                   reject_if: lambda { |a| a[:title].blank? and a[:head_user].blank? }
 

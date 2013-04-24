@@ -1,17 +1,12 @@
-%h1 Listing package_lists
+%h3 Ведомости
 
-%table
-  %tr
-    %th
-    %th
-    %th
+= render 'distribution/shared/tab_menu', point: @point, active:'package_lists'
 
-  - @package_lists.each do |package_list|
-    %tr
-      %td= link_to 'Show', package_list
-      %td= link_to 'Edit', edit_package_list_path(package_list)
-      %td= link_to 'Destroy', package_list, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Package list', new_package_list_path
+.tab-content
+  %table#package_lists.display{data: {source:distribution_point_package_lists_url(@point, format: :json)}}
+    %thead
+      %tr
+        %th Дата выдачи
+        %th Количество записей
+        %th Состояние
+    %tbody

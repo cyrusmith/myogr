@@ -1,13 +1,21 @@
-window.days_off = []
-window.is_init = false
-
+#window.days_off = {}
 fetchDaysOff = (year, month) ->
   start_date = ''
+  url = document.URL + '/package_list/days_off'
   if (year? && month?)
-    start_date = new Date(year, month, 1)
-  $.getJSON('/distribution/package_lists/days_off', {start_date: start_date}, (data) =>
-    $.each(data, (index, value) =>
-      window.days_off.push(value)))
+    start_date = new Date(year, month-1, 1)
+
+  $.ajax(
+    url:url
+    data:{start_date: start_date.format('dd-mm-yyyy')}
+    async: false
+    success: (data) =>
+      $.each(data, (index, value) =>
+        for key of value
+          window.days_off[key] = value[key]
+          false
+      )
+  )
 
 jQuery ->
   $('#distribution_point_head_name').autocomplete
@@ -45,33 +53,23 @@ jQuery ->
       false
 
   $('#calendar').datepicker(
-    inline: true
+    inline:true
     dateFormat: 'dd-mm-yy'
     defaultDate: 0
     numberOfMonths: [1, 3]
     maxDate: '+1y'
     minDate: '+1d'
-    onChangeMonthYear: (year, month) =>
+    onChangeMonthYear: (year, month) ->
       fetchDaysOff(year, month)
     beforeShowDay: (date) =>
-      if (!window.is_init)
-        fetchDaysOff()
-        window.is_init = true
-      if (window.days_off.length > 0)
-        for day_off in days_off
-          if (date.getTime() == new Date().getTime())
-            return [true, "day_off", 'Выходной']
-          else
-            return [true, '', '']
+      if (window.days_off? and window.days_off != {})
+        string_date = date.format('yyyy-mm-dd')
+        if (window.days_off[string_date])
+          return [true, window.days_off[string_date], 'Выходной']
+        else
+          return [true, '', '']
       else
         return [true, '', '']
-#    onSelect: (date) =>
-#      dc = $('#dc')[0].value
-#      url = '/distribution/points/' + dc + '/package_list/'
-#      $.getJSON(url,
-#        {date: date}, (response) =>
-#          $('#day_properties').append(response)
-#      )
     onSelect: (date) =>
       dc = $('#dc')[0].value
       url = '/distribution/points/' + dc + '/package_list/'
@@ -81,6 +79,3 @@ jQuery ->
         dataType: "script"
       })
   )
-
-
-

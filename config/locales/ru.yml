@@ -351,6 +351,12 @@ ru:
         comment: "Примечание"
         employees: "Сотрудники"
         default_package_limit: "Кол-во заказов к обработке в день"
+    package_lists:
+      form:
+        package_limit: Лимит
+      package_list:
+        set_day_off: Сделать выходным
+        set_working_day: Сделать рабочим
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"

@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Order:
+  = @distribution_package.order
+%p
+  %b State:
+  = @distribution_package.state
+
+= link_to 'Edit', edit_distribution_package_path(@distribution_package)
+\|
+= link_to 'Back', distribution_packages_path

@@ -16,6 +16,7 @@
 //= require jquery.ui.datepicker-ru
 //= require_tree .
 //= require rails.validations
+//= require dataTables/jquery.dataTables
 
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {
@@ -35,3 +36,4 @@ $(document).ready(function () {
     }());
 //    $(':password').showPassword();
 });
+

@@ -1,1 +1,15 @@
-$('#day_properties').html('<%= j render(@package_list) %>');
+$('#day_properties').html('<%= j render(@package_list) %>').show();
+$("input#package_limit").spinner({
+    max: 300,
+    min: $('#packages_already').val()
+});
+$("input#package_limit").bind("keydown", function (event) {
+    if (event.keyCode == $.ui.keyCode.ENTER) {
+        $.getJSON('/distribution/points/' + $('#dc')[0].value + '/package_list/change_limit',
+                {date: $('input#date').val(), new_limit: this.value},
+                function (response) {
+                    $("input#package_limit").val(response)
+                }
+        )
+    }
+});

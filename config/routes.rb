@@ -1,5 +1,10 @@
 Ogromno::Application.routes.draw do
 
+  namespace :distribution do
+    resources :packages
+  end
+
+
   root :to => 'home#index'
 
   resources :users, :except => :destroy
@@ -48,8 +53,9 @@ Ogromno::Application.routes.draw do
   namespace :distribution do
     resources :points do
       resources :package_lists
-      get 'package_lists/days_off'=> 'package_lists#days_off'
+      get 'package_list/days_off'=> 'package_lists#days_off'
       get 'package_list/switch_day_off' => 'package_lists#switch_day_off', :as => :switch_day_off
+      get 'package_list/change_limit' => 'package_lists#change_limit'
       get 'package_list' => 'package_lists#show'
     end
   end
