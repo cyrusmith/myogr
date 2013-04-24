@@ -1,0 +1,2 @@
+module Distribution::PackagesHelper
+end

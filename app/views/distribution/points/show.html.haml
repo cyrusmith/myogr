@@ -1,0 +1,11 @@
+= javascript_tag do
+  window.days_off = #{raw @marked_days.to_json}
+
+%h4=@distribution_point.title
+= render 'distribution/shared/tab_menu', point: @distribution_point, active: 'main'
+
+.tab-content
+  =hidden_field_tag :dc, @distribution_point.id
+  #calendar
+  %fieldset#day_properties
+

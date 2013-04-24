@@ -11,6 +11,7 @@
  *= require_self
  *= require_tree .
  *= require jquery.ui.all
+ *= require dataTables/src/demo_table_jui
  */
 //dimensions
 $total_width: 1060px
@@ -190,8 +191,26 @@ ol ol ol ol li:before
 .field
   margin: 10px 5px
 
+.underline
+  text-decoration: underline
+
+.grey
+  color: $grey
+
+.dashed
+  border-bottom: thin dashed $grey
+
+.pointer
+  cursor: pointer
+
 #login
   padding-top: 10px
+
+.actions
+  margin: 10px
+
+.tab-content
+  background-color: #ffffff
 
 ul.ui-autocomplete 
   position: absolute

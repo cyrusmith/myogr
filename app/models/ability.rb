@@ -8,15 +8,15 @@ class Ability
       when user.has_role?(UserRole::ADMIN)
         can :manage, :all
       when user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
-        can :access, DistributionCenter::DistributionCenter, :head_user => user.id
-        cannot :destroy, DistributionCenter::DistributionCenter
-        cannot :edit, DistributionCenter::DistributionCenter
+        can :access, Distribution::Point, :head_user => user.id
+        cannot :destroy, Distribution::Point
+        cannot :edit, Distribution::Point
       when user.has_role?(UserRole::SALON_ADMINISTRATOR)
         can :manage, Record
       else
         can :create, Banner
         can :manage, Record
-        can :read, DistributionCenter::DistributionCenter
+        can :read, Distribution::Point
     end
     #if
     #

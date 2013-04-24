@@ -1,6 +1,6 @@
 #class RecordsController < AuthorizedController
 #Временно убрал проверку на права
-class RecordsController < ApplicationController
+class RecordsController < AuthorizedController
   # GET /records
   # GET /records.json
   def index
@@ -39,14 +39,24 @@ class RecordsController < ApplicationController
   # GET /records/1/edit
   def edit
     @record = Record.find(params[:id])
+    @group = @record.group
+    @procedures = Admin::Salon::Procedure.where(:group => @group)
+    @employees = Admin::Salon::Employee.where(:specialization => @group)
+    @time_model = get_time_model
+    @namespace = get_namespace
+    render "edit_service_record"
+  end
+  
+  def get_namespace
+    return []
   end
 
   # POST /records
   # POST /records.json
   def create
     @record = Record.new(params[:record])
-    @record.record_time = Time.parse (params[:record][:full_time])
     @record.employee = choose_employee params[:record][:group] if params[:record][:employee] == 'any'
+    @record.record_time = Time.parse (params[:record][:full_time])
     @record.user_id = current_user.id
 
     respond_to do |format|
@@ -69,10 +79,10 @@ class RecordsController < ApplicationController
   # PUT /records/1.json
   def update
     @record = Record.find(params[:id])
-
+    
     respond_to do |format|
       if @record.update_attributes(params[:record])
-        format.html { redirect_to @record, notice: 'Record was successfully updated.' }
+        format.html { redirect_to action: :index, notice: 'Record was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -86,9 +96,8 @@ class RecordsController < ApplicationController
   def destroy
     @record = Record.find(params[:id])
     @record.destroy
-
     respond_to do |format|
-      format.html { redirect_to records_url }
+      format.html { redirect_to :action => :index }
       format.json { head :no_content }
     end
   end
@@ -106,17 +115,25 @@ class RecordsController < ApplicationController
     @record = Record.new
     @procedures = Admin::Salon::Procedure.where(:group => params[:group])
     @employees = Admin::Salon::Employee.where(:specialization => params[:group])
-    @start_time = Time.parse Admin::Salon::Settings.schedule.mon.from
-    @end_time = Time.parse Admin::Salon::Settings.schedule.mon.till
-    @time_range = @start_time.split_by 30.minutes, @end_time
+    @time_model = get_time_model
     @group = params[:group]
+    @namespace = get_namespace
     #@avaliable_time = get_avaliable_time(Time.today, 'any')
+    render "edit_service_record"
+  end
+  
+  def get_time_model
+    morning = Time.parse "6:00:00"
+    noon = Time.parse "12:00:00"
+    evening = Time.parse "18:00:00"
+    endofday = Time.parse "23:30:00"
+    morning_range = morning.split_by 30.minutes, noon - 30.minutes
+    afternoon_range = noon.split_by 30.minutes, evening - 30.minutes
+    evening_range = evening.split_by 30.minutes, endofday
+    time_model = {:morning => morning_range, :afternoon => afternoon_range, :evening => evening_range}
   end
 
   def get_avaliable_time_remote
-    @start_time = Time.parse Admin::Salon::Settings.schedule.mon.from
-    @end_time = Time.parse Admin::Salon::Settings.schedule.mon.till
-    @time_range = @start_time.split_by 30.minutes, @end_time
     employee = params[:employee] == 'any' ? Admin::Salon::Employee.first : Admin::Salon::Employee.find(params[:employee])
     render :json => employee.avaliable_time(params[:date]).each { |subarray| subarray.map!{|time| Russian::strftime(time, '%H%M') }}.to_json
   end

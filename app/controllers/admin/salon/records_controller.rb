@@ -1,6 +1,6 @@
 module Admin
   module Salon
-    class Admin::Salon::RecordsController < ApplicationController
+    class Admin::Salon::RecordsController < RecordsController
       # GET /records
       # GET /records.json
       def index
@@ -18,6 +18,11 @@ module Admin
           format.json { render json: @weekSchedule }
         end
       end
+      
+      def get_namespace
+        return [:admin, :salon]
+      end
+      
     end
   end
 end

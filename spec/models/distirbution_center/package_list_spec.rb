@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe DistributionCenter::PackageList do
+describe Distribution::PackageList do
   pending "add some examples to (or delete) #{__FILE__}"
 end

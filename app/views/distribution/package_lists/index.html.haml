@@ -1,0 +1,12 @@
+%h3 Ведомости
+
+= render 'distribution/shared/tab_menu', point: @point, active:'package_lists'
+
+.tab-content
+  %table#package_lists.display{data: {source:distribution_point_package_lists_url(@point, format: :json)}}
+    %thead
+      %tr
+        %th Дата выдачи
+        %th Количество записей
+        %th Состояние
+    %tbody

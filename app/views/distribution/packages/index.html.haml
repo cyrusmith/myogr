@@ -1,0 +1,21 @@
+%h1 Listing distribution_packages
+
+%table
+  %tr
+    %th Order
+    %th State
+    %th
+    %th
+    %th
+
+  - @distribution_packages.each do |distribution_package|
+    %tr
+      %td= distribution_package.order
+      %td= distribution_package.state
+      %td= link_to 'Show', distribution_package
+      %td= link_to 'Edit', edit_distribution_package_path(distribution_package)
+      %td= link_to 'Destroy', distribution_package, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Package', new_distribution_package_path
