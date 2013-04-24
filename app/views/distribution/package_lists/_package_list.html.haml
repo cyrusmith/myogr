@@ -1,0 +1,3 @@
+= text_field_tag :package_limit, @package_list.package_limit
+= link_to t(@package_list.day_off? ? '.set_working_day' : '.set_day_off'), distribution_point_switch_day_off_path(@point, date: @package_list.date), remote:true
+

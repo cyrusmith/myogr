@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe "distribution_centers/index" do
   before(:each) do
-    assign(:distribution_centers, [
-      stub_model(DistributionCenter),
-      stub_model(DistributionCenter)
+    assign(:points, [
+      stub_model(Point),
+      stub_model(Point)
     ])
   end
 

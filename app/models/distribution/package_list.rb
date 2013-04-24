@@ -1,4 +1,4 @@
-module DistributionCenter
+module Distribution
   class PackageList < ::Schedule
     include Mongoid::Document
 
@@ -6,7 +6,7 @@ module DistributionCenter
     field :is_closed, type: Boolean, default: false
     field :closed_by, type: String
 
-    belongs_to :distribution_center
+    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists
 
     attr_accessible :package_limit, :is_closed, :closed_by
 

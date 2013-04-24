@@ -1,21 +1,19 @@
-module DistributionCenter
-  class DistributionCenter
+module Distribution
+  class Point
     include Mongoid::Document
     include Mongoid::Timestamps
     include Mongoid::Paranoia
-
-    store_in collection: 'distribution_centers'
 
     before_save :check_head_permission, :check_employees_permissions
 
     field :title, type: String
     field :head_user, type: Integer
     field :employees, type: Array
-    field :default_day_package_limit, type: Integer, default: Settings.day_package_limit
+    field :default_day_package_limit, type: Integer, default: Distribution::Settings.day_package_limit
     field :comment, type: String
 
     embeds_one :address
-    has_many :distribution_center_package_lists, :class_name => 'DistributionCenter::PackageList'
+    has_many :package_lists, class_name: 'Distribution::PackageList', inverse_of: :point
 
     attr_accessible :title, :head_name, :employees_names, :default_day_package_limit, :comment, :address, :address_fields
 

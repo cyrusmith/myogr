@@ -341,15 +341,16 @@ ru:
     create_success: "Пользователь был успешно создан. Мы отправили письмо для подтверждения вашей электропочты."
     update_success: "Данные пользователя успешно обновлены."
 
-  distribution_centers:
-    title: Название
-
-    head_user: "Начальник ЦР"
-    comment: "Примечание"
-    index:
-      enter: "Войти в панель управления"
-    employees: "Сотрудники"
-    default_package_limit: "Кол-во заказов к обработке в день"
+  distribution:
+    points:
+      index:
+        enter: "Войти в панель управления"
+      form:
+        title: Название
+        head_user: "Начальник ЦР"
+        comment: "Примечание"
+        employees: "Сотрудники"
+        default_package_limit: "Кол-во заказов к обработке в день"
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"

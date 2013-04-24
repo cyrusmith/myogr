@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe DistributionCentersController do
+describe PointsController do
   describe "routing" do
 
     it "routes to #index" do

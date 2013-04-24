@@ -8,7 +8,7 @@ class Address
   field :street, type: String
   field :location, type: Array
 
-  embedded_in :distribution_center_distribution_center
+  embedded_in :distribution_point
   attr_accessible :city, :district, :street
 
   def to_s

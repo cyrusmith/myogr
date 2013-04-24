@@ -29,7 +29,6 @@ Ogromno::Application.routes.draw do
   match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
 
   resources :schedules
-  resources :distribution_centers, as: 'distribution_center_distribution_centers'
   resources :addresses
 
   get 'contacts', :to => 'home#contacts'
@@ -46,7 +45,14 @@ Ogromno::Application.routes.draw do
   match 'banners/:id/activate' => 'banners#activate', :as => :activate_banner
   match 'banners/:id/deactivate' => 'banners#deactivate', :as => :deactivate_banner
 
-  get '/distribution_center/package_lists/days_off'=> 'distribution_center/package_lists#days_off'
+  namespace :distribution do
+    resources :points do
+      resources :package_lists
+      get 'package_lists/days_off'=> 'package_lists#days_off'
+      get 'package_list/switch_day_off' => 'package_lists#switch_day_off', :as => :switch_day_off
+      get 'package_list' => 'package_lists#show'
+    end
+  end
 
   namespace :admin do
     resources :promo_place

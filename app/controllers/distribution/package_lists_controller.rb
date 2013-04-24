@@ -1,10 +1,9 @@
-module DistributionCenter
+module Distribution
   class PackageListsController < ApplicationController
     # GET /package_lists
     # GET /package_lists.json
     def index
       @package_lists = PackageList.all
-
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @package_lists }
@@ -14,11 +13,22 @@ module DistributionCenter
     # GET /package_lists/1
     # GET /package_lists/1.json
     def show
-      @package_list = PackageList.find(params[:id])
-
+      @point = Point.find(params[:point_id])
+      @package_list = if params[:id].present?
+                        PackageList.find(params[:id])
+                      elsif params[:date].present?
+                        date = Date.parse params[:date]
+                        package_list = @point.package_lists.where(date: date).first
+                        if package_list.nil?
+                          @point.package_lists.create(date: date, package_limit: @point.default_day_package_limit)
+                        else
+                          package_list
+                        end
+                      end
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @package_list }
+        format.js
       end
     end
 
@@ -88,5 +98,10 @@ module DistributionCenter
       @package_lists = PackageList.where(:date.gte => start_date, :date.lte => start_date + num_of_months)
       render json: @package_lists.map(&:date)
     end
+
+    def switch_day_off
+      true
+    end
+
   end
 end
