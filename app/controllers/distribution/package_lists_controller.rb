@@ -118,7 +118,7 @@ module Distribution
       @point = Point.find(params[:point_id])
       date = Date.parse params[:date]
       @package_list = @point.package_lists.where(date: date).first
-      if params[:new_limit].present? and params[:new_limit].to_i > @package_list.packages.count
+      if params[:new_limit].present? and params[:new_limit].to_i >= @package_list.packages.count
         @package_list.update_attribute :package_limit, params[:new_limit]
       end
       render json: @package_list.package_limit
