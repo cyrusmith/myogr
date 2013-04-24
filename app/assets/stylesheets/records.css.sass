@@ -3,23 +3,37 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $green:#BAD98B
+$red:#E65C5C
 
 .chosen
   background-color: $green
+  
+input[type=radio].time
+  width: 0px
+  height: 0px
+  visibility: hidden
 
 input[type=radio] + label
   padding: 10px
+  cursor: pointer
 
 input[type=radio]:checked + label
   background-color: $green
   border-radius: 5px
+  
+input[type=radio]:disabled + label
+  background-color: $red
+  border-radius: 5px
+  
+table#avaliable_time
+  display: none
 
 ul#procedures > li
   cursor: pointer
   display: block
   float: none
 
-.unactive
+label.unactive
   color: gray
 
 //#avaliable_time

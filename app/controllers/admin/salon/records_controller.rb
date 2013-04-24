@@ -19,6 +19,10 @@ module Admin
         end
       end
       
+      def get_namespace
+        return [:admin, :salon]
+      end
+      
     end
   end
 end

@@ -20,4 +20,4 @@
         %td= procedure.name
         %td= record.contact_phone
         %td= link_to 'Отменить', admin_salon_record_path(record), method: :delete, data: { confirm: 'Вы уверены, что хотите отменить запись?' }
-        %td= link_to 'Редактировать', admin_salon_record_path(record), method: :get
+        %td= link_to 'Редактировать', edit_admin_salon_record_path(record), method: :get
