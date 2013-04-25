@@ -1,6 +1,6 @@
 module Admin
   module Salon
-    class EmployeesController < ApplicationController
+    class EmployeesController < AdminController
       # GET /admin/salon/employees
       # GET /admin/salon/employees.json
       def index

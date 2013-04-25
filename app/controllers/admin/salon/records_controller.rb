@@ -1,6 +1,7 @@
 module Admin
   module Salon
     class Admin::Salon::RecordsController < RecordsController
+      layout 'admin'
       # GET /records
       # GET /records.json
       def index
