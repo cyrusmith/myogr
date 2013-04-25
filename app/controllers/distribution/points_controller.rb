@@ -1,5 +1,5 @@
 module Distribution
-  class PointsController < ApplicationController
+  class PointsController < Admin::AdminController
 
     # GET /distribution_centers
     # GET /distribution_centers.json

@@ -1,0 +1,11 @@
+%ul.menu
+  %li= show_logo 'admin/ogromno-logo.png'
+  %li= link_to 'Центры раздач', distribution_points_path
+  %li
+    = link_to 'Салон красоты', '#'
+    %ul
+      %li= link_to 'Записи', admin_salon_records_path
+      %li= link_to 'Процедуры', admin_salon_procedures_path
+      %li= link_to 'Сотрудники', admin_salon_procedures_path
+  %li= link_to 'Пользователи', users_path
+

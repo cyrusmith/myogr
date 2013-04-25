@@ -1,12 +1,12 @@
 module ApplicationHelper
   # encoding: utf-8
-  LOGO_PATH = 'ogromno-logo.png'
+  LOGO_ICON = 'ogromno-logo.png'
 
-  def show_logo
+  def show_logo(logo_path=LOGO_ICON)
     if current_page? :root
-      return image_tag LOGO_PATH
+      return image_tag logo_path
     else
-      return link_to image_tag(LOGO_PATH), root_path
+      return link_to image_tag(logo_path), root_path
     end
   end
 

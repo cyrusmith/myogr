@@ -18,7 +18,6 @@
 //= require rails.validations
 //= require dataTables/jquery.dataTables
 
-
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {
         var list = jQuery([1]);
@@ -36,5 +35,22 @@ $(document).ready(function () {
         };
     }());
 //    $(':password').showPassword();
+    /*---------------------------------
+     MENU Dropdowns
+     -----------------------------------*/
+    $('ul.menu').each(function () {
+        // find menu items with children.
+        $(this).find('li').has('ul').addClass('has-menu')
+            .append('<span class="arrow">&nbsp;</span>');
+    });
+
+    $('ul.menu li').hover(function () {
+            $(this).find('ul:first').stop(true, true).fadeIn('fast');
+            $(this).addClass('hover');
+        },
+        function () {
+            $(this).find('ul').stop(true, true).fadeOut('slow');
+            $(this).removeClass('hover');
+        });
 });
 

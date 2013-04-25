@@ -1,5 +1,3 @@
-#class RecordsController < AuthorizedController
-#Временно убрал проверку на права
 class RecordsController < AuthorizedController
   # GET /records
   # GET /records.json

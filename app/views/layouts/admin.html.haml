@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+%html
+  %head
+    %title Гипермаркет "Огромно"
+    = stylesheet_link_tag "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+    %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
+  %body
+    = render 'shared/admin/header'
+    #wrapper
+      -if (flash[:success])
+        %div{:class => 'notice success'}
+          = flash[:success]
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+      -if (notice)
+        %div{:class => 'notice warning'}
+          = notice
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+      -if (alert)
+        %div{:class => 'notice error'}
+          = alert
+          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+      #admin-main-data
+        = yield
+      .clear

@@ -1,6 +1,6 @@
 module Admin
   module Salon
-    class ProceduresController < ApplicationController
+    class ProceduresController < AdminController
       # GET /admin/salon/procedures
       # GET /admin/salon/procedures.json
       def index
