@@ -5,7 +5,18 @@ module Distribution
     field :package_limit, type: Integer
     field :is_closed, type: Boolean, default: false
     field :closed_by, type: String
-    field :state, type:String, default: :forming
+
+    state_machine :state, :initial => :formed do
+      event :collect do
+        transition :formed => :collected
+      end
+      event :distribute do
+        transition :collected => :distributed
+      end
+      event :archive do
+        transition :distributed => :archived
+      end
+    end
 
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
 
