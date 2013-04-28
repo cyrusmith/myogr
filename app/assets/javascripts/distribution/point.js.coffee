@@ -65,7 +65,11 @@ jQuery ->
       if (window.days_off? and window.days_off != {})
         string_date = date.format('yyyy-mm-dd')
         if (window.days_off[string_date])
-          return [true, window.days_off[string_date], 'Выходной']
+          style = window.days_off[string_date]
+          tip = 'Выходной'
+          if style == 'limit-filled'
+            tip = 'Лимит записей исчерпан'
+          return [true, style, tip ]
         else
           return [true, '', '']
       else

@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.ui.datepicker-ru
-//= require_tree .
+//= require_directory .
 //= require rails.validations
 //= require dataTables/jquery.dataTables
 

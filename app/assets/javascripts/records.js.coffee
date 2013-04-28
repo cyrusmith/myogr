@@ -2,9 +2,21 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-$ ->
+jQuery ->
 #  sendTimeRequest()
-  initDatepicker()
+  $('#record_dates input:radio:last').datepicker(
+    showOn: 'focus'
+    dateFormat: 'dd-mm-yy'
+    defaultDate: 0
+    numberOfMonths: [1, 2]
+    maxDate: '+1m'
+    minDate: '+3d'
+    onClose: (date) ->
+      dateObject = $.datepicker.parseDate('dd-mm-yy', date)
+      $(this).next().text($.datepicker.formatDate('DD, d MM', dateObject))
+      sendTimeRequest()
+  )
+
   $('#record_dates input:checked').each ->
     $(this).removeAttr('checked')
 
