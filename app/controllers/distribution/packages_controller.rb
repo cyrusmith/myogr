@@ -1,4 +1,4 @@
-class Distribution::PackagesController < Admin::AdminController
+class Distribution::PackagesController < AuthorizedController
   # GET /distribution/packages
   # GET /distribution/packages.json
   def index

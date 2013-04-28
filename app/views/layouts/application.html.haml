@@ -29,8 +29,9 @@
         = yield
       #right-sidebar
         %ul
-          %li= link_to t("banner.my_banners"), banners_path
-          %li= link_to t("record.my_records"), records_path
+          %li= link_to t('banner.my_banners'), banners_path
+          %li= link_to t('record.my_records'), records_path
+          %li= link_to t('user.my_distribution_records'), distribution_packages_path
       .clear
 
     = render 'shared/footer'

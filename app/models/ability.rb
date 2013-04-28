@@ -12,10 +12,11 @@ class Ability
         cannot :destroy, Distribution::Point
         cannot :edit, Distribution::Point
       when user.has_role?(UserRole::SALON_ADMINISTRATOR)
-        can :manage, Record
+        can :manage, Admin::Record
       else
         can :create, Banner
         can :manage, Record
+        can :manage, Distribution::Package
         can :read, Distribution::Point
     end
     #if
