@@ -6,15 +6,15 @@ module Distribution
     field :is_closed, type: Boolean, default: false
     field :closed_by, type: String
 
-    state_machine :state, :initial => :formed do
-      event :collect do
-        transition :formed => :collected
+    state_machine :state, :initial => :forming do
+      event :to_collecting do
+        transition :forming => :collecting
       end
-      event :distribute do
-        transition :collected => :distributed
+      event :to_distribution do
+        transition :collecting => :distributing
       end
       event :archive do
-        transition :distributed => :archived
+        transition :distributing => :archived
       end
     end
 
