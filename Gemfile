@@ -22,6 +22,7 @@ gem 'mini_magick'
 gem 'carrierwave-mongoid'
 gem 'money-rails'
 gem 'kaminari'
+gem 'state_machine'
 
 group :development do
   gem 'better_errors'
@@ -53,7 +54,7 @@ gem 'jquery-ui-rails'
 gem 'client_side_validations'
 gem 'client_side_validations-mongoid'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
-
+#gem 'htmlkickstart'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
