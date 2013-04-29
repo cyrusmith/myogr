@@ -8,6 +8,7 @@ module Distribution
     before_save :set_order
 
     field :order, type: Integer
+    field :comment, type: String
     #TODO Добавить связь со сборщиком и дату сборки
 
     embeds_many :items, class_name: 'Distribution::PackageItem'

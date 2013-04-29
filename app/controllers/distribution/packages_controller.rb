@@ -40,6 +40,9 @@ module Distribution
     # GET /distribution/packages/1/edit
     def edit
       @distribution_package = Package.find(params[:id])
+      @distribution_points = Point.all
+      @found_items = @distribution_package.items
+      @marked_days = @distribution_points.first.get_marked_days.inject Hash.new, :merge unless @distribution_points.count == 0
     end
 
     # POST /distribution/packages

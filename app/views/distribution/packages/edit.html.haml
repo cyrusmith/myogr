@@ -1,7 +1,3 @@
-%h1 Editing distribution_package
+%h4 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.order}
 
 = render 'form'
-
-= link_to 'Show', @distribution_package
-\|
-= link_to 'Back', distribution_packages_path
