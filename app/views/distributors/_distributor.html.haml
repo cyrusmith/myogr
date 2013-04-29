@@ -1,5 +1,5 @@
 %tr
-  %td=@distributor.title
+  %td=t @distributor.title
   %td=User.find(@distributor.starter_id).display_name
   %td
     = hidden_field_tag 'tid[]', @distributor.id

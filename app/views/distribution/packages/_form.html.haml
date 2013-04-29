@@ -31,7 +31,7 @@
         %tbody
           - @found_items.each do |item|
             %tr{id:item.id}
-              %td= item.title
+              %td= t item.title
               %td= item.organizer.is_a?(Integer) ? User.find(item.organizer).display_name : item.organizer.display_name
               %td
                 = hidden_field_tag 'tid[]', item.id
