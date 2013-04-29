@@ -45,10 +45,14 @@ Ogromno::Application.routes.draw do
   resources :sessions
 
   resources :banners
+  resources :distributors, :except => [:destroy, :update]
+
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
   match 'new_banner/step2/:type' => 'banners#create_step2', :as => :create_banner_step2
   match 'banners/:id/activate' => 'banners#activate', :as => :activate_banner
   match 'banners/:id/deactivate' => 'banners#deactivate', :as => :deactivate_banner
+
+  get 'distributor/remove/:tid' => 'distributor#remove', :as => :remove_from_cabinet
 
   namespace :distribution do
     resources :points do

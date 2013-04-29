@@ -5,6 +5,8 @@ module Distribution
     include Mongoid::Paranoia
     include Tenacity
 
+    before_save :set_order
+
     field :order, type: Integer
     #TODO Добавить связь со сборщиком и дату сборки
 
@@ -15,7 +17,7 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes
+    attr_accessible :items_attributes, :order
 
     state_machine :state, :initial => :accepted do
       event :start_collecting do
@@ -39,6 +41,12 @@ module Distribution
       event :utilize do
         transition :collected => :utilized
       end
+    end
+
+    private
+
+    def set_order
+      self.order = self.package_list.get_order_num
     end
 
   end

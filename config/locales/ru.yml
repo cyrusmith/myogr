@@ -367,3 +367,12 @@ ru:
     new_password_success: "Новый пароль был успешно установлен"
   headers:
     ditribution_center_list: "Центры раздач"
+
+  status:
+    accepted: Принята
+    collecting: Собирается
+    colledcted: Собрана
+    in_distribution_point: В центре раздач
+    in_delivery: В отделе доставки
+    issued: Выдана
+    utilized: Утилизирована

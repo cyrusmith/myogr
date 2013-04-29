@@ -1,0 +1,6 @@
+%tr
+  %td=@distributor.title
+  %td=User.find(@distributor.starter_id).display_name
+  %td
+    = hidden_field_tag 'tid[]', @distributor.id
+    = link_to 'Удалить', '#', class: 'remove_custom_tid'

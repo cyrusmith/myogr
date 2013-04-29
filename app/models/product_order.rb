@@ -8,6 +8,8 @@ class ProductOrder < ForumModels
 
   scope :showing, where(show_buyer: 1)
   scope :for_user, ->(user_id){ where(member_id: user_id) }
+  scope :participate, where('`status` NOT IN (-2, 2)')
+  scope :not_participate, where(status: [-2, 2])
 
   def self.in_distribution_for_user(user_id)
     self.joins(:distributor)
