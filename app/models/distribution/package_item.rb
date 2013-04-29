@@ -9,5 +9,10 @@ module Distribution
 
     has_one :user
     embedded_in :package
+
+    validates_presence_of :item_id
+
+    attr_accessible :item_id
+
   end
 end

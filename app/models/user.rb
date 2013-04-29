@@ -10,8 +10,10 @@ class User < ForumModels
 
   has_one :credential, foreign_key: 'converge_id'
   has_one :extra, foreign_key: 'id'
+  t_has_many :packages, :class_name => 'Distribution::Package'
   t_has_many :banners
   t_has_many :records
+  t_has_many :distributors, foreign_key: 'starter_id'
   t_has_one :user_role
 
   attr_accessor :password

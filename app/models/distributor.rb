@@ -2,7 +2,16 @@ class Distributor < ForumModels
   include Tenacity
 
   self.table_name = 'ibf_topics'
-  default_scope where(razdacha: true)
+  self.primary_key = 'tid'
+  #default_scope where('color > 1')
 
-  has_one :user, foreign_key: 'starter_id'
+  has_one :organizer, class_name:'User', foreign_key: 'id'
+  has_many :product_orders, foreign_key: 'tid'
+
+  def self.in_distribution_for_user(user_id)
+    self.joins(:product_orders)
+        .where('color = 5')
+        .where(ProductOrder.table_name => {member_id: user_id, show_buyer: 1})
+        .where('ibf_zakup.status NOT IN (-2, 2)')
+  end
 end

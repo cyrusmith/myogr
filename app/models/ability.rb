@@ -16,6 +16,7 @@ class Ability
       else
         can :create, Banner
         can :manage, Record
+        #TODO добавить условие на управления только своими записями
         can :manage, Distribution::Package
         can :read, Distribution::Point
     end
