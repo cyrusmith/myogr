@@ -1,5 +1,6 @@
-%h1 New distribution_package
+%h4 Новая запись в центр раздач
+
+= javascript_tag do
+  window.days_off = #{raw @marked_days.to_json}
 
 = render 'form'
-
-= link_to 'Back', distribution_packages_path

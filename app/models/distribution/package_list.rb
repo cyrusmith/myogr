@@ -2,6 +2,8 @@ module Distribution
   class PackageList < ::Schedule
     include Mongoid::Document
 
+    before_save :check_package_limit
+
     field :package_limit, type: Integer
     field :is_closed, type: Boolean, default: false
     field :closed_by, type: String
@@ -26,6 +28,16 @@ module Distribution
 
     def closed?
       self.is_closed
+    end
+
+    def get_order_num
+      self.packages.count + 1
+    end
+
+    private
+
+    def check_package_limit
+      self.package_limit = self.point.default_day_package_limit if self.package_limit.nil?
     end
 
   end

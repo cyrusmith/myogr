@@ -44,12 +44,29 @@ jQuery ->
           return [true, '', '']
       else
         return [true, '', '']
-#    onSelect: (date) =>
-#      dc = $('#dc')[0].value
-#      url = '/distribution/points/' + dc + '/package_list/'
-#      $.ajax({
-#        url:url
-#        data: {date : date},
-#        dataType: "script"
-#      })
+    onSelect: (date) =>
+      $('#package_date').val(date)
   )
+
+  $('form').on 'click', '.remove_fields', (event) ->
+    $(this).prev('input[type=hidden]').val('1')
+    $(this).closest('fieldset').hide()
+    event.preventDefault()
+
+  $('form').on 'click', '.add_fields', (event) ->
+    time = new Date().getTime()
+    regexp = new RegExp($(this).data('id'), 'g')
+    $(this).before($(this).data('fields').replace(regexp, time))
+    event.preventDefault()
+
+  $('#add-custom-topic').click (event) ->
+    tid = $(this).prev('input').val().match(/\d{1,10}/gi)[0]
+    $.ajax({
+      url: $(this).attr('data-source') + '/' + tid
+      dataType: "script"
+    })
+    event.preventDefault()
+
+  $('.remove_custom_tid').click (event) ->
+    $(this).parents('tr').remove()
+    event.preventDefault()

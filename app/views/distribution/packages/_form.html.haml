@@ -6,11 +6,55 @@
         - @distribution_package.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :order
-    = f.text_field :order
-  .field
-    = f.label :state
-    = f.text_field :state
+  #step1
+    - if @distribution_points.count > 1
+      = select_tag 'distribution_point', options_from_collection_for_select(@distribution_points, :id, :title)
+    - else
+      - point = @distribution_points.first
+      = hidden_field_tag 'distribution_point', point.id
+      %p
+        = point.title
+        = "(#{point.address.to_s})"
+
+  #step2
+    #calendar
+      = hidden_field_tag :package_date, @distribution_package.package_list.nil? ? Russian::strftime((Date.today + 2.days), '%d-%m-%Y') : @distribution_package.package_list.date
+
+    %fieldset#found-items
+      %legend Заказы, найденные автоматически
+      %table.tight
+        %thead
+          %tr
+            %td Название закупки
+            %td Организатор
+            %td
+        %tbody
+          - @found_items.each do |item|
+            %tr{id:item.id}
+              %td= t item.title
+              %td= item.organizer.is_a?(Integer) ? User.find(item.organizer).display_name : item.organizer.display_name
+              %td
+                = hidden_field_tag 'tid[]', item.id
+                = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
+
+    %fieldset#custom-items
+      %legend Заказы, добавленные вами
+      %table.tight
+        %thead
+          %tr
+            %td Название закупки
+            %td Организатор
+            %td
+        %tbody
+
+      %p
+        = label_tag :topic_link, 'Ссылка или id темы:'
+        = text_field_tag :topic_link
+        = link_to 'Добавить', '#', id: 'add-custom-topic', data: {source: distributors_path}
+
+    .field
+      = f.label :comment, t('common.comment')
+      = f.text_area :comment
   .actions
-    = f.submit 'Save'
+    = link_to 'Отмена', distribution_packages_path
+    = f.submit 'Записаться'

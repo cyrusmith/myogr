@@ -1,21 +1,19 @@
-%h1 Listing distribution_packages
+%h3 Записи в центр раздач
 
 %table
   %tr
-    %th Order
-    %th State
-    %th
-    %th
-    %th
+    %th Дата записи
+    %th Статус
+    %th Закупки в сборке
 
-  - @distribution_packages.each do |distribution_package|
+  - @distribution_packages.each do |package|
     %tr
-      %td= distribution_package.order
-      %td= distribution_package.state
-      %td= link_to 'Show', distribution_package
-      %td= link_to 'Edit', edit_distribution_package_path(distribution_package)
-      %td= link_to 'Destroy', distribution_package, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %td= Russian::strftime package.package_list.date, '%d %B'
+      %td= t ('status.' + package.state)
+      %td= t (package.items.map(&:title).join('<br>'))
+      %td= link_to 'Редактировать', edit_distribution_package_path(package)
+      %td= link_to 'Отказаться от записи', package, :method => :delete, :data => { :confirm => 'Вы уверены, что хотите отменить запись?' }
 
 %br
 
-= link_to 'New Package', new_distribution_package_path
+= link_to 'Записаться', new_distribution_package_path

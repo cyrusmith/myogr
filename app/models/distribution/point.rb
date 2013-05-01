@@ -47,7 +47,6 @@ module Distribution
     accepts_nested_attributes_for :address,
                                   reject_if: lambda { |a| a[:title].blank? and a[:head_user].blank? }
 
-
     private
 
     def check_head_permission

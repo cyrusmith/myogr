@@ -5,9 +5,12 @@ module Distribution
     include Mongoid::Paranoia
     include Tenacity
 
+    before_save :set_order
+
     field :order, type: Integer
     field :collector_id, type: Integer
     field :collection_date, type: Date
+    field :comment, type: String
     #TODO Добавить связь со сборщиком и дату сборки
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
@@ -49,6 +52,12 @@ module Distribution
         item.delete if !collected_items.index(item.item_id)
       end
       self.finish_collecting if self.can_finish_collecting?
+    end
+
+    private
+
+    def set_order
+      self.order = self.package_list.get_order_num
     end
 
     def finish_collecting
