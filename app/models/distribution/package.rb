@@ -6,6 +6,8 @@ module Distribution
     include Tenacity
 
     field :order, type: Integer
+    field :collector_id, type: Integer
+    field :collection_date, type: Date
     #TODO Добавить связь со сборщиком и дату сборки
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
@@ -41,5 +43,17 @@ module Distribution
       end
     end
 
+    def collect!(collector, collected_items)
+      self.collector_id = collector
+      self.items.each do |item|
+        item.delete if !collected_items.index(item.item_id)
+      end
+      self.finish_collecting if self.can_finish_collecting?
+    end
+
+    def finish_collecting
+      self.collection_date = Date.today
+      super
+    end
   end
 end

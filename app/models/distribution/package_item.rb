@@ -7,7 +7,6 @@ module Distribution
     field :item_id, type: Integer
     field :title, type: String
 
-    has_one :user
     embedded_in :package
 
     validates_presence_of :item_id

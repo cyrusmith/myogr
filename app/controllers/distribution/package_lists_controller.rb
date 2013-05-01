@@ -93,6 +93,21 @@ module Distribution
       end
     end
 
+    #TODO Исправить на запрос.
+    def find_package
+      point = Point.find(params[:point_id])
+      @available_packages = [];
+      point.package_lists.each do |list|
+        formatted_date = list.date.strftime('%d.%m.%Y')
+        if formatted_date.scan(params[:term]).length > 0
+          Package.where(package_list: list).each do |package|
+            @available_packages += [{label: formatted_date + '/' + package.order.to_s, value: package.id}]
+          end
+        end
+      end
+      render json: @available_packages.sort
+    end
+
     def days_off
       @point = Point.find(params[:point_id])
       render json: @point.get_marked_days(params[:start_date])

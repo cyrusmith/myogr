@@ -1,0 +1,24 @@
+%h3 Сборка
+= form_tag
+= hidden_field_tag :package, '', data: {package_source: distribution_packages_path}
+= hidden_field_tag :collected_items
+.field
+  = label_tag :collector, 'Сборщик'
+  = text_field_tag :collector,'', data: {autocomplete_source: @employees_string}
+
+.field
+  = label_tag :package_number, 'Сборка'
+  = text_field_tag :package_number, '', data: {autocomplete_source: distribution_point_find_package_path}
+
+%fieldset#package_items
+  %legend Список магазинов
+  %table#package_items_list
+    %tr
+      %th Магазин
+      %th Готовность
+  .field
+    = label_tag :number, 'Номер'
+    = text_field_tag :number
+
+.actions
+  = submit_tag 'Заказ собран', disabled: 'disabled'

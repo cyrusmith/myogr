@@ -81,5 +81,20 @@ module Distribution
         format.json { head :no_content }
       end
     end
+
+    def collect_package
+      if (params[:package])
+        items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map {|deb| Integer(deb)}
+        package = Package.find(params[:package])
+        package.collect! Integer(params[:collector]), items
+        package.save
+      end
+      @point = Point.find(params[:point_id])
+      @employees_string = @point.employees.map {|id| id.to_s}.to_s
+      respond_to do |format|
+        format.html # show.html.erb
+        format.js
+      end
+    end
   end
 end
