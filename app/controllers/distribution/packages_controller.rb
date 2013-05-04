@@ -16,7 +16,7 @@ module Distribution
     # GET /distribution/packages/1.json
     def show
       @distribution_package = Package.find(params[:id])
-
+      @found_items = @distribution_package.items
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_package }
@@ -42,19 +42,20 @@ module Distribution
       @distribution_package = Package.find(params[:id])
       @distribution_points = Point.all
       @found_items = @distribution_package.items
-      @marked_days = @distribution_points.first.get_marked_days.inject Hash.new, :merge unless @distribution_points.count == 0
+      @marked_days = @distribution_package.package_list.point.get_marked_days.inject Hash.new, :merge
     end
 
     # POST /distribution/packages
     # POST /distribution/packages.json
     def create
+      @distribution_package.errors << t('distribution.package.errors.wrong_date_selected') unless params[:package_date]
       @distribution_point = Point.find(params[:distribution_point])
       @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
       @distribution_package = @package_list.packages.new(params[:distribution_package])
       @distribution_package.user_id = current_user.id
       if params[:tid]
         params[:tid].uniq.each do |tid|
-          @distribution_package.items.new(item_id: tid)
+          @distribution_package.items.new(create_item_hash(tid))
         end
       end
 
@@ -96,5 +97,13 @@ module Distribution
         format.json { head :no_content }
       end
     end
+
+    private
+
+    def create_item_hash(distributor_id)
+      distributor = Distributor.find distributor_id
+      { item_id: distributor_id, title: distributor.title, organizer: distributor.starter_id }
+    end
+
   end
 end

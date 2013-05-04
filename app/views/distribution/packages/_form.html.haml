@@ -1,20 +1,25 @@
+= javascript_tag do
+  window.days_off = #{raw @marked_days.to_json}
+
 = form_for @distribution_package do |f|
+  %h4
+    Запись в центр раздач на
+    - if @distribution_points.count > 1
+      -#TODO сейчас по-умолчанию проставляется первый адрес из списка нужно подставлять или самый популярный у этого юзера или анализировать координаты
+      = select_tag 'distribution_point', options_from_collection_for_select(@distribution_points, :id, :address, @distribution_package.package_list.nil? ? '' : @distribution_package.package_list.point.id), required: true
+    - else
+      - point = @distribution_points.first
+      = hidden_field_tag 'distribution_point', point.id
+      = point.address.to_s
+  - unless @distribution_package.order.nil?
+    %h5 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.order}
+
   - if @distribution_package.errors.any?
     #error_explanation
       %h2= "#{pluralize(@distribution_package.errors.count, "error")} prohibited this distribution_package from being saved:"
       %ul
         - @distribution_package.errors.full_messages.each do |msg|
           %li= msg
-
-  #step1
-    - if @distribution_points.count > 1
-      = select_tag 'distribution_point', options_from_collection_for_select(@distribution_points, :id, :title)
-    - else
-      - point = @distribution_points.first
-      = hidden_field_tag 'distribution_point', point.id
-      %p
-        = point.title
-        = "(#{point.address.to_s})"
 
   #step2
     #calendar
@@ -32,7 +37,7 @@
           - @found_items.each do |item|
             %tr{id:item.id}
               %td= t item.title
-              %td= item.organizer.is_a?(Integer) ? User.find(item.organizer).display_name : item.organizer.display_name
+              %td= User.find(item.organizer).display_name
               %td
                 = hidden_field_tag 'tid[]', item.id
                 = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
@@ -56,5 +61,4 @@
       = f.label :comment, t('common.comment')
       = f.text_area :comment
   .actions
-    = link_to 'Отмена', distribution_packages_path
-    = f.submit 'Записаться'
+    = f.submit

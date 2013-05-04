@@ -1,12 +1,20 @@
-%p#notice= notice
+%h4 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.order} на #{ Russian::strftime @distribution_package.package_list.date, '%e %B'} в ЦР на #{@distribution_package.package_list.point.address.to_s}
+%h5
+  %strong Статус записи: #{t('distribution.package.states.' + @distribution_package.state)}
+%p
+  %strong Закупки к выдаче:
+%table.tight
+  %thead
+    %tr
+      %td Название закупки
+      %td Организатор
+  %tbody
+    - @found_items.each do |item|
+      %tr
+        %td= t item.title
+        %td= User.find(item.organizer).display_name
 
 %p
-  %b Order:
-  = @distribution_package.order
-%p
-  %b State:
-  = @distribution_package.state
-
-= link_to 'Edit', edit_distribution_package_path(@distribution_package)
-\|
-= link_to 'Back', distribution_packages_path
+  %strong Примечание:
+  %br
+  = @distribution_package.comment

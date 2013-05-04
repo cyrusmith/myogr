@@ -178,11 +178,12 @@ ru:
         district: Район
         street: Улица, дом
     select:
-      prompt: ! 'Выберите: '
+      prompt: Выберите
     submit:
-      create: Создать %{model}
-      submit: Сохранить %{model}
-      update: Сохранить %{model}
+      distribution_package:
+        create: Записаться
+        submit: Записаться
+        update: Сохранить
   number:
     currency:
       format:
@@ -359,6 +360,18 @@ ru:
       package_list:
         set_day_off: Сделать выходным
         set_working_day: Сделать рабочим
+    package:
+      errors:
+        wrong_date_selected: Выберите корректную дату записи
+      states:
+        accepted: Принята
+        collecting: Собирается
+        collected: Собрана
+        in_distribution_point: В центре раздач
+        in_delivery: В отделе доставки
+        issued: Выдана
+        utilized: Утилизирована
+
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"
@@ -368,12 +381,3 @@ ru:
     new_password_success: "Новый пароль был успешно установлен"
   headers:
     ditribution_center_list: "Центры раздач"
-
-  status:
-    accepted: Принята
-    collecting: Собирается
-    colledcted: Собрана
-    in_distribution_point: В центре раздач
-    in_delivery: В отделе доставки
-    issued: Выдана
-    utilized: Утилизирована

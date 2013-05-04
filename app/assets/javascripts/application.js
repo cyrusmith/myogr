@@ -17,6 +17,7 @@
 //= require_directory .
 //= require rails.validations
 //= require dataTables/jquery.dataTables
+//= require date.format
 
 
 $(document).ready(function () {

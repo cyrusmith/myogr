@@ -9,7 +9,7 @@ module Distribution
     ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution_point, :in_delivery, :in_suitcase]
 
     scope :user_can_change, where(state: USER_CAN_CHANGE_STATES)
-    scope :active, where(state: ACTIVE_STATES)
+    scope :active, where(:state.in => ACTIVE_STATES)
 
     before_save :set_order
 
@@ -17,7 +17,6 @@ module Distribution
     field :collector_id, type: Integer
     field :collection_date, type: Date
     field :comment, type: String
-    #TODO Добавить связь со сборщиком и дату сборки
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
 
@@ -26,7 +25,7 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes
+    attr_accessible :items_attributes, :comment, :collector_id, :collection_date
 
     state_machine :state, :initial => :accepted do
       event :start_collecting do

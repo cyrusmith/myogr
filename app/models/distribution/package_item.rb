@@ -4,7 +4,7 @@ module Distribution
     include Mongoid::Timestamps
     include Mongoid::Paranoia
 
-    after_initialize :get_info
+    before_create :get_info
 
     field :item_id, type: Integer
     field :title, type: String
@@ -14,7 +14,7 @@ module Distribution
 
     validates_presence_of :item_id
 
-    attr_accessible :item_id
+    attr_accessible :item_id, :title, :organizer
 
     private
 

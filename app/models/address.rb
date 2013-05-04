@@ -12,7 +12,7 @@ class Address
   attr_accessible :city, :district, :street
 
   def to_s
-    "#{self.city}, #{self.street}"
+    "#{self.street}"
   end
 
   def set_location

@@ -47,7 +47,7 @@ Ogromno::Application.routes.draw do
   match 'banners/:id/activate' => 'banners#activate', :as => :activate_banner
   match 'banners/:id/deactivate' => 'banners#deactivate', :as => :deactivate_banner
 
-  get 'distributor/remove/:tid' => 'distributor#remove', :as => :remove_from_cabinet
+  get 'distributor/remove/:tid' => 'distributors#remove', :as => :remove_from_cabinet
 
   namespace :distribution do
     resources :packages

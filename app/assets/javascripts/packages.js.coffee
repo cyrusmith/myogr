@@ -2,17 +2,20 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-fetchDaysOff = (year, month) ->
+fetchDaysOff = (pointId) ->
   start_date = ''
-  url = document.URL + '/package_list/days_off'
+  arr = window.location.href.split("/")
+  full = arr[0] + "//" + arr[2]
+  url = full + '/distribution/points/' + pointId + '/package_list/days_off'
   if (year? && month?)
     start_date = new Date(year, month-1, 1)
 
   $.ajax(
     url:url
-    data:{start_date: start_date.format('dd-mm-yyyy')}
+    data:{start_date: dateFormat(start_date, 'dd-mm-yyyy')}
     async: false
     success: (data) =>
+      window.days_off = []
       $.each(data, (index, value) =>
         for key of value
           window.days_off[key] = value[key]
@@ -21,16 +24,19 @@ fetchDaysOff = (year, month) ->
   )
 
 jQuery ->
-  $('distribution_point').change(-> fetchDaysOff())
+  $('#distribution_point').change(->
+    pointId = $(this).val()
+    fetchDaysOff(pointId)
+    $('#package_date').val('')
+    $('#calendar').datepicker('refresh')
+  )
   $('#calendar').datepicker(
+    altField: "#package_date"
     inline:true
     dateFormat: 'dd-mm-yy'
-    defaultDate: 0
     numberOfMonths: [1, 3]
     maxDate: '+2m'
     minDate: '+2d'
-    onChangeMonthYear: (year, month) ->
-      fetchDaysOff(year, month)
     beforeShowDay: (date) =>
       if (window.days_off? and window.days_off != {})
         string_date = date.format('yyyy-mm-dd')
@@ -44,8 +50,6 @@ jQuery ->
           return [true, '', '']
       else
         return [true, '', '']
-    onSelect: (date) =>
-      $('#package_date').val(date)
   )
 
   $('form').on 'click', '.remove_fields', (event) ->

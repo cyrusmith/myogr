@@ -18,6 +18,16 @@ module ApplicationHelper
     end
   end
 
+  def get_package_path
+    active_package = current_user.packages.active.first
+    return new_distribution_package_path if active_package.nil?
+    if active_package.accepted?
+      edit_distribution_package_path(active_package)
+    else
+      distribution_package_path(active_package)
+    end
+  end
+
   def link_to_add_fields(name, f, association)
     new_object = f.object.send(association).klass.new
     id = new_object.object_id
