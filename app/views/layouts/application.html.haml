@@ -29,10 +29,12 @@
         = render 'shared/banners'
         = yield
       #right-sidebar
-        %ul
-          %li= link_to t('banner.my_banners'), banners_path
-          %li= link_to t('record.my_records'), records_path
-          %li= link_to t('user.my_distribution_records'), distribution_packages_path
+        - unless current_user.nil?
+          %ul
+            %li= link_to t('banner.my_banners'), banners_path
+            %li= link_to t('record.my_records'), records_path
+            - active_package = current_user.packages.active.first
+            %li= link_to t('user.my_distribution_records'), active_package.nil? ? new_distribution_package_path : distribution_packages_path(active_package)
       .clear
 
     = render 'shared/footer'

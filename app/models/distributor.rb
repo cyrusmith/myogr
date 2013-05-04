@@ -5,7 +5,6 @@ class Distributor < ForumModels
   self.primary_key = 'tid'
   #default_scope where('color > 1')
 
-  has_one :organizer, class_name:'User', foreign_key: 'id'
   has_many :product_orders, foreign_key: 'tid'
 
   def self.in_distribution_for_user(user_id)
@@ -13,5 +12,9 @@ class Distributor < ForumModels
         .where('color = 5')
         .where(ProductOrder.table_name => {member_id: user_id, show_buyer: 1})
         .where('ibf_zakup.status NOT IN (-2, 2)')
+  end
+
+  def organizer
+    self.starter_id
   end
 end

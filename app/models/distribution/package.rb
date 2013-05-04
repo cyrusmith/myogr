@@ -5,6 +5,12 @@ module Distribution
     include Mongoid::Paranoia
     include Tenacity
 
+    USER_CAN_CHANGE_STATES = [:accepted]
+    ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution_point, :in_delivery, :in_suitcase]
+
+    scope :user_can_change, where(state: USER_CAN_CHANGE_STATES)
+    scope :active, where(state: ACTIVE_STATES)
+
     before_save :set_order
 
     field :order, type: Integer
@@ -42,7 +48,7 @@ module Distribution
         transition :in_distribution_point => :issued, :in_delivery => :issued, :in_suitcase => :issued
       end
       event :utilize do
-        transition :collected => :utilized
+        transition :collected => :utilized, :in_distribution_point => :utilized
       end
     end
 
