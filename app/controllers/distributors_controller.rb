@@ -19,9 +19,6 @@ class DistributorsController < ApplicationController
                      nil
                    end
 
-
-    @user_orders = @distributor.product_orders.for_user(current_user.id).participate unless @distributor.nil?
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @distributor }
