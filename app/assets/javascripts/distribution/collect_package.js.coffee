@@ -4,14 +4,14 @@ isReadyForTimeRequest = () ->
   else
     $('input[type = "submit"]').attr('disabled', 'disabled')
 
-fill_packege_list = (package_id) ->
+fill_package_list = (package_id) ->
   $('#package_items_list tr[class="item_record"]').remove()
   $.ajax(
     $('#package').data('package-source') + '/' + package_id + '.json'
     async: true
     success: (data) =>
       $.each(data.items, (index, value) =>
-        $('#package_items_list').append('<tr class = "item_record"><td>' + value.title + '</td><td><img src = "/assets/cross.png" id = "' + value.item_id + '"/></td></tr>')
+        $('#package_items_list').append('<tr class = "item_record"><td>' + value.item_id + '</td><td>' + value.title + '</td><td><img src = "/assets/cross.png" id = "' + value.item_id + '"/></td></tr>')
       )
       false
   )
@@ -46,7 +46,7 @@ jQuery ->
       this.value = ui.item.label
       $('#package').val(ui.item.value)
       $('#collected_items').val('')
-      fill_packege_list(ui.item.value)
+      fill_package_list(ui.item.value)
       isReadyForTimeRequest()
       false
 

@@ -98,10 +98,9 @@ module Distribution
       point = Point.find(params[:point_id])
       @available_packages = []
       point.package_lists.each do |list|
-        formatted_date = list.date.strftime('%d.%m.%Y')
+        formatted_date = list.date.strftime('%d%m%Y')
         if formatted_date.scan(params[:term]).length > 0
-          # Зачем такой запрос? можно же list.packages
-          Package.where(package_list: list).each do |package|
+          list.packages.each do |package|
             @available_packages += [{label: formatted_date + '/' + package.order.to_s, value: package.id}]
           end
         end

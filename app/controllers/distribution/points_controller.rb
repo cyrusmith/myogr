@@ -90,7 +90,7 @@ module Distribution
         package.save
       end
       @point = Point.find(params[:point_id])
-      @employees_string = @point.employees.map {|id| id.to_s}.to_s
+      @employees_string = @point.employees.map{|id| id.to_s} <<  @point.head_user.to_s
       respond_to do |format|
         format.html # show.html.erb
         format.js

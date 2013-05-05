@@ -7,3 +7,7 @@
     %li.current= link_to 'Ведомости', 'javascript:void(0)'
   -else
     %li= link_to 'Ведомости', distribution_point_package_lists_path(point)
+  - if active == 'collect_package'
+    %li.current= link_to 'Сборка заказа', 'javascript:void(0)'
+  -else
+    %li= link_to 'Сборка заказа', distribution_point_collect_package_path(point)

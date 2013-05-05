@@ -12,9 +12,12 @@ module Distribution
       event :to_collecting do
         transition :forming => :collecting
       end
+      after_transition :to => :collecting, :do => :packages_state_to_collecting
+
       event :to_distribution do
         transition :collecting => :distributing
       end
+
       event :archive do
         transition :distributing => :archived
       end
@@ -38,6 +41,10 @@ module Distribution
 
     def check_package_limit
       self.package_limit = self.point.default_day_package_limit if self.package_limit.nil?
+    end
+
+    def packages_state_to_collecting
+      self.packages.each {|package| package.start_collecting}
     end
 
   end
