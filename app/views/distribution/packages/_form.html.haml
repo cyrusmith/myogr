@@ -39,8 +39,9 @@
               %td= t item.title
               %td= User.find(item.organizer).display_name
               %td
-                = hidden_field_tag 'tid[]', item.id
-                = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
+                - if (item.is_a? Distributor)
+                  = hidden_field_tag 'tid[]', item.id
+                  = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
 
     %fieldset#custom-items
       %legend Заказы, добавленные вами

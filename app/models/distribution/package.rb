@@ -11,7 +11,7 @@ module Distribution
     scope :user_can_change, where(state: USER_CAN_CHANGE_STATES)
     scope :active, where(:state.in => ACTIVE_STATES)
 
-    before_save :set_order
+    before_create :set_order
 
     field :order, type: Integer
     field :collector_id, type: Integer
@@ -30,6 +30,10 @@ module Distribution
     state_machine :state, :initial => :accepted do
       event :start_collecting do
         transition :accepted => :collecting
+      end
+
+      before_transition :on => :finish_collecting do
+        self.collection_date = Time.now
       end
       event :finish_collecting do
         transition :collecting => :collected
@@ -59,11 +63,11 @@ module Distribution
       self.finish_collecting if self.can_finish_collecting?
     end
 
-    private
-
     def set_order
       self.order = self.package_list.get_order_num
     end
+
+    private
 
     def finish_collecting
       self.collection_date = Date.today
