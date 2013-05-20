@@ -10,10 +10,14 @@ module Distribution
 
     scope :user_can_change, where(state: USER_CAN_CHANGE_STATES)
     scope :active, where(:state.in => ACTIVE_STATES)
+    scope :case, where(:distribution_method => :case)
+    scope :not_case, where(:distribution_method.nin => [:case])
+    #scope :not_case, where(:distribution_method.not => :case) Пока не работает - в следующем обновлении должно быть исправление
 
     before_create :set_order
 
     field :order, type: Integer
+    field :distribution_method, type: String, default: :at_point
     field :collector_id, type: Integer
     field :collection_date, type: Date
     field :comment, type: String
@@ -25,7 +29,7 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes, :comment, :collector_id, :collection_date
+    attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method
 
     state_machine :state, :initial => :accepted do
       event :start_collecting do
@@ -64,7 +68,7 @@ module Distribution
     end
 
     def set_order
-      self.order = self.package_list.get_order_num
+      self.order = self.package_list.get_order_num unless self.distribution_method == :case
     end
 
     private

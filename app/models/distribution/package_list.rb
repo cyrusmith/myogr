@@ -12,6 +12,7 @@ module Distribution
       event :to_collecting do
         transition :forming => :collecting
       end
+      #TODO тут кроется потенциальный глюк, так как транзакций в монго нет, а операции атомарны только в рамках одного объекта.
       after_transition :to => :collecting, :do => :packages_state_to_collecting
 
       event :to_distribution do
@@ -34,7 +35,7 @@ module Distribution
     end
 
     def get_order_num
-      self.packages.count + 1
+      self.packages.not_case.count + 1
     end
 
     private

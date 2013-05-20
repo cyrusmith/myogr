@@ -9,6 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
+ *= require normalize-rails
  *= require_tree .
  *= require jquery.ui.all
  *= require dataTables/src/demo_table_jui
@@ -16,12 +17,7 @@
 //dimensions
 $total_width: 1060px
 
-//colors
-$dark_grey: #353936
-$grey: #C4C4C4
-$light_grey: #F0F0F0
-$green: #94C943
-$logo_green: #B4D77F
+@import "colors"
 
 html
   height: 100%
@@ -212,20 +208,6 @@ ol ol ol ol li:before
 .tab-content
   background-color: #ffffff
 
-.day-off a, .day-off span
-  color: red !important
-  font-weight: bold !important
-  border: 1px solid red !important
-
-.limit-filled a
-  background-image: none !important
-  background-color: orange !important
-
-.limit-filled span
-  color: orangered !important
-  font-weight: bold !important
-  border: 1px solid orangered !important
-
 .closed a
   color: blue !important
 
@@ -248,5 +230,15 @@ ul.ui-autocomplete
     
     a.ui-state-hover, a.ui-state-active 
       background-color: #FFFCB2
-    
-  
+
+#calendar-loading
+  display: none
+  position: absolute
+  height: 217px
+  background: white
+  width: 783px
+  z-index: 2
+  opacity: 0.5
+  text-align: center
+  padding-top: 110px
+  border-radius: 4px

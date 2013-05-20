@@ -12,8 +12,11 @@ fetchDaysOff = (pointId) ->
 
   $.ajax(
     url:url
-    data:{start_date: dateFormat(start_date, 'dd-mm-yyyy')}
-    async: false
+    data:{start_date: dateFormat(start_date, 'isoDate')}
+    beforeSend: ->
+      $('#calendar').slideDown()
+      $('#calendar-loading').show()
+      $('#krutilka').trigger('show')
     success: (data) =>
       window.days_off = []
       $.each(data, (index, value) =>
@@ -21,36 +24,60 @@ fetchDaysOff = (pointId) ->
           window.days_off[key] = value[key]
           false
       )
+      $('#calendar').datepicker('refresh')
+    complete: ->
+      $('#package_date').val('')
+      $('#krutilka').trigger('hide')
+      $('#calendar-loading').hide()
   )
 
 jQuery ->
   $('#distribution_point').change(->
     pointId = $(this).val()
     fetchDaysOff(pointId)
-    $('#package_date').val('')
-    $('#calendar').datepicker('refresh')
   )
+  package_date = $('#package_date').val()
   $('#calendar').datepicker(
     altField: "#package_date"
     inline:true
-    dateFormat: 'dd-mm-yy'
+    dateFormat: 'yy-mm-dd'
     numberOfMonths: [1, 3]
+    defaultDate: package_date if package_date != ''
     maxDate: '+2m'
     minDate: '+2d'
     beforeShowDay: (date) =>
       if (window.days_off? and window.days_off != {})
-        string_date = date.format('yyyy-mm-dd')
+        string_date = date.format('isoDate')
         if (window.days_off[string_date])
           style = window.days_off[string_date]
-          tip = 'Выходной'
-          if style == 'limit-filled'
-            tip = 'Лимит записей исчерпан'
-          return [false, style, tip ]
+          switch style
+            when  'limit-filled'
+              tip = 'Лимит записей исчерпан'
+              return [false, style, tip]
+            when 'day-off'
+              tip = 'Выходной'
+              return [false, style, tip]
+            when 'closed'
+              tip = 'Запись закрыта'
+              return [false, style, tip]
+            when 'active-record'
+              tip = 'Вы записаны на этот день'
+              return [true, style, tip]
+            else
+              return [false, '', 'Неизвестная ошибка']
         else
           return [true, '', '']
       else
         return [true, '', '']
   )
+
+  $('#krutilka').krutilka
+    size: 64
+    petals: 15
+    petalWidth: 4
+    petalLength: 16
+    time: 2500
+  $('#krutilka').trigger('hide')
 
   $('form').on 'click', '.remove_fields', (event) ->
     $(this).prev('input[type=hidden]').val('1')
@@ -69,6 +96,7 @@ jQuery ->
       url: $(this).attr('data-source') + '/' + tid
       dataType: "script"
     })
+    $('#topic_link').val('')
     event.preventDefault()
 
   $('.remove_custom_tid').click (event) ->

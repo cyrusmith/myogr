@@ -44,8 +44,9 @@ module Distribution
       already_added_items = @distribution_package.items
       already_added_items_ids = already_added_items.map(&:item_id)
       items_from_db = Distributor.in_distribution_for_user current_user
-      @found_items = already_added_items + items_from_db.delete_if { |item| item.id.in? already_added_items_ids }
+      @found_items = already_added_items.current_pickup + items_from_db.delete_if { |item| item.id.in? already_added_items_ids }
       @marked_days = @distribution_package.package_list.point.get_marked_days.inject Hash.new, :merge
+      @marked_days[@distribution_package.package_list.date] = 'active-record'
     end
 
     # POST /distribution/packages
@@ -56,10 +57,20 @@ module Distribution
       @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
       @distribution_package = @package_list.packages.new(params[:distribution_package])
       @distribution_package.user_id = current_user.id
+      @distribution_package.distribution_method = :case
       if params[:tid]
-        params[:tid].uniq.each do |tid|
-          @distribution_package.items.new(create_item_hash(tid))
+        current_pickup_ids = params[:tid].uniq.map(&:to_i)
+        items_in_cabinet = Distributor.in_distribution_for_user current_user
+        items_in_cabinet.each do |item|
+          if item.tid.in?(current_pickup_ids)
+            is_next_time_pickup = false
+            current_pickup_ids.delete(item.tid)
+          else
+            is_next_time_pickup = true
+          end
+          @distribution_package.items.new(create_item_hash(item, is_next_time_pickup))
         end
+        current_pickup_ids.each{|id| @distribution_package.items.new(create_item_hash(id))}
       end
 
       respond_to do |format|
@@ -84,10 +95,19 @@ module Distribution
         @distribution_package.set_order
       end
       if params[:tid]
-        created_items_ids = @distribution_package.items.map(&:item_id)
+        existing_item_ids = {}
+        @distribution_package.items.map{|item| existing_item_ids[item.item_id] = item.is_next_time_pickup}
         params[:tid].uniq.each do |tid|
-          @distribution_package.items.new(create_item_hash(tid)) unless tid.in? created_items_ids
+          tid = tid.to_i
+          if tid.in? existing_item_ids.keys
+            #TODO оптимально не искать каждый раз объекты в таблице. Уменьшить количество запросов
+            @distribution_package.items.where(item_id:tid).each{|item| item.is_next_time_pickup = false} if existing_item_ids[tid]
+            existing_item_ids.delete(tid)
+          else
+            @distribution_package.items.new(create_item_hash(tid))
+          end
         end
+        existing_item_ids.keys.each {|id| @distribution_package.items.where(item_id: id).each{|item| item.is_next_time_pickup = true}}
       end
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
@@ -104,19 +124,19 @@ module Distribution
     # DELETE /distribution/packages/1.json
     def destroy
       @distribution_package = Package.find(params[:id])
-      @distribution_package.destroy
+      @distribution_package.delete
 
       respond_to do |format|
-        format.html { redirect_to distribution_packages_url }
+        format.html { redirect_to root_path, flash: {success: 'Ваша заявка была успешно аннулирована'} }
         format.json { head :no_content }
       end
     end
 
     private
 
-    def create_item_hash(distributor_id)
-      distributor = Distributor.find distributor_id
-      { item_id: distributor_id, title: distributor.title, organizer: distributor.starter_id }
+    def create_item_hash(distributor, is_next_time_pickup = false)
+      distributor = Distributor.find distributor unless distributor.is_a? Distributor
+      { item_id: distributor.tid, title: distributor.title, organizer: distributor.starter_id, is_next_time_pickup: is_next_time_pickup, state_on_creation: distributor.color}
     end
 
   end

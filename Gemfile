@@ -49,6 +49,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'normalize-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'client_side_validations'

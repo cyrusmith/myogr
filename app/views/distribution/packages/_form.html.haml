@@ -5,14 +5,16 @@
   %h4
     Запись в центр раздач на
     - if @distribution_points.count > 1
-      -#TODO сейчас по-умолчанию проставляется первый адрес из списка нужно подставлять или самый популярный у этого юзера или анализировать координаты
-      = select_tag 'distribution_point', options_from_collection_for_select(@distribution_points, :id, :address, @distribution_package.package_list.nil? ? '' : @distribution_package.package_list.point.id), required: true
+      - default_value = @distribution_package.package_list.nil? ? '' : @distribution_package.package_list.point.id
+      = select_tag 'distribution_point',
+          options_from_collection_for_select(@distribution_points, :id, :address, default_value),
+          required: true, prompt: default_value.blank? ? '(Выберите ЦР)' : false
     - else
       - point = @distribution_points.first
       = hidden_field_tag 'distribution_point', point.id
       = point.address.to_s
   - unless @distribution_package.order.nil?
-    %h5 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.order}
+    %h5 Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}. Номер записи - #{@distribution_package.order}.
 
   - if @distribution_package.errors.any?
     #error_explanation
@@ -21,45 +23,40 @@
         - @distribution_package.errors.full_messages.each do |msg|
           %li= msg
 
-  #step2
-    #calendar
-      = hidden_field_tag :package_date, @distribution_package.package_list.nil? ? Russian::strftime((Date.today + 2.days), '%d-%m-%Y') : @distribution_package.package_list.date
+  #calendar{style: ('display:none' if @distribution_package.new_record?)}
+    #calendar-loading
+      %span#krutilka
+    = hidden_field_tag :package_date, @distribution_package.package_list.nil? ? Russian::strftime((Date.today + 2.days), '%F') : @distribution_package.package_list.date.to_date.iso8601
 
-    %fieldset#found-items
-      %legend Заказы, найденные автоматически
-      %table.tight
-        %thead
-          %tr
-            %td Название закупки
-            %td Организатор
+  %fieldset#package-items
+    %legend Заказы
+    %table.tight
+      %thead
+        %tr
+          %td Название закупки
+          %td Организатор
+          %td
+      %tbody
+        - @found_items.each do |item|
+          %tr{id:item.id}
+            %td= t item.title
+            %td= User.find(item.organizer).display_name
             %td
-        %tbody
-          - @found_items.each do |item|
-            %tr{id:item.id}
-              %td= t item.title
-              %td= User.find(item.organizer).display_name
-              %td
-                - if (item.is_a? Distributor)
-                  = hidden_field_tag 'tid[]', item.id
-                  = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
+              - if (item.is_a? Distributor)
+                = link_to 'Уже получено(удалить из личного кабинета)', remove_from_cabinet_path(item.id), remote:true
+              = hidden_field_tag 'tid[]', item.is_a?(Distributor) ? item.id : item.item_id
+              = link_to 'Забрать в следующий раз', '#', class: 'remove_custom_tid'
 
-    %fieldset#custom-items
-      %legend Заказы, добавленные вами
-      %table.tight
-        %thead
-          %tr
-            %td Название закупки
-            %td Организатор
-            %td
-        %tbody
+    %p
+      = label_tag :topic_link, 'Ссылка или id темы:'
+      = text_field_tag :topic_link
+      = link_to 'Добавить', '#', id: 'add-custom-topic', data: {source: distributors_path}
 
-      %p
-        = label_tag :topic_link, 'Ссылка или id темы:'
-        = text_field_tag :topic_link
-        = link_to 'Добавить', '#', id: 'add-custom-topic', data: {source: distributors_path}
-
-    .field
-      = f.label :comment, t('common.comment')
-      = f.text_area :comment
+  .field
+    = f.label :comment, t('common.comment')
+    = f.text_area :comment, cols: 50, rows: 2
   .actions
     = f.submit
+    - unless @distribution_package.new_record?
+      или
+      = link_to 'Отменить запись', distribution_package_path(@distribution_package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'

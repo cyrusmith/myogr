@@ -1,9 +1,9 @@
 <%- if !(@distributor.nil?) %>
-$('#custom-items').find('tbody').append('<%= j render(@distributor) %>');
-$('.remove_custom_tid').click(function (event) {
-    $(this).parents('tr').remove();
-    event.preventDefault()
-});
+    $('#package-items').find('tbody').append('<%= j render(@distributor) %>');
+    $('.remove_custom_tid').click(function (event) {
+        $(this).parents('tr').remove();
+        event.preventDefault()
+    });
 <%- else %>
-alert('Закупка не найдена');
+    alert('Закупка не найдена');
 <%- end %>
