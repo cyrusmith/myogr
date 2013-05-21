@@ -363,6 +363,7 @@ ru:
     package:
       errors:
         wrong_date_selected: Выберите корректную дату записи
+        distribution_point_not_selected: "Выберите центр раздач для записи"
       states:
         accepted: Принята
         collecting: Собирается

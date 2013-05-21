@@ -27,10 +27,26 @@ fetchDaysOff = (pointId) ->
       )
       $('#calendar').datepicker('refresh')
     complete: ->
-      $('#package_date').val('')
+      $('#calendar').datepicker('setDate', getDefaultDate())
       $('#krutilka').trigger('hide')
       $('#calendar-loading').hide()
   )
+
+isValid = (date) ->
+  if (window.days_off? and window.days_off != {})
+    string_date = date.format('isoDate')
+    if (window.days_off[string_date] and window.days_off[string_date] != 'active-record')
+      return false
+  return true
+
+getDefaultDate = ->
+  package_date = $('#package_date').val()
+  date = new Date()
+  date = new Date (Date.parse(package_date)) if package_date != ''
+
+  while(!isValid(date))
+    date.setDate(date.getDate()+1)
+  return date
 
 jQuery ->
   $('#distribution_point').change(->
@@ -70,6 +86,8 @@ jQuery ->
           return [true, '', '']
       else
         return [true, '', '']
+    onSelect: (date) =>
+      $('input:submit').removeAttr('disabled').removeClass('disabled')
   )
 
   $('#krutilka').krutilka

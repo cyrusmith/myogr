@@ -29,7 +29,7 @@ module Distribution
       @distribution_package = Package.new
       @distribution_points = Point.all
       @found_items = Distributor.in_distribution_for_user current_user
-      @marked_days = @distribution_points.first.get_marked_days.inject Hash.new, :merge unless @distribution_points.count == 0
+      @marked_days = @distribution_points.first.get_marked_days.inject Hash.new, :merge if @distribution_points.count == 1
 
       respond_to do |format|
         format.html # new.html.erb
@@ -52,34 +52,49 @@ module Distribution
     # POST /distribution/packages
     # POST /distribution/packages.json
     def create
-      @distribution_package.errors << t('distribution.package.errors.wrong_date_selected') unless params[:package_date]
-      @distribution_point = Point.find(params[:distribution_point])
-      @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
-      @distribution_package = @package_list.packages.new(params[:distribution_package])
-      @distribution_package.user_id = current_user.id
-      @distribution_package.distribution_method = :case
-      if params[:tid]
-        current_pickup_ids = params[:tid].uniq.map(&:to_i)
-        items_in_cabinet = Distributor.in_distribution_for_user current_user
-        items_in_cabinet.each do |item|
-          if item.tid.in?(current_pickup_ids)
-            is_next_time_pickup = false
-            current_pickup_ids.delete(item.tid)
-          else
-            is_next_time_pickup = true
+      @distribution_package = Package.new(params[:distribution_package])
+      validate_form
+      if no_errors?
+        @distribution_point = Point.find(params[:distribution_point])
+        @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
+        @package_list.packages << @distribution_package
+        @distribution_package.user_id = current_user.id
+        @distribution_package.distribution_method = :case if current_user.case_on and DateTime.today < DateTime.parse(current_user.case_till)
+        if params[:tid] or !params[:tid].empty?
+          current_pickup_ids = params[:tid].uniq.map(&:to_i)
+          items_in_cabinet = Distributor.in_distribution_for_user current_user
+          items_in_cabinet.each do |item|
+            if item.tid.in?(current_pickup_ids)
+              is_next_time_pickup = false
+              current_pickup_ids.delete(item.tid)
+            else
+              is_next_time_pickup = true
+            end
+            @distribution_package.items.new(create_item_hash(item, is_next_time_pickup))
           end
-          @distribution_package.items.new(create_item_hash(item, is_next_time_pickup))
+          current_pickup_ids.each { |id| @distribution_package.items.new(create_item_hash(id)) }
         end
-        current_pickup_ids.each{|id| @distribution_package.items.new(create_item_hash(id))}
+      else
+        unless params[:distribution_point].blank?
+          @chosen_point = Point.find(params[:distribution_point])
+          @marked_days = @chosen_point.get_marked_days.inject Hash.new, :merge
+        end
+        chosen_package_list = @chosen_point.package_lists.find_or_create_by(date: params[:package_date]) unless @chosen_point.nil? and params[:package_date].blank?
+        chosen_package_list.packages << @distribution_package if chosen_package_list
+        @distribution_points = Point.all
+        @found_items = if params[:tid] or !params[:tid].empty?
+                         Distributor.where(tid: params[:tid].uniq)
+                       else
+                         Distributor.in_distribution_for_user current_user
+                       end
       end
-
       respond_to do |format|
-        if @distribution_package.save
+        if no_errors? and @distribution_package.save
           format.html { redirect_to root_path, flash: {success: "Вы успешно записались на #{Russian::strftime(@distribution_package.package_list.date, '%e %B')}"} }
           format.json { render json: @distribution_package, status: :created, location: @distribution_package }
         else
-          format.html { render action: "new" }
-          format.json { render json: @distribution_package.errors, status: :unprocessable_entity }
+          format.html { render action: 'new' }
+          format.json { render json: @distribution_package.errors << @error_hash, status: :unprocessable_entity }
         end
       end
     end
@@ -88,30 +103,31 @@ module Distribution
     # PUT /distribution/packages/1.json
     def update
       @distribution_package = Package.find(params[:id])
-      @distribution_package.errors << t('distribution.package.errors.wrong_date_selected') unless params[:package_date]
       distribution_point = Point.find(params[:distribution_point])
-      if !(@distribution_package.package_list.point == distribution_point) or !(@distribution_package.package_list.date.eql? params[:package_date])
-        @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
-        @distribution_package.set_order
+      unless params[:package_date].blank?
+        if !(@distribution_package.package_list.point == distribution_point) or !(@distribution_package.package_list.date.eql? params[:package_date])
+          @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
+          @distribution_package.set_order
+        end
       end
       if params[:tid]
         existing_item_ids = {}
-        @distribution_package.items.map{|item| existing_item_ids[item.item_id] = item.is_next_time_pickup}
+        @distribution_package.items.map { |item| existing_item_ids[item.item_id] = item.is_next_time_pickup }
         params[:tid].uniq.each do |tid|
           tid = tid.to_i
           if tid.in? existing_item_ids.keys
             #TODO оптимально не искать каждый раз объекты в таблице. Уменьшить количество запросов
-            @distribution_package.items.where(item_id:tid).each{|item| item.is_next_time_pickup = false} if existing_item_ids[tid]
+            @distribution_package.items.where(item_id: tid).each { |item| item.is_next_time_pickup = false } if existing_item_ids[tid]
             existing_item_ids.delete(tid)
           else
             @distribution_package.items.new(create_item_hash(tid))
           end
         end
-        existing_item_ids.keys.each {|id| @distribution_package.items.where(item_id: id).each{|item| item.is_next_time_pickup = true}}
+        existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.is_next_time_pickup = true } }
       end
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
-          format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.order} успешно обновлены" }}
+          format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.order} успешно обновлены"} }
           format.json { head :no_content }
         else
           format.html { render action: 'edit' }
@@ -136,7 +152,16 @@ module Distribution
 
     def create_item_hash(distributor, is_next_time_pickup = false)
       distributor = Distributor.find distributor unless distributor.is_a? Distributor
-      { item_id: distributor.tid, title: distributor.title, organizer: distributor.starter_id, is_next_time_pickup: is_next_time_pickup, state_on_creation: distributor.color}
+      {item_id: distributor.tid, title: distributor.title, organizer: distributor.starter_id, is_next_time_pickup: is_next_time_pickup, state_on_creation: distributor.color}
+    end
+
+    def validate_form
+      @distribution_package.errors[:base] = t('distribution.package.errors.wrong_date_selected') if params[:package_date].blank?
+      @distribution_package.errors[:base] = t('distribution.package.errors.distribution_point_not_selected') if params[:distribution_point].blank?
+    end
+
+    def no_errors?
+      @distribution_package.errors.size == 0
     end
 
   end
