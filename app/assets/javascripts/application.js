@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.ui.datepicker-ru
+//= require kickstart/kickstart
 //= require_directory .
 //= require rails.validations
 //= require dataTables/jquery.dataTables

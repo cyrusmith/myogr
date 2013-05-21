@@ -33,6 +33,7 @@
     ------------------------------------------------------- */
 [class^="icon-"],
 [class*=" icon-"] {
+  font-size: 14px;
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;

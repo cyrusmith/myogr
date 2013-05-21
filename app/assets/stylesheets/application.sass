@@ -8,8 +8,10 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_self
+ *= require _colors
  *= require normalize-rails
+ *= require_tree ../../../vendor/assets/stylesheets
+ *= require_self
  *= require_tree .
  *= require jquery.ui.all
  *= require dataTables/src/demo_table_jui
@@ -31,6 +33,19 @@ body
   padding: 0
   background: url("background.png") repeat
   min-width: $total_width + 4
+
+a
+  color: #666666
+  outline: 0
+
+a:active
+  color: #94C943
+
+a:hover
+  color: #000000
+
+.notice
+  font-size: 14px
 
 .wrapper
   width: $total_width
