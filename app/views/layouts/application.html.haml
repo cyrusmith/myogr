@@ -13,18 +13,22 @@
   %body
     = render 'shared/header'
     #wrapper
-      -if (flash[:success])
-        %div{:class => 'notice success'}
-          = flash[:success]
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
-      -if (notice)
-        %div{:class => 'notice warning'}
-          = notice
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
-      -if (alert)
-        %div{:class => 'notice error'}
-          = alert
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+      %div{style: 'position:absolute;bottom:0px;width:800px;'}
+        -if (flash[:success])
+          %div{:class => 'notice success'}
+            %i.icon-ok.icon-large
+            = flash[:success]
+            %a{:href => "#close", :class => "icon-remove"}
+        -if (notice)
+          %div{:class => 'notice warning'}
+            %i.icon-warning-sign.icon-large
+            = notice
+            %a{:href => "#close", :class => "icon-remove"}
+        -if (alert)
+          %div{:class => 'notice error'}
+            %i.icon-remove-sign.icon-large
+            = alert
+            %a{:href => "#close", :class => "icon-remove"}
       #main-data
         = render 'shared/banners'
         = yield
