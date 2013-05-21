@@ -110,7 +110,12 @@ module Distribution
 
     def days_off
       @point = Point.find(params[:point_id])
-      render json: @point.get_marked_days(params[:start_date])
+      marked_days = @point.get_marked_days(params[:start_date])
+      active_record =  current_user.packages.active.first
+      if !active_record.nil? and active_record.package_list.point == @point
+        marked_days << {active_record.package_list.date => 'active-record'}
+      end
+      render json:marked_days
     end
 
     def switch_day_off
