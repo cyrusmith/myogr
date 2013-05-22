@@ -1,5 +1,10 @@
 module ApplicationHelper
   # encoding: utf-8
+
+  def javascipt(*files)
+    content_for (:head) {javascript_include_tag(*files)}
+  end
+
   LOGO_ICON = 'ogromno-logo.png'
 
   def show_logo(logo_path=LOGO_ICON)

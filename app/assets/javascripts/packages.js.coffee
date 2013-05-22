@@ -50,7 +50,7 @@ getDefaultDate = ->
 
 jQuery ->
   point_element = $('#distribution_point')[0]
-  if (point_element.type == 'hidden')
+  if point_element? and point_element.type == 'hidden'
     $('#calendar').show()
   else
     $('#distribution_point').change(->
