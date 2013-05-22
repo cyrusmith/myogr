@@ -1,6 +1,6 @@
 module Distribution
   class PackageListsDatatable
-    delegate :params, :h, :link_to, :number_to_currency, :point, to: :@view
+    delegate :params, :h, :raw, :link_to, :number_to_currency, :point, to: :@view
 
     def initialize(view)
       @view = view

@@ -1,5 +1,5 @@
 module Distribution
-  class PackageListsController < ApplicationController
+  class PackageListsController < Admin::AdminController
     # GET /package_lists
     # GET /package_lists.json
     def index
@@ -105,7 +105,7 @@ module Distribution
           end
         end
       end
-      render json: @available_packages.sort
+      render json: @available_packages.sort_by{|a| a[:label]}
     end
 
     def days_off
