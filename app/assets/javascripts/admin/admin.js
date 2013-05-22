@@ -14,12 +14,13 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.ui.datepicker-ru
-//= require date.format
-//= require_directory ./../distribution
-//= require_directory .
-//= require_directory ./salon
+//= require jquery.moodular
+//= require krutilka
+//= require kickstart/kickstart
+//= require common
 //= require rails.validations
 //= require dataTables/jquery.dataTables
+//= require date.format
 
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {

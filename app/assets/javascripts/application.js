@@ -14,8 +14,10 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.ui.datepicker-ru
+//= require jquery.moodular
+//= require krutilka
 //= require kickstart/kickstart
-//= require_directory .
+//= require common
 //= require rails.validations
 //= require dataTables/jquery.dataTables
 //= require date.format

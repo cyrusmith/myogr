@@ -17,5 +17,5 @@
 
 %br
 
-= link_to 'Новый центр раздач', new_distribution_point_path
+= link_to 'Новый центр раздач', new_distribution_point_path if can? :create, @distribution_centers
 

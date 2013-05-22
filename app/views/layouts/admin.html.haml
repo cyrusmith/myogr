@@ -4,6 +4,7 @@
     %title Гипермаркет "Огромно"
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "admin/admin"
+    = yield(:head)
     = csrf_meta_tags
     %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
   %body

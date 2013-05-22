@@ -1,16 +1,18 @@
 # coding: utf-8
 module Distribution
-  class PackagesController < ApplicationController
-    # GET /distribution/packages
-    # GET /distribution/packages.json
-    def index
-      @distribution_packages = current_user.packages
+  class PackagesController < AuthorizedController
 
-      respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: @distribution_packages }
-      end
-    end
+    before_filter :check_active_package, only: [:new, :create]
+    before_filter :check_changeability, only: [:edit, :update]
+
+        def index
+          @distribution_packages = current_user.packages
+
+          respond_to do |format|
+            format.html # index.html.erb
+            format.json { render json: @distribution_packages }
+          end
+        end
 
     # GET /distribution/packages/1
     # GET /distribution/packages/1.json
@@ -59,7 +61,7 @@ module Distribution
         @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
         @package_list.packages << @distribution_package
         @distribution_package.user_id = current_user.id
-        @distribution_package.distribution_method = :case if current_user.case_on and DateTime.today < DateTime.parse(current_user.case_till)
+        @distribution_package.distribution_method = :case if current_user.case_on and Time.now < Time.at(current_user.case_till)
         if params[:tid] or !params[:tid].empty?
           current_pickup_ids = params[:tid].uniq.map(&:to_i)
           items_in_cabinet = Distributor.in_distribution_for_user current_user
@@ -105,9 +107,11 @@ module Distribution
       @distribution_package = Package.find(params[:id])
       distribution_point = Point.find(params[:distribution_point])
       unless params[:package_date].blank?
-        if !(@distribution_package.package_list.point == distribution_point) or !(@distribution_package.package_list.date.eql? params[:package_date])
+        is_point_changed = !@distribution_package.package_list.point == distribution_point
+        is_date_changed = !@distribution_package.package_list.date == params[:package_date]
+        if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
-          @distribution_package.set_order
+          @distribution_package.set_order unless @distribution_package.distribution_method == :case
         end
       end
       if params[:tid]
@@ -149,6 +153,16 @@ module Distribution
     end
 
     private
+
+    def check_active_package
+      user_active_packages = current_user.packages.active
+      redirect_to edit_distribution_package_path(user_active_packages.first) if user_active_packages.count > 0
+    end
+
+    def check_changeability
+      editing_package = Package.find(params[:id])
+      redirect_to distribution_package_path(editing_package) unless editing_package.changeable?
+    end
 
     def create_item_hash(distributor, is_next_time_pickup = false)
       distributor = Distributor.find distributor unless distributor.is_a? Distributor
