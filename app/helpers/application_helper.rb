@@ -21,7 +21,7 @@ module ApplicationHelper
   def get_package_path
     active_package = current_user.packages.active.first
     return new_distribution_package_path if active_package.nil?
-    if active_package.accepted?
+    if active_package.changeable?
       edit_distribution_package_path(active_package)
     else
       distribution_package_path(active_package)

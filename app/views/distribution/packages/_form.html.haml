@@ -14,8 +14,14 @@
       - point = @distribution_points.first
       = hidden_field_tag 'distribution_point', point.id
       = point.address.to_s
-  - unless @distribution_package.order.nil?
-    %h5 Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}. Номер записи - #{@distribution_package.order}.
+  - unless @distribution_package.new_record?
+    - method = @distribution_package.distribution_method
+    %h5
+      Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}.
+      - if method == :case
+        Вы пользуетесь услугой кейс, подходите без очереди.
+      - else
+        Номер записи - #{@distribution_package.order}.
 
   - if @distribution_package.errors.any?
     - errors = @distribution_package.errors
@@ -43,17 +49,17 @@
           %td
       %tbody
         - @found_items.each do |item|
-          %tr{id:item.id}
+          - item_id = item.is_a?(Distributor) ? item.id : item.item_id
+          %tr{id:item_id}
             %td= t item.title
             %td= User.find(item.organizer).display_name
             %td{nowrap: 'nowrap'}
-              = hidden_field_tag 'tid[]', item.is_a?(Distributor) ? item.id : item.item_id
+              = hidden_field_tag 'tid[]', item_id
               %ul.button-bar
-                - if item.is_a? Distributor
-                  %li
-                    = link_to remove_from_cabinet_path(item.id),
-                              title: 'Уже получено(удалить из личного кабинета)', remote:true do
-                      %i.icon-trash.icon-large
+                %li
+                  = link_to remove_from_cabinet_path(item_id),
+                            title: 'Уже получено(удалить из личного кабинета)', remote:true do
+                    %i.icon-trash.icon-large
                 %li
                   = link_to '#', class: 'remove_custom_tid', title: 'Отложить(забрать в следующий раз)' do
                     %i.icon-inbox.icon-large

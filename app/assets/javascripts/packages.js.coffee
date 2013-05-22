@@ -49,10 +49,15 @@ getDefaultDate = ->
   return date
 
 jQuery ->
-  $('#distribution_point').change(->
-    pointId = $(this).val()
-    fetchDaysOff(pointId)
-  )
+  point_element = $('#distribution_point')[0]
+  if (point_element.type == 'hidden')
+    $('#calendar').show()
+  else
+    $('#distribution_point').change(->
+      pointId = $(this).val()
+      fetchDaysOff(pointId)
+    )
+
   package_date = $('#package_date').val()
   $('#calendar').datepicker(
     altField: "#package_date"

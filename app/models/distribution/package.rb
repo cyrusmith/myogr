@@ -5,19 +5,17 @@ module Distribution
     include Mongoid::Paranoia
     include Tenacity
 
-    USER_CAN_CHANGE_STATES = [:accepted]
     ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution_point, :in_delivery, :in_suitcase]
 
-    scope :user_can_change, where(state: USER_CAN_CHANGE_STATES)
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])
     #scope :not_case, where(:distribution_method.not => :case) Пока не работает - в следующем обновлении должно быть исправление
 
-    before_create :set_order
+    after_create :set_order, unless: Proc.new { |package| package.distribution_method == :case}
 
     field :order, type: Integer
-    field :distribution_method, type: String, default: :at_point
+    field :distribution_method, type: Symbol, default: :at_point
     field :collector_id, type: Integer
     field :collection_date, type: Date
     field :comment, type: String
@@ -56,6 +54,18 @@ module Distribution
       end
       event :utilize do
         transition :collected => :utilized, :in_distribution_point => :utilized
+      end
+
+      state :accepted do
+        def changeable?
+          true
+        end
+      end
+
+      state all - :accepted do
+        def changeable?
+          false
+        end
       end
     end
 
