@@ -10,8 +10,8 @@
  *
  *= require _colors
  *= require normalize-rails
- *= require_tree ../../../vendor/assets/stylesheets
  *= require_self
+ *= require_tree ../../../vendor/assets/stylesheets
  *= require_tree .
  *= require jquery.ui.all
  *= require dataTables/src/demo_table_jui
@@ -19,7 +19,7 @@
 //dimensions
 $total_width: 1060px
 
-@import "colors"
+@import "_colors.css.sass"
 
 html
   height: 100%
@@ -35,14 +35,14 @@ body
   min-width: $total_width + 4
 
 a
-  color: #666666
+  color: #666666 !important
   outline: 0
 
 a:active
-  color: #94C943
+  color: #94C943 !important
 
 a:hover
-  color: #000000
+  color: #000000 !important
 
 .notice
   font-size: 14px
