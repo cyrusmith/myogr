@@ -12,7 +12,7 @@ module Distribution
     scope :not_case, where(:distribution_method.nin => [:case])
     #scope :not_case, where(:distribution_method.not => :case) Пока не работает - в следующем обновлении должно быть исправление
 
-    after_create :set_order, unless: Proc.new { |package| package.distribution_method == :case}
+    before_create :set_order, unless: Proc.new {|p| p.distribution_method == :case}
 
     field :order, type: Integer
     field :distribution_method, type: Symbol, default: :at_point
