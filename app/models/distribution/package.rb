@@ -30,6 +30,7 @@ module Distribution
     attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method
 
     state_machine :state, :initial => :accepted do
+      store_audit_trail
       event :start_collecting do
         transition :accepted => :collecting
       end
