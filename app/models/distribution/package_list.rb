@@ -1,6 +1,7 @@
 module Distribution
   class PackageList < ::Schedule
     include Mongoid::Document
+    paginates_per 50
 
     before_save :check_package_limit
 
@@ -9,6 +10,7 @@ module Distribution
     field :closed_by, type: String
 
     state_machine :state, :initial => :forming do
+      #store_audit_trail
       event :to_collecting do
         transition :forming => :collecting
       end

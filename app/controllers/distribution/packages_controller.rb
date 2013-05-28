@@ -55,13 +55,13 @@ module Distribution
     # POST /distribution/packages.json
     def create
       @distribution_package = Package.new(params[:distribution_package])
+      @distribution_package.user_id = current_user.id
+      @distribution_package.distribution_method = :case if current_user.case_on and Time.now < Time.at(current_user.case_till)
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
         @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
         @package_list.packages << @distribution_package
-        @distribution_package.user_id = current_user.id
-        @distribution_package.distribution_method = :case if current_user.case_on and Time.now < Time.at(current_user.case_till)
         if params[:tid] or !params[:tid].empty?
           current_pickup_ids = params[:tid].uniq.map(&:to_i)
           items_in_cabinet = Distributor.in_distribution_for_user current_user

@@ -23,6 +23,7 @@ gem 'carrierwave-mongoid'
 gem 'money-rails'
 gem 'kaminari'
 gem 'state_machine'
+gem 'state_machine-audit_trail'
 
 group :development do
   gem 'better_errors'

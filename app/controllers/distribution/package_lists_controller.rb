@@ -4,7 +4,7 @@ module Distribution
     # GET /package_lists.json
     def index
       @point = Point.find(params[:point_id])
-      @package_lists = @point.package_lists.all
+      @package_lists = @point.package_lists.where(is_day_off: false).order_by(:date.asc).page params[:page]
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: PackageListsDatatable.new(view_context) }
@@ -105,17 +105,17 @@ module Distribution
           end
         end
       end
-      render json: @available_packages.sort_by{|a| a[:label]}
+      render json: @available_packages.sort_by { |a| a[:label] }
     end
 
     def days_off
       @point = Point.find(params[:point_id])
       marked_days = @point.get_marked_days(params[:start_date])
-      active_record =  current_user.packages.active.first
+      active_record = current_user.packages.active.first
       if !active_record.nil? and active_record.package_list.point == @point
         marked_days << {active_record.package_list.date => 'active-record'}
       end
-      render json:marked_days
+      render json: marked_days
     end
 
     def switch_day_off
@@ -142,6 +142,19 @@ module Distribution
         @package_list.update_attribute :package_limit, params[:new_limit]
       end
       render json: @package_list.package_limit
+    end
+
+    def fire_event
+      @point = Point.find(params[:point_id])
+      @package_list = PackageList.find(params[:id])
+      event_name = params[:event].to_sym
+      if @package_list.state_events.include? event_name
+        respond_to do |format|
+          if @package_list.fire_state_event(event_name)
+            format.js { render 'new_state'}
+          end
+        end
+      end
     end
 
   end

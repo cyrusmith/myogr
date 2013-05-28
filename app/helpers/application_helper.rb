@@ -42,4 +42,9 @@ module ApplicationHelper
     link_to(name, '#', class: 'add_fields', data: {id: id, :fields => fields.gsub('\n', '')})
   end
 
+  def progressbar(max, value, options={})
+    percentage = max>0 ? ((value.to_f / max.to_f).round(2) * 100) : 0
+    render 'shared/progressbar', percentage: percentage, size:options[:size], hint:options[:hint], color: options[:color]
+  end
+
 end
