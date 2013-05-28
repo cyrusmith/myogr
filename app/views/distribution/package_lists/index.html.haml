@@ -4,10 +4,17 @@
 = render 'distribution/shared/tab_menu', point: @point, active:'package_lists'
 
 .tab-content
-  %table#package_lists.display{data: {source:distribution_point_package_lists_url(@point, format: :json)}}
+  %table#package_lists.sortable
     %thead
       %tr
         %th Дата выдачи
-        %th Количество записей
         %th Состояние
+        %th Заказано(%)
+        %th Собрано(%)
+        %th Выдано(%)
+        %th
     %tbody
+      - @package_lists.each do |list|
+        = render 'list_row', point: @point, list: list
+
+  = paginate @package_lists

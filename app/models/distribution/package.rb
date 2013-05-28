@@ -6,6 +6,7 @@ module Distribution
     include Tenacity
 
     ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution_point, :in_delivery, :in_suitcase]
+    FINAL_STATES = [:issued, :utilized]
 
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
@@ -30,7 +31,7 @@ module Distribution
     attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method
 
     state_machine :state, :initial => :accepted do
-      store_audit_trail
+      #store_audit_trail
       event :start_collecting do
         transition :accepted => :collecting
       end
@@ -69,6 +70,9 @@ module Distribution
         end
       end
     end
+
+    include StateMachineScopes
+    state_machine_scopes :state
 
     def collect!(collector, collected_items)
       self.collector_id = collector

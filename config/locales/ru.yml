@@ -360,6 +360,15 @@ ru:
       package_list:
         set_day_off: Сделать выходным
         set_working_day: Сделать рабочим
+      states:
+        forming: Формируется
+        collecting: Собирается
+        distributing: Раздается
+        archived: В архиве
+      events:
+        to_collecting: На сборку
+        to_distribution: На выдачу
+        archive: В архив
     package:
       errors:
         wrong_date_selected: Выберите корректную дату записи

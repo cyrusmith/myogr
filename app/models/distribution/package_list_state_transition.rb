@@ -4,7 +4,7 @@ module Distribution
     field :event, type: String
     field :from, type: String
     field :to, type: String
-    field :created_at, type: Timestamp
-    embedded_in :package_list
+    field :created_at, type: Time
+    #embedded_in :package_list
   end
 end
