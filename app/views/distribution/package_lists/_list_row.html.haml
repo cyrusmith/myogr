@@ -15,18 +15,18 @@
   %td
     = progressbar package_limit, number_of_packages,
                   size: 100,
-                  hint: "#{number_of_packages} из #{package_limit}"
+                  hint: t('common.hints.percentage_tooltip', part: number_of_packages, whole:package_limit)
   %td
     - number_of_collected_packages = list.packages.where(:state.nin => [:accepted, :collecting]).count
     = progressbar number_of_packages, number_of_collected_packages,
                   size: 100,
-                  hint: "#{number_of_packages} из #{number_of_collected_packages}",
+                  hint: t('common.hints.percentage_tooltip', part: number_of_collected_packages, whole:number_of_packages),
                   color: 'blue'
   %td
     - number_of_issued_packages = list.packages.where(:state.in => Distribution::Package::FINAL_STATES).count
     = progressbar number_of_packages, number_of_issued_packages,
                   size: 100,
-                  hint: "#{number_of_packages} из #{number_of_issued_packages}",
+                  hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:number_of_packages),
                   color: 'green'
   %td
     = select_tag 'action_on_' + list.id, options_for_select([['Распечатать ведомости', 1], ['Распечатать упаковочные листы', 2]])
