@@ -37,8 +37,8 @@ module Distribution
         transition :accepted => :collecting
       end
 
-      before_transition :on => :finish_collecting do
-        self.collection_date = Time.now
+      before_transition :on => :finish_collecting do |package|
+        package.collection_date = Time.now
       end
       event :finish_collecting do
         transition :collecting => :collected
@@ -80,6 +80,7 @@ module Distribution
       self.items.each do |item|
         item.delete if !collected_items.index(item.item_id)
       end
+      #TODO уточнить, нужно ли хранить дату последнего или всех обновлений заказов
       self.finish_collecting if self.can_finish_collecting?
     end
 
@@ -87,11 +88,5 @@ module Distribution
       self.order = self.package_list.get_order_num unless self.distribution_method == :case
     end
 
-    private
-
-    def finish_collecting
-      self.collection_date = Date.today
-      super
-    end
   end
 end
