@@ -22,6 +22,7 @@ module Distribution
     field :comment, type: String
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
+    embeds_many :package_state_transitions, class_name: 'Distribution::PackageStateTransition'
 
     t_belongs_to :user
     belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages
@@ -31,7 +32,7 @@ module Distribution
     attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method
 
     state_machine :state, :initial => :accepted do
-      #store_audit_trail
+      store_audit_trail
       event :start_collecting do
         transition :accepted => :collecting
       end
