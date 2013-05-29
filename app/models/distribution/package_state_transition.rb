@@ -5,6 +5,6 @@ module Distribution
     field :from, type: String
     field :to, type: String
     field :created_at, type: Time
-    #embedded_in :package
+    embedded_in :package
   end
 end

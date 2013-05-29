@@ -10,7 +10,7 @@ module Distribution
     field :closed_by, type: String
 
     state_machine :state, :initial => :forming do
-      #store_audit_trail
+      store_audit_trail
       event :to_collecting do
         transition :forming => :collecting
       end
@@ -29,6 +29,8 @@ module Distribution
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
 
     belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists
+
+    embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
     attr_accessible :package_limit, :is_closed, :closed_by
 

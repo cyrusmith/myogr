@@ -288,7 +288,9 @@ ru:
 
   common:
     image: Изображение
-    comment: "Примечание"
+    comment: Примечание
+    hints:
+      percentage_tooltip: "%{part} из %{whole}"
 
   actions:
     create: Создать
