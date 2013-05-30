@@ -11,6 +11,7 @@ module Distribution
     field :organizer, type: Integer
     #состояние закупки, в тот момент, когда пользователь отправил ее в сборку
     field :state_on_creation, type:String
+    field :is_user_participate, type: Boolean, default: true
     field :is_next_time_pickup, type: Boolean, default: false
 
     embedded_in :package

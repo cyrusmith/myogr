@@ -15,6 +15,10 @@ class Address
     "#{self.street}"
   end
 
+  def full_address
+    "#{self.city}, #{self.street}"
+  end
+
   def set_location
     #TODO запрос к яндексу по адресу и городу
   end

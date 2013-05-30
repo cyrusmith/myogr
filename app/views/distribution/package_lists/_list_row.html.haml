@@ -29,5 +29,5 @@
                   hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:number_of_packages),
                   color: 'green'
   %td
-    = select_tag 'action_on_' + list.id, options_for_select([['Распечатать ведомости', 1], ['Распечатать упаковочные листы', 2]])
+    = select_tag 'action_on_' + list.id, options_for_select([['(Выберите действие)', ''],['Распечатать ведомости', 1], ['Распечатать упаковочные листы', 2, {class: 'pdf', source: distribution_point_package_list_packing_lists_path(point, list)}]]), class: 'actions'
 

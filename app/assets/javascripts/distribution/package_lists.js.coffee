@@ -1,4 +1,11 @@
 jQuery ->
+  $('select.actions').change(->
+    option = $(this).children('[value='+this.value + ']')
+    if option.hasClass('pdf')
+      url = option.attr('source')
+      win=window.open(url, '_blank')
+      win.focus()
+  )
 #  $('#package_lists').dataTable
 #    sPaginationType: "full_numbers"
 #    bJQueryUI: true

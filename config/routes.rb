@@ -53,7 +53,9 @@ Ogromno::Application.routes.draw do
     resources :packages
     resources :points do
       match 'collect_package' => 'points#collect_package'
-      resources :package_lists
+      resources :package_lists do
+        get 'packing_lists' => 'package_lists#packing_lists'
+      end
       put 'package_list/:id/fire_event/:event'=> 'package_lists#fire_event', :as => :fire_package_list_event
       get 'package_list/days_off'=> 'package_lists#days_off'
       get 'package_list/switch_day_off' => 'package_lists#switch_day_off', :as => :switch_day_off

@@ -24,6 +24,7 @@ gem 'money-rails'
 gem 'kaminari'
 gem 'state_machine'
 gem 'state_machine-audit_trail'
+gem 'prawn', git: 'git://github.com/prawnpdf/prawn.git', submodules: true
 
 group :development do
   gem 'better_errors'
