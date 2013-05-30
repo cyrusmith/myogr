@@ -83,9 +83,9 @@ module Distribution
     end
 
     def collect_package
-      if (params[:package])
+      if (params[:package_list])
         items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map {|deb| Integer(deb)}
-        package = Package.find(params[:package])
+        package = Package.find(params[:package_list])
         package.collect! Integer(params[:collector]), items
         package.save
       end
