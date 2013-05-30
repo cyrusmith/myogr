@@ -10,11 +10,12 @@ module Distribution
     FINAL_STATES = [:issued, :utilized]
     METHODS = [:at_point, :case, :delivery]
     #TODO в настройки
-    METHODS_IDENTIFICATOR = { at_point: '', case: 'К', delivery: 'Д'}
+    METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])
+    scope :distribution_method, ->(method_name) { where(:distribution_method => method_name) }
     #scope :not_case, where(:distribution_method.not => :case) Пока не работает - в следующем обновлении должно быть исправление
 
     before_create :set_order

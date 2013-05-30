@@ -3,6 +3,7 @@ jQuery ->
     option = $(this).children('[value='+this.value + ']')
     if option.hasClass('pdf')
       url = option.attr('source')
+      $(this).val('')
       win=window.open(url, '_blank')
       win.focus()
   )

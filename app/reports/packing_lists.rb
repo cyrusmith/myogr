@@ -50,7 +50,7 @@ class PackingLists < Prawn::Document
     move_down 4
     text "Место получения: #{list.package_list.point.address.full_address}"
     move_down 4
-    text "Паспорт получателя: XXXX XXXXXX"
+    text "Паспорт получателя: #{list.document_number}"
     move_down 10
 
     data = []

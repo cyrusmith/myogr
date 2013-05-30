@@ -7,7 +7,7 @@ class PackingList < Prawn::Document
 
   def initialize(package, view)
     super()
-    @package_list = package
+    @package = package
     @view = view
     @@num = 1
   end
@@ -22,20 +22,20 @@ class PackingList < Prawn::Document
 
   def to_pdf
     initFonts
-    formatted_package_date = Russian::strftime @package_list.package_list.date, '%d.%m.%y'
-    text "Упаковочный лист №#{@package_list.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
+    formatted_package_date = Russian::strftime @package.package_list.date, '%d.%m.%y'
+    text "Упаковочный лист №#{@package.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
     move_down 18
-    text "Пользователь: #{@package_list.user.try(:display_name)}"
+    text "Пользователь: #{@package.user.try(:display_name)}"
     move_down 4
-    text "Дата получения: #{formatted_package_date} - #{Russian::strftime @package_list.package_list.date + 2.days, '%d.%m.%y'}"
+    text "Дата получения: #{formatted_package_date} - #{Russian::strftime @package.package_list.date + 2.days, '%d.%m.%y'}"
     move_down 4
-    text "Место получения: #{@package_list.package_list.point.address.full_address}"
+    text "Место получения: #{@package.package_list.point.address.full_address}"
     move_down 4
-    text "Паспорт получателя: XXXX XXXXXX"
+    text "Паспорт получателя: #{@package.document_number}"
     move_down 10
 
     data = []
-    @package_list.items.each do |item|
+    @package.items.each do |item|
       data << new_row(item.item_id, item.title, User.find(item.organizer).try(:display_name), '')
       @@num = @@num + 1
     end
