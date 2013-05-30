@@ -35,9 +35,11 @@ class PackingLists < Prawn::Document
   def pa(list)
     font_families.update(
         'Verdana' => {
-            :bold => '/home/nlopin/prawn-fonts/verdanab.ttf',
-            :italic => '/home/nlopin/prawn-fonts/verdanai.ttf',
-            :normal => '/home/nlopin/prawn-fonts/verdana.ttf'})
+            :bold => "#{Rails.root}/public/assets/font/verdanab.ttf",
+            :italic => "#{Rails.root}/public/assets/font/verdanai.ttf",
+            :normal => "#{Rails.root}/public/assets/font/verdana.ttf"
+        }
+    )
     font 'Verdana', :size => 10
     formatted_package_date = Russian::strftime list.package_list.date, '%d.%m.%y'
     text "Упаковочный лист №#{list.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
