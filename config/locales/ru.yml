@@ -371,6 +371,9 @@ ru:
         to_collecting: На сборку
         to_distribution: На выдачу
         archive: В архив
+    packages:
+      form:
+        document_number: Серия и номер документа получателя
     package:
       errors:
         wrong_date_selected: Выберите корректную дату записи

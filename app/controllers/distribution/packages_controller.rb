@@ -175,7 +175,7 @@ module Distribution
     end
 
     def no_errors?
-      @distribution_package.errors.size == 0
+      @distribution_package.errors.size == 0 && @distribution_package.valid?
     end
 
   end

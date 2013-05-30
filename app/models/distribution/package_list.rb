@@ -20,10 +20,12 @@ module Distribution
       event :to_distribution do
         transition :collecting => :distributing
       end
+      after_transition :to => :distributing, :do => :packages_state_to_distribution
 
       event :archive do
         transition :distributing => :archived
       end
+      after_transition :to => :archived, :do => :packages_state_to_issued
     end
 
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
@@ -38,8 +40,8 @@ module Distribution
       self.is_closed
     end
 
-    def get_order_num
-      self.packages.not_case.count + 1
+    def order_number_for(method)
+      self.packages.where(distribution_method: method).count + 1
     end
 
     private
@@ -50,6 +52,14 @@ module Distribution
 
     def packages_state_to_collecting
       self.packages.each {|package| package.start_collecting}
+    end
+
+    def packages_state_to_distribution
+      self.packages.each {|package| package.to_distribution}
+    end
+
+    def packages_state_to_issued
+      self.packages.each {|package| package.to_issued}
     end
 
   end
