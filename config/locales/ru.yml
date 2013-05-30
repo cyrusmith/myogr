@@ -371,6 +371,9 @@ ru:
         to_collecting: На сборку
         to_distribution: На выдачу
         archive: В архив
+    packages:
+      form:
+        document_number: Серия и номер документа получателя
     package:
       errors:
         wrong_date_selected: Выберите корректную дату записи
@@ -383,6 +386,10 @@ ru:
         in_delivery: В отделе доставки
         issued: Выдана
         utilized: Утилизирована
+      methods:
+        at_point: ЦР
+        case: Кейс
+        delivery: Доставка
 
   mail:
     subject:
@@ -395,4 +402,5 @@ ru:
     ditribution_center_list: "Центры раздач"
   pdf:
     filemnames:
-      package_lists: Упаковочные листы для ведомости %{date}.pdf
+      packing_lists: Упаковочные листы для ведомости %{date}.pdf
+      package_lists: Ведомости %{date}.pdf

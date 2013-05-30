@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Distribution
   class Package
     include Mongoid::Document
@@ -5,21 +6,27 @@ module Distribution
     include Mongoid::Paranoia
     include Tenacity
 
-    ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution_point, :in_delivery, :in_suitcase]
+    ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution]
     FINAL_STATES = [:issued, :utilized]
+    METHODS = [:at_point, :case, :delivery]
+    #TODO в настройки
+    METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])
+    scope :distribution_method, ->(method_name) { where(:distribution_method => method_name) }
     #scope :not_case, where(:distribution_method.not => :case) Пока не работает - в следующем обновлении должно быть исправление
 
-    before_create :set_order, unless: Proc.new {|p| p.distribution_method == :case}
+    before_create :set_order
 
-    field :order, type: Integer
+    field :order, type: String
     field :distribution_method, type: Symbol, default: :at_point
     field :collector_id, type: Integer
     field :collection_date, type: Date
     field :comment, type: String
+    field :document_number, type: String
+    validates :document_number, presence: true, length: {minimum: 5, maximum: 30}
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
     embeds_many :package_state_transitions, class_name: 'Distribution::PackageStateTransition'
@@ -29,7 +36,7 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method
+    attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method, :document_number
 
     state_machine :state, :initial => :accepted do
       store_audit_trail
@@ -44,19 +51,13 @@ module Distribution
         transition :collecting => :collected
       end
       event :to_distribution do
-        transition :collected => :in_distribution_point
-      end
-      event :to_delivery do
-        transition :collected => :in_delivery
-      end
-      event :to_suitcase do
-        transition :collected => :in_suitcase
+        transition :collected => :in_distribution
       end
       event :to_issued do
-        transition :in_distribution_point => :issued, :in_delivery => :issued, :in_suitcase => :issued
+        transition :in_distribution => :issued
       end
       event :utilize do
-        transition :collected => :utilized, :in_distribution_point => :utilized
+        transition :collected => :utilized, :in_distribution => :utilized
       end
 
       state :accepted do
@@ -85,7 +86,7 @@ module Distribution
     end
 
     def set_order
-      self.order = self.package_list.get_order_num unless self.distribution_method == :case
+      self.order = self.package_list.order_number_for(self.distribution_method).to_s + METHODS_IDENTIFICATOR[self.distribution_method]
     end
 
   end

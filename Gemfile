@@ -25,6 +25,8 @@ gem 'kaminari'
 gem 'state_machine'
 gem 'state_machine-audit_trail'
 gem 'prawn', git: 'git://github.com/prawnpdf/prawn.git', submodules: true
+gem 'prawnto_2', :require => 'prawnto'
+gem 'whenever', :require => false
 
 group :development do
   gem 'better_errors'
@@ -54,8 +56,8 @@ end
 gem 'normalize-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'client_side_validations'
-gem 'client_side_validations-mongoid'
+#gem 'client_side_validations'
+#gem 'client_side_validations-mongoid'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 
 # To use ActiveModel has_secure_password
