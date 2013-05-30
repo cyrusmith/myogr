@@ -26,6 +26,7 @@ gem 'state_machine'
 gem 'state_machine-audit_trail'
 gem 'prawn', git: 'git://github.com/prawnpdf/prawn.git', submodules: true
 gem 'prawnto_2', :require => 'prawnto'
+gem 'whenever', :require => false
 
 group :development do
   gem 'better_errors'
