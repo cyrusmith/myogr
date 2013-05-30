@@ -157,5 +157,13 @@ module Distribution
       end
     end
 
+    def packing_lists
+      @package_list = PackageList.find(params[:package_list_id])
+      output = PackingLists.new(@package_list, view_context).to_pdf
+      filename = t('pdf.filemnames.package_lists', date: Russian::strftime(@package_list.date, '%d.%m.%Y'))
+      send_data output, :filename => filename,
+                :type => :pdf, :disposition => 'inline'
+    end
+
   end
 end

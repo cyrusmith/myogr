@@ -393,3 +393,6 @@ ru:
     new_password_success: "Новый пароль был успешно установлен"
   headers:
     ditribution_center_list: "Центры раздач"
+  pdf:
+    filemnames:
+      package_lists: Упаковочные листы для ведомости %{date}.pdf

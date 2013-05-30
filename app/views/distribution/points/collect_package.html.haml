@@ -4,7 +4,7 @@
 
 .tab-content
   = form_tag
-  = hidden_field_tag :package, '', data: {package_source: distribution_packages_path}
+  = hidden_field_tag :package_list, '', data: {package_source: distribution_packages_path}
   = hidden_field_tag :collected_items
   .field
     = label_tag :collector, 'Сборщик'
