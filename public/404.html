@@ -1,26 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <style type="text/css">
-    body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
-    div.dialog {
-      width: 25em;
-      padding: 0 4em;
-      margin: 4em auto 0 auto;
-      border: 1px solid #ccc;
-      border-right-color: #999;
-      border-bottom-color: #999;
-    }
-    h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
-  </style>
+    <title>404 - страница не найдена</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+        body {
+            background-color: #fff;
+            color: #666;
+            text-align: center;
+            font-family: arial, sans-serif;
+        }
+
+        div.dialog {
+            width: 700px;
+            padding: 0 2em;
+            margin: 2em auto 0 auto;
+            border: 1px solid #ccc;
+            border-right-color: #999;
+            border-bottom-color: #999;
+        }
+
+        h1 {
+            font-size: 150px;
+            line-height: 1.5em;
+            position:relative;
+            top: 80px;
+        }
+
+        h2 {
+            font-size: 16px;
+            line-height: 1.5em;
+        }
+
+        #circle {
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+            background: #94C943;
+            -moz-border-radius: 250px;
+            -webkit-border-radius: 250px;
+            border-radius: 250px;
+        }
+
+        #inner-circle {
+            position: relative;
+            margin: 0 auto;
+            top: 50px;
+            width: 400px;
+            height: 400px;
+            background: #fff;
+            -moz-border-radius: 200px;
+            -webkit-border-radius: 200px;
+            border-radius: 200px;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <h1>The page you were looking for doesn't exist.</h1>
-    <p>You may have mistyped the address or the page may have moved.</p>
-  </div>
+<!-- This file lives in public/500.html -->
+<div id="circle">
+    <div id="inner-circle">
+        <h1>404</h1>
+    </div>
+</div>
+<div class="dialog">
+    <h2>Запрошенная вами страница не найдена.<br>Вероятно, она была удалена или перемещена. Вы можете вернуться на <a href="..">главную страницу</a>или написать <a href="mailto:admin@ogromno.com">администратору системы</a> </h2>
+</div>
 </body>
 </html>
