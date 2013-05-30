@@ -18,7 +18,6 @@
 //= require krutilka
 //= require kickstart/kickstart
 //= require common
-//= require rails.validations
 //= require dataTables/jquery.dataTables
 //= require date.format
 

@@ -19,10 +19,7 @@
     - method = @distribution_package.distribution_method
     %h5
       Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}.
-      - if method == :case
-        Вы пользуетесь услугой кейс, подходите без очереди.
-      - else
-        Номер записи - #{@distribution_package.order}.
+      Номер записи - #{@distribution_package.order}.
 
   - if @distribution_package.errors.any?
     - errors = @distribution_package.errors
@@ -70,6 +67,10 @@
       = text_field_tag :topic_link
       = link_to '#', id: 'add-custom-topic', title: 'Добавить', data: {source: distributors_path} do
         %i.icon-plus.icon-large
+
+  .field
+    = f.label :document_number, t('.document_number')
+    = f.text_field :document_number
 
   .field
     = f.label :comment, t('common.comment')
