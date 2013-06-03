@@ -19,4 +19,8 @@ module LayoutHelper
   def javascript(*args)
     content_for(:head) { javascript_include_tag(*args) }
   end
+
+  def help_icon(tooltip_text, position=:right)
+    tag 'span', class: "icon-question-sign icon-large tooltip-#{position}", title:tooltip_text
+  end
 end

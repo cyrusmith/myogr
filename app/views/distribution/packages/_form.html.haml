@@ -71,7 +71,7 @@
   .field
     = f.label :document_number, t('.document_number')
     = f.text_field :document_number
-
+    = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
   .field
     = f.label :comment, t('common.comment')
     = f.text_area :comment, cols: 50, rows: 2
