@@ -5,6 +5,7 @@ module Distribution
     include Mongoid::Paranoia
 
     before_save :check_head_permission, :check_employees_permissions
+    after_create :initialize_package_lists
 
     field :title, type: String
     field :head_user, type: Integer
@@ -13,7 +14,7 @@ module Distribution
     field :comment, type: String
 
     embeds_one :address
-    has_many :package_lists, class_name: 'Distribution::PackageList', inverse_of: :point
+    has_many :package_lists, class_name: 'Distribution::PackageList', inverse_of: :point, dependent: :destroy
 
     attr_accessible :title, :head_name, :employees_names, :default_day_package_limit, :comment, :address, :address_fields
 
@@ -58,6 +59,14 @@ module Distribution
       self.employees.each do |employee|
         user = User.find employee
         user.add_role UserRole::DISTRIB_CENTER_EMPLOYEE unless user.has_role?(UserRole::DISTRIB_CENTER_EMPLOYEE)
+      end
+    end
+
+    def initialize_package_lists
+      from = Date.today
+      till = from + 90.days
+      for current_date in from..till do
+        self.package_lists << PackageList.create(date: current_date, package_limit: self.default_day_package_limit)
       end
     end
 
