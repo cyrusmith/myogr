@@ -166,7 +166,14 @@ module Distribution
 
     def create_item_hash(distributor, is_next_time_pickup = false)
       distributor = Distributor.find distributor unless distributor.is_a? Distributor
-      {item_id: distributor.tid, title: distributor.title, organizer: distributor.starter_id, is_next_time_pickup: is_next_time_pickup, state_on_creation: distributor.color}
+      {
+       item_id: distributor.tid,
+       title: distributor.title,
+       organizer: distributor.starter_id,
+       is_next_time_pickup: is_next_time_pickup,
+       state_on_creation: distributor.color,
+       is_user_participate: distributor.user_participate?(current_user)
+      }
     end
 
     def validate_form
