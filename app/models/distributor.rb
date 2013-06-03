@@ -14,6 +14,10 @@ class Distributor < ForumModels
         .where('ibf_zakup.status NOT IN (-2, 2)')
   end
 
+  def user_participate? (user_id)
+    Distributor.joins(:product_orders).where(tid: self.tid, ProductOrder.table_name => {member_id: user_id}).count > 0
+  end
+
   def organizer
     self.starter_id
   end

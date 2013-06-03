@@ -21,7 +21,7 @@ module Distribution
 
     validates_presence_of :item_id
 
-    attr_accessible :item_id, :title, :organizer, :is_next_time_pickup, :state_on_creation
+    attr_accessible :item_id, :title, :organizer, :is_next_time_pickup, :state_on_creation, :is_user_participate
 
     def next_time_pickup?
       self.next_time_pickup
