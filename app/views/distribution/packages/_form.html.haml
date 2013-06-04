@@ -53,7 +53,7 @@
           - item_id = item.is_a?(Distributor) ? item.id : item.item_id
           %tr{id:item_id}
             %td= item_id
-            %td= t item.title
+            %td= raw item.title
             %td= User.find(item.organizer).display_name
             %td{nowrap: 'nowrap'}
               = hidden_field_tag 'tid[]', item_id

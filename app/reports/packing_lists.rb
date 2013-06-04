@@ -25,7 +25,7 @@ class PackingLists < Prawn::Document
   end
 
   def new_row(item_id, title, organizer_name, comment)
-    row = [@@num, item_id, h(title), h(organizer_name), comment]
+    row = [@@num, item_id, CGI.unescapeHTML(title), CGI.unescapeHTML(organizer_name), comment]
     make_table([row]) do |t|
       t.column_widths = Widths
       t.cells.style :borders => [:left, :right], :padding => 2
