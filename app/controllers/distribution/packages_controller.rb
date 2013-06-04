@@ -107,16 +107,16 @@ module Distribution
       @distribution_package = Package.find(params[:id])
       distribution_point = Point.find(params[:distribution_point])
       unless params[:package_date].blank?
-        is_point_changed = !@distribution_package.package_list.point == distribution_point
-        is_date_changed = !@distribution_package.package_list.date == params[:package_date]
+        is_point_changed = !(@distribution_package.package_list.point == distribution_point)
+        is_date_changed = !(@distribution_package.package_list.date == Date.parse(params[:package_date]))
         if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
           @distribution_package.set_order unless @distribution_package.distribution_method == :case
         end
       end
+      existing_item_ids = {}
+      @distribution_package.items.map { |item| existing_item_ids[item.item_id] = item.is_next_time_pickup }
       if params[:tid]
-        existing_item_ids = {}
-        @distribution_package.items.map { |item| existing_item_ids[item.item_id] = item.is_next_time_pickup }
         params[:tid].uniq.each do |tid|
           tid = tid.to_i
           if tid.in? existing_item_ids.keys
@@ -127,8 +127,8 @@ module Distribution
             @distribution_package.items.new(create_item_hash(tid))
           end
         end
-        existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.is_next_time_pickup = true } }
       end
+      existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.is_next_time_pickup = true } }
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
           format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.order} успешно обновлены"} }
