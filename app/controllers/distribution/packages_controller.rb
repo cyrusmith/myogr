@@ -62,7 +62,7 @@ module Distribution
         @distribution_point = Point.find(params[:distribution_point])
         @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
         @package_list.packages << @distribution_package
-        if params[:tid] or !params[:tid].empty?
+        if params[:tid] and !params[:tid].empty?
           current_pickup_ids = params[:tid].uniq.map(&:to_i)
           items_in_cabinet = Distributor.in_distribution_for_user current_user
           items_in_cabinet.each do |item|
@@ -84,7 +84,7 @@ module Distribution
         chosen_package_list = @chosen_point.package_lists.find_or_create_by(date: params[:package_date]) unless @chosen_point.nil? and params[:package_date].blank?
         chosen_package_list.packages << @distribution_package if chosen_package_list
         @distribution_points = Point.all
-        @found_items = if params[:tid] or !params[:tid].empty?
+        @found_items = if params[:tid] and !params[:tid].empty?
                          Distributor.where(tid: params[:tid].uniq)
                        else
                          Distributor.in_distribution_for_user current_user

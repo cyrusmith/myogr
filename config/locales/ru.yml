@@ -2,6 +2,10 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 ru:
+  mongoid:
+    attributes:
+      distribution/package:
+        document_number: Номер документа
   date:
     abbr_day_names:
     - Вс
