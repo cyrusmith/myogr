@@ -77,7 +77,7 @@ jQuery ->
               tip = 'Лимит записей исчерпан'
               return [false, style, tip]
             when 'day-off'
-              tip = 'Выходной'
+              tip = 'Нерабочий день'
               return [false, style, tip]
             when 'closed'
               tip = 'Запись закрыта'
