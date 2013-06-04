@@ -1,6 +1,7 @@
 %header
   #up-header
     %ul
+      %li= link_to 'Админка ЦР', distribution_points_path if can? :access, :distribution_point
       %li= link_to 'Помощь', 'http://ogromno.com/index.php?showforum=84'
       -#%li= link_to 'Как сделать заказ', '#'
       %li= link_to 'Доставка', 'http://ogromno.com/index.php?showtopic=36684'
