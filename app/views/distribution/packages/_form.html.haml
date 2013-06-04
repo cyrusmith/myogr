@@ -42,6 +42,7 @@
     %table.tight
       %thead
         %tr
+          %td Id закупки
           %td Название закупки
           %td Организатор
           %td
@@ -49,6 +50,7 @@
         - @found_items.each do |item|
           - item_id = item.is_a?(Distributor) ? item.id : item.item_id
           %tr{id:item_id}
+            %td= item_id
             %td= t item.title
             %td= User.find(item.organizer).display_name
             %td{nowrap: 'nowrap'}
