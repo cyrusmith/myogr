@@ -65,7 +65,7 @@ class PackageListReport < Prawn::Document
   end
 
   def new_row(order, user, doc_num, orders_num)
-    row = [order, h(user), h(doc_num), orders_num, '', '', '']
+    row = [order, CGI.unescapeHTML(user), CGI.unescapeHTML(doc_num), orders_num, '', '', '']
     make_table([row]) do |t|
       t.column_widths = Widths
       t.cells.style :borders => [:left, :right], :padding => 2

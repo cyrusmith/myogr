@@ -38,7 +38,9 @@
     = hidden_field_tag :package_date, @distribution_package.package_list.nil? ? '' : @distribution_package.package_list.date.to_date.iso8601
 
   %fieldset#package-items
-    %legend Заказы
+    %legend
+      Заказы
+      = help_icon 'Список заказов которые Вы хотите получить в Центре раздач. Если заказа нет в списке, Вы можете его добавить, указав ссылку на тему или id темы. Если в списке присутствуют заказы, которые Вы получили, можете его удалить.', :top
     %table.tight
       %thead
         %tr
@@ -51,7 +53,7 @@
           - item_id = item.is_a?(Distributor) ? item.id : item.item_id
           %tr{id:item_id}
             %td= item_id
-            %td= t item.title
+            %td= raw item.title
             %td= User.find(item.organizer).display_name
             %td{nowrap: 'nowrap'}
               = hidden_field_tag 'tid[]', item_id
