@@ -1,5 +1,6 @@
 - package_limit = list.package_limit
-- number_of_packages = list.packages.count
+- limitable_packages = list.packages.not_case.count
+- total_packages = list.packages.count
 %tr{id: list.id}
   %td=list.date
   %td
@@ -13,20 +14,20 @@
                 remote: true,
                 method: :put
   %td
-    = progressbar package_limit, number_of_packages,
+    = progressbar package_limit, limitable_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: number_of_packages, whole:package_limit)
+                  hint: t('common.hints.percentage_tooltip', part: total_packages, whole:package_limit)
   %td
     - number_of_collected_packages = list.packages.where(:state.nin => [:accepted, :collecting]).count
-    = progressbar number_of_packages, number_of_collected_packages,
+    = progressbar total_packages, number_of_collected_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: number_of_collected_packages, whole:number_of_packages),
+                  hint: t('common.hints.percentage_tooltip', part: number_of_collected_packages, whole:total_packages),
                   color: 'blue'
   %td
     - number_of_issued_packages = list.packages.where(:state.in => Distribution::Package::FINAL_STATES).count
-    = progressbar number_of_packages, number_of_issued_packages,
+    = progressbar total_packages, number_of_issued_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:number_of_packages),
+                  hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:total_packages),
                   color: 'green'
   %td
     = select_tag 'action_on_' + list.id, options_for_select([ ['(Выберите действие)', ''],
