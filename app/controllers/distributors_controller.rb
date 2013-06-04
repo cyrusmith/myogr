@@ -56,9 +56,6 @@ class DistributorsController < ApplicationController
   def remove
     @tid = params[:tid]
     distributor = Distributor.find @tid
-    distributor.product_orders.showing.for_user(current_user.id).each do |order|
-      order.show_buyer = 0
-      order.save!
-    end
+    distributor.remove_from_cabinet current_user.id
   end
 end
