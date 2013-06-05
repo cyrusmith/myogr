@@ -16,7 +16,7 @@ module Distribution
     scope :case, where(:distribution_method => :case)
     #scope :not_case, where(:distribution_method.nin => [:case])
     scope :distribution_method, ->(method_name) { where(:distribution_method => method_name) }
-    scope :not_case, where(:distribution_method.not => :case)
+    #scope :not_case, where(:distribution_method.not => :case)
 
     before_create :set_order
 
