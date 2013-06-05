@@ -364,8 +364,8 @@ ru:
       form:
         package_limit: Лимит
       package_list:
-        set_day_off: Сделать выходным
-        set_working_day: Сделать рабочим
+        set_day_off: Пометить как нерабочий
+        set_working_day: Пометить как рабочий
       states:
         forming: Формируется
         collecting: Собирается
