@@ -19,7 +19,7 @@ class PackageListReport < Prawn::Document
             :normal => "#{Rails.root}/public/assets/font/verdana.ttf"
         }
     )
-    font 'Verdana', :size => 8
+    font 'Verdana', :size => 10
     Distribution::Package::METHODS.each do |method_name|
       new_list(@package_list.packages.distribution_method(method_name), method_name)
     end
