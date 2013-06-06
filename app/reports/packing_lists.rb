@@ -13,8 +13,10 @@ class PackingLists < Prawn::Document
   end
 
   def to_pdf
-    @package_list.packages.sort{|a,b| a.order.to_i <=> b.order.to_i}.each do |package|
-      pa package
+    Distribution::Package::METHODS.each do |method_name|
+      @package_list.packages.distribution_method(method_name).sort { |a, b| a.order.to_i <=> b.order.to_i }.each do |package|
+        pa package
+      end
     end
     creation_date = Time.zone.now.strftime("Лист сгенерирован %e %b %Y %H:%M")
     go_to_page(page_count)
@@ -25,10 +27,10 @@ class PackingLists < Prawn::Document
   end
 
   def new_row(num, item_id, title, organizer_name, comment)
-    row = [num, item_id, CGI.unescapeHTML(title), CGI.unescapeHTML(organizer_name), comment]
+    row = [num, item_id, CGI.unescapeHTML(title)[0..49], CGI.unescapeHTML(organizer_name), comment]
     make_table([row]) do |t|
       t.column_widths = Widths
-      t.cells.style :borders => [:left, :right], :padding => 2
+      t.cells.style :borders => [:left, :right], :padding => 2, :size => 9
     end
   end
 
@@ -42,17 +44,27 @@ class PackingLists < Prawn::Document
         }
     )
     font 'Verdana', :size => 10
+
     formatted_package_date = Russian::strftime list.package_list.date, '%d.%m.%y'
-    text "Упаковочный лист №#{list.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
-    move_down 18
-    text "Пользователь: #{list.user.try(:display_name)}"
-    move_down 4
-    text "Дата получения: #{formatted_package_date} - #{Russian::strftime list.package_list.date + 2.days, '%d.%m.%y'}"
-    move_down 4
-    text "Место получения: #{list.package_list.point.address.full_address}"
-    move_down 4
-    text "Паспорт получателя: #{list.document_number}"
-    move_down 10
+    table([[list.order.to_s, "Упаковочный лист №#{list.order} / #{formatted_package_date}"]], :column_widths => [80, 460]) do
+      columns(0).size = 18
+      columns(0).borders = [:top, :right, :left, :bottom]
+      columns(1).size = 14
+      columns(1).borders = []
+      cells.font_style = :bold
+      cells.align = :center
+      cells.valign = :center
+    end
+    #text , :size => 14, :style => :bold, :align => :center
+    data = [
+        ["Пользователь: #{list.user.try(:display_name)}", "Место получения: #{list.package_list.point.address.full_address}"],
+        ["Паспорт получателя: #{list.document_number}", "Дата получения: #{formatted_package_date} - #{Russian::strftime list.package_list.date + 2.days, '%d.%m.%y'}",]
+
+    ]
+    table(data, :column_widths => [270, 270]) do
+      cells.borders = []
+      cells.padding = 3
+    end
 
     data = []
     list.items.each do |item|
@@ -61,20 +73,23 @@ class PackingLists < Prawn::Document
     end
 
     head = make_table([Headers], :column_widths => Widths)
-    table([[head], *(data.map{|d| [d]})], :header => true, :row_colors => %w[ffffff]) do
+    table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
       row(0).style :background_color => 'cccccc'
     end
-    move_down 10
-    data = [['Подпись сборщика', '', '', 'Подпись получателя','']]
-    table(data, :column_widths => [110, 100, 40, 120, 100 ]) do
+    move_down 8
+    data = [['Подпись сборщика', '', '', 'Подпись получателя', '']]
+    table(data, :column_widths => [110, 100, 40, 120, 100]) do
       cells.borders = []
-      row(0).columns([1,4]).borders = [:bottom]
+      row(0).columns([1, 4]).borders = [:bottom]
     end
-    table([['Дата сборки', '', '', 'Дата получения', '']], :column_widths => [80, 100, 70, 100, 100 ]) do
+    table([['Дата сборки', '', '', 'Дата получения', '']], :column_widths => [80, 100, 70, 100, 100]) do
       cells.borders = []
-      row(0).columns([1,4]).borders = [:bottom]
+      row(0).columns([1, 4]).borders = [:bottom]
     end
-    move_down 10
+    move_down 20
+    dash 10
+    horizontal_rule
+    move_down 20
   end
 
 end
