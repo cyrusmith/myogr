@@ -13,7 +13,7 @@ class PackingLists < Prawn::Document
   end
 
   def to_pdf
-    @package_list.packages.sort{|a,b| a.order.to_i <=> b.order.to_i}.each do |package|
+    @package_list.packages.asc(:order).each do |package|
       pa package
     end
     creation_date = Time.zone.now.strftime("Лист сгенерирован %e %b %Y %H:%M")
