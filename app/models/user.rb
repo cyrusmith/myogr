@@ -98,4 +98,8 @@ class User < ForumModels
     self.joined = Time.now.to_i
   end
 
+  def case?
+    self.case_on and Time.now < Time.at(self.case_till)
+  end
+
 end

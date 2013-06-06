@@ -31,7 +31,7 @@ module Distribution
       @distribution_package = Package.new
       @distribution_points = Point.all
       @found_items = Distributor.in_distribution_for_user current_user
-      @marked_days = @distribution_points.first.get_marked_days.inject Hash.new, :merge if @distribution_points.count == 1
+      @marked_days = @distribution_points.first.get_marked_days(current_user.case?).inject Hash.new, :merge if @distribution_points.count == 1
 
       respond_to do |format|
         format.html # new.html.erb
@@ -47,7 +47,7 @@ module Distribution
       already_added_items_ids = already_added_items.map(&:item_id)
       items_from_db = Distributor.in_distribution_for_user current_user
       @found_items = already_added_items.current_pickup + items_from_db.delete_if { |item| item.id.in? already_added_items_ids }
-      @marked_days = @distribution_package.package_list.point.get_marked_days.inject Hash.new, :merge
+      @marked_days = @distribution_package.package_list.point.get_marked_days(current_user.case?).inject Hash.new, :merge
       @marked_days[@distribution_package.package_list.date] = 'active-record'
     end
 
@@ -56,7 +56,7 @@ module Distribution
     def create
       @distribution_package = Package.new(params[:distribution_package])
       @distribution_package.user_id = current_user.id
-      @distribution_package.distribution_method = :case if current_user.case_on and Time.now < Time.at(current_user.case_till)
+      @distribution_package.distribution_method = :case if current_user.case?
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
@@ -79,7 +79,7 @@ module Distribution
       else
         unless params[:distribution_point].blank?
           @chosen_point = Point.find(params[:distribution_point])
-          @marked_days = @chosen_point.get_marked_days.inject Hash.new, :merge
+          @marked_days = @chosen_point.get_marked_days(current_user.case?).inject Hash.new, :merge
         end
         chosen_package_list = @chosen_point.package_lists.find_or_create_by(date: params[:package_date]) unless @chosen_point.nil? and params[:package_date].blank?
         chosen_package_list.packages << @distribution_package if chosen_package_list
