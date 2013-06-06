@@ -35,12 +35,13 @@ module Distribution
       self.employees = array.map { |name| User.find_by_members_display_name(name.strip).try(:id) }.delete_if { |x| x.nil? }
     end
 
-    def get_marked_days(start_date=nil, num_months=3.month)
+    def get_marked_days(exclude_filled_dates = false, start_date=nil, num_months=3.month)
       start_date = start_date || Date.today.beginning_of_month
       start_date = Date.parse start_date unless start_date.is_a? Date
       range_package_lists = self.package_lists.where(:date.gte => start_date, :date.lte => start_date + num_months)
       days_off = range_package_lists.select { |list| list.is_day_off }.map { |list| {list.date => 'day-off'} }
-      filled_package_lists = range_package_lists.select { |list| list.packages.not_case.count >= list.package_limit }.map{|list| {list.date => 'limit-filled'}}
+      filled_package_lists = []
+      filled_package_lists = range_package_lists.select { |list| list.packages.not_case.count >= list.package_limit }.map { |list| {list.date => 'limit-filled'} } unless exclude_filled_dates
       closed_package_lists = range_package_lists.select { |list| list.closed? }.map { |list| {list.date => 'closed'} }
       days_off + filled_package_lists + closed_package_lists
     end

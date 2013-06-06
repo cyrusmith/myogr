@@ -110,7 +110,7 @@ module Distribution
 
     def days_off
       @point = Point.find(params[:point_id])
-      marked_days = @point.get_marked_days(params[:start_date])
+      marked_days = @point.get_marked_days(current_user.case?, params[:start_date])
       active_record = current_user.packages.active.first
       if !active_record.nil? and active_record.package_list.point == @point
         marked_days << {active_record.package_list.date => 'active-record'}
@@ -151,7 +151,7 @@ module Distribution
       if @package_list.state_events.include? event_name
         respond_to do |format|
           if @package_list.fire_state_event(event_name)
-            format.js { render 'new_state'}
+            format.js { render 'new_state' }
           end
         end
       end

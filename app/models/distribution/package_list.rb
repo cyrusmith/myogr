@@ -6,7 +6,6 @@ module Distribution
     before_save :check_package_limit
 
     field :package_limit, type: Integer
-    field :is_closed, type: Boolean, default: false
     field :closed_by, type: String
 
     state_machine :state, :initial => :forming do
@@ -26,6 +25,18 @@ module Distribution
         transition :distributing => :archived
       end
       after_transition :to => :archived, :do => :packages_state_to_issued
+
+      state :forming do
+        def closed?
+          false
+        end
+      end
+
+      state all - :forming do
+        def closed?
+          true
+        end
+      end
     end
 
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
@@ -35,10 +46,6 @@ module Distribution
     embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
     attr_accessible :package_limit, :is_closed, :closed_by
-
-    def closed?
-      self.is_closed
-    end
 
     def order_number_for(method)
       self.packages.where(distribution_method: method).count + 1
