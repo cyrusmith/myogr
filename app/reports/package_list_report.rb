@@ -21,7 +21,7 @@ class PackageListReport < Prawn::Document
     )
     font 'Verdana', :size => 10
     Distribution::Package::METHODS.each do |method_name|
-      new_list(@package_list.packages.distribution_method(method_name).asc(:order), method_name)
+      new_list(@package_list.packages.distribution_method(method_name).sort{|a,b| a.order.to_i <=> b.order.to_i}, method_name)
     end
     render
   end
