@@ -26,7 +26,7 @@ module Distribution
     field :collection_date, type: Date
     field :comment, type: String
     field :document_number, type: String
-    validates :document_number, presence: true, length: {minimum: 5, maximum: 30}
+    validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
     embeds_many :items, class_name: 'Distribution::PackageItem'
     embeds_many :package_state_transitions, class_name: 'Distribution::PackageStateTransition'
