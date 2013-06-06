@@ -24,8 +24,8 @@ class PackingLists < Prawn::Document
     render
   end
 
-  def new_row(item_id, title, organizer_name, comment)
-    row = [@@num, item_id, CGI.unescapeHTML(title), CGI.unescapeHTML(organizer_name), comment]
+  def new_row(num, item_id, title, organizer_name, comment)
+    row = [num, item_id, CGI.unescapeHTML(title), CGI.unescapeHTML(organizer_name), comment]
     make_table([row]) do |t|
       t.column_widths = Widths
       t.cells.style :borders => [:left, :right], :padding => 2
@@ -33,6 +33,7 @@ class PackingLists < Prawn::Document
   end
 
   def pa(list)
+    num = 1
     font_families.update(
         'Verdana' => {
             :bold => "#{Rails.root}/public/assets/font/verdanab.ttf",
@@ -55,8 +56,8 @@ class PackingLists < Prawn::Document
 
     data = []
     list.items.each do |item|
-      data << new_row(item.item_id, item.title, User.find(item.organizer).try(:display_name), '')
-      @@num = @@num + 1
+      data << new_row(num, item.item_id, item.title, User.find(item.organizer).try(:display_name), '')
+      num = num + 1
     end
 
     head = make_table([Headers], :column_widths => Widths)
