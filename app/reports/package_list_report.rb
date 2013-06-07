@@ -1,8 +1,8 @@
 # encoding: utf-8
 class PackageListReport < Prawn::Document
   delegate :h, :raw, :t, to: :@view
-  Widths = [30, 100, 70, 30, 100, 100, 110]
-  Headers = ['№', 'Id/Ник', 'Документ', 'Кол-во мест', 'Дата получения', 'Сумма за просрочку', 'Подпись']
+  Widths = [50, 110, 75, 40, 75, 70, 110]
+  Headers = ['№', 'Id/Ник', 'Документ', 'Мест', 'Дата получения', 'Сумма за просрочку', 'Подпись']
 
   def initialize(package_list, view)
     super()
@@ -53,7 +53,11 @@ class PackageListReport < Prawn::Document
   end
 
   def new_package_table(dataset)
-    head = make_table([Headers], :column_widths => Widths)
+    head = make_table([Headers], :column_widths => Widths) do |t|
+      t.row(0).align = :center
+      t.row(0).valign = :center
+      t.row(0).font_style = :bold
+    end
     data = []
     dataset.each do |row|
       username = row.user.nil? ? "" : "#{row.user.id}/#{row.user.display_name}"
@@ -65,9 +69,12 @@ class PackageListReport < Prawn::Document
   end
 
   def new_row(order, user, doc_num, orders_num)
-    row = [order, CGI.unescapeHTML(user), CGI.unescapeHTML(doc_num), orders_num, '', '', '']
+    row = [order, CGI.unescapeHTML(user)[0..17], CGI.unescapeHTML(doc_num), orders_num, '', '', '']
     make_table([row]) do |t|
       t.column_widths = Widths
+      t.columns(0).size = 14
+      t.columns(0).font_style = :bold
+      t.columns([0,2,3]).align = :center
       t.cells.style :borders => [:left, :right], :padding => 2
     end
   end
