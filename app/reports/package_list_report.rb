@@ -5,7 +5,7 @@ class PackageListReport < Prawn::Document
   Headers = ['№', 'Id/Ник', 'Документ', 'Мест', 'Дата получения', 'Сумма за просрочку', 'Подпись']
 
   def initialize(package_list, view)
-    super()
+    super(margin: [10])
     @package_list = package_list
     @view = view
     @@tables = 0

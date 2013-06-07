@@ -295,6 +295,7 @@ ru:
     comment: Примечание
     hints:
       percentage_tooltip: "%{part} из %{whole}"
+      case_tooltip: "Кейсов %{cases}"
 
   actions:
     create: Создать
