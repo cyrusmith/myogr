@@ -6,7 +6,7 @@ class PackingLists < Prawn::Document
   @@num = 1
 
   def initialize(package_list, view)
-    super()
+    super(margin: [10])
     @package_list = package_list
     @view = view
     @@num = 1

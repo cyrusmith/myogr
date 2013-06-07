@@ -1,6 +1,7 @@
 - package_limit = list.package_limit
 - limitable_packages = list.packages.not_case.count
 - total_packages = list.packages.count
+- cases = total_packages - limitable_packages
 %tr{id: list.id}
   %td=list.date
   %td
@@ -16,7 +17,7 @@
   %td
     = progressbar package_limit, limitable_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: total_packages, whole:package_limit)
+                  hint: t('common.hints.percentage_tooltip', part: limitable_packages, whole: package_limit) + '. ' + t('common.hints.case_tooltip', cases: cases)
   %td
     - number_of_collected_packages = list.packages.where(:state.nin => [:accepted, :collecting]).count
     = progressbar total_packages, number_of_collected_packages,

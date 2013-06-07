@@ -9,8 +9,12 @@ class Ability
         can :manage, :all
       when user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
         can :access, Distribution::Point, :head_user => user.id
+        can :view_list, Distribution::Point
+        can :read, Distribution::Point
         cannot :destroy, Distribution::Point
         cannot :edit, Distribution::Point
+        can :manage, Distribution::PackageList
+        can :manage, Distribution::Package
       when user.has_role?(UserRole::SALON_ADMINISTRATOR)
         can :manage, Admin::Record
       else
