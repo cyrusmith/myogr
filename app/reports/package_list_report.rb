@@ -61,15 +61,15 @@ class PackageListReport < Prawn::Document
     data = []
     dataset.each do |row|
       username = row.user.nil? ? "" : "#{row.user.id}/#{row.user.display_name}"
-      data << new_row(row.order, username, row.document_number, row.items.count)
+      data << new_row(row.code, username, row.document_number, row.items.count)
     end
     table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
       row(0).style :background_color => 'cccccc'
     end
   end
 
-  def new_row(order, user, doc_num, orders_num)
-    row = [order, CGI.unescapeHTML(user)[0..17], CGI.unescapeHTML(doc_num), orders_num, '', '', '']
+  def new_row(code, user, doc_num, orders_num)
+    row = [code, CGI.unescapeHTML(user)[0..17], CGI.unescapeHTML(doc_num), orders_num, '', '', '']
     make_table([row]) do |t|
       t.column_widths = Widths
       t.columns(0).size = 14

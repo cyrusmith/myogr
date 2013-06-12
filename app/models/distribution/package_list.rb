@@ -54,7 +54,8 @@ module Distribution
     attr_accessible :package_limit, :is_closed, :closed_by
 
     def order_number_for(method)
-      self.packages.where(distribution_method: method).max(:order).to_i + 1
+      max_order = self.packages.where(distribution_method: method).max(:order)
+      max_order ? max_order + 1 : 1
     end
 
     def packages_fire_event(event_name)

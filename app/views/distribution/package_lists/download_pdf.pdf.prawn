@@ -10,7 +10,7 @@ headers = %w(№ Закупка Наименование Организатор 
           :normal => '/home/nlopin/prawn-fonts/verdana.ttf'})
   font 'Verdana', :size => 10
   formatted_package_date = Russian::strftime @package_list.date, '%d.%m.%y'
-  text "Упаковочный лист №#{package.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
+  text "Упаковочный лист №#{package.code}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
   move_down 18
   text "Пользователь: #{package.user.try(:display_name)}"
   move_down 4

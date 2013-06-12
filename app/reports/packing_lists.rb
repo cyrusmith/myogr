@@ -46,7 +46,7 @@ class PackingLists < Prawn::Document
     font 'Verdana', :size => 10
 
     formatted_package_date = Russian::strftime list.package_list.date, '%d.%m.%y'
-    table([[list.order.to_s, "Упаковочный лист №#{list.order} / #{formatted_package_date}"]], :column_widths => [80, 460]) do
+    table([[list.code.to_s, "Упаковочный лист №#{list.code} / #{formatted_package_date}"]], :column_widths => [80, 460]) do
       columns(0).size = 18
       columns(0).borders = [:top, :right, :left, :bottom]
       columns(1).size = 14
