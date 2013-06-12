@@ -14,17 +14,23 @@ module Distribution
         transition :forming => :collecting
       end
       #TODO тут кроется потенциальный глюк, так как транзакций в монго нет, а операции атомарны только в рамках одного объекта.
-      after_transition :to => :collecting, :do => :packages_state_to_collecting
+      after_transition :to => :collecting do |package_list|
+        package_list.packages_fire_event(:start_collecting)
+      end
 
       event :to_distribution do
         transition :collecting => :distributing
       end
-      after_transition :to => :distributing, :do => :packages_state_to_distribution
+      after_transition :to => :distributing do |package_list|
+        package_list.packages_fire_event(:finish_collecting)
+      end
 
       event :archive do
         transition :distributing => :archived
       end
-      after_transition :to => :archived, :do => :packages_state_to_issued
+      after_transition :to => :archived do |package_list|
+        package_list.packages_fire_event(:to_issued)
+      end
 
       state :forming do
         def closed?
@@ -51,22 +57,15 @@ module Distribution
       self.packages.where(distribution_method: method).max(:order).to_i + 1
     end
 
+    def packages_fire_event(event_name)
+      event_name = event_name.to_sym
+      self.packages.each { |package| package.fire_state_event(event_name) } if Package.new.state_paths.events.include? event_name
+    end
+
     private
 
     def check_package_limit
       self.package_limit = self.point.default_day_package_limit if self.package_limit.nil?
-    end
-
-    def packages_state_to_collecting
-      self.packages.each {|package| package.start_collecting}
-    end
-
-    def packages_state_to_distribution
-      self.packages.each {|package| package.to_distribution}
-    end
-
-    def packages_state_to_issued
-      self.packages.each {|package| package.to_issued}
     end
 
   end

@@ -54,10 +54,10 @@ module Distribution
         transition :collected => :in_distribution
       end
       event :to_issued do
-        transition :in_distribution => :issued
+        transition [:collected, :in_distribution] => :issued
       end
       event :utilize do
-        transition :collected => :utilized, :in_distribution => :utilized
+        transition [:collected, :in_distribution] => :utilized
       end
 
       state :accepted do
