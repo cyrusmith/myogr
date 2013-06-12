@@ -111,7 +111,7 @@ module Distribution
         is_date_changed = !(@distribution_package.package_list.date == Date.parse(params[:package_date]))
         if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
-          @distribution_package.set_order unless @distribution_package.distribution_method == :case
+          @distribution_package.set_order
         end
       end
       existing_item_ids = {}
@@ -131,7 +131,7 @@ module Distribution
       existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.is_next_time_pickup = true } }
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
-          format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.order} успешно обновлены"} }
+          format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.code} успешно обновлены"} }
           format.json { head :no_content }
         else
           format.html { render action: 'edit' }

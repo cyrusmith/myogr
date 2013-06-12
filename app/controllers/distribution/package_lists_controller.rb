@@ -101,7 +101,7 @@ module Distribution
         formatted_date = list.date.strftime('%d%m%Y')
         if formatted_date.scan(params[:term]).length > 0
           list.packages.each do |package|
-            @available_packages += [{label: formatted_date + '/' + package.order.to_s, value: package.id}]
+            @available_packages += [{label: formatted_date + '/' + package.code.to_s, value: package.id}]
           end
         end
       end

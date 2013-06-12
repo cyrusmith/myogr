@@ -1,4 +1,4 @@
-%h4 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.order} на #{ Russian::strftime @distribution_package.package_list.date, '%e %B'} в ЦР на #{@distribution_package.package_list.point.address.to_s}
+%h4 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.code} на #{ Russian::strftime @distribution_package.package_list.date, '%e %B'} в ЦР на #{@distribution_package.package_list.point.address.to_s}
 %h5
   %strong Статус записи: #{t('distribution.package.states.' + @distribution_package.state)}
 %p

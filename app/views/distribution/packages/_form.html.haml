@@ -19,7 +19,7 @@
     - method = @distribution_package.distribution_method
     %h5
       Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}.
-      Номер записи - #{@distribution_package.order}.
+      Номер записи - #{@distribution_package.code}.
 
   - if @distribution_package.errors.any?
     - errors = @distribution_package.errors

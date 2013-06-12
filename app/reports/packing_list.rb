@@ -23,7 +23,7 @@ class PackingList < Prawn::Document
   def to_pdf
     initFonts
     formatted_package_date = Russian::strftime @package.package_list.date, '%d.%m.%y'
-    text "Упаковочный лист №#{@package.order}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
+    text "Упаковочный лист №#{@package.code}. Ведомость #{formatted_package_date}", :size => 15, :style => :bold, :align => :center
     move_down 18
     text "Пользователь: #{@package.user.try(:display_name)}"
     move_down 4

@@ -20,7 +20,8 @@ module Distribution
 
     before_create :set_order
 
-    field :order, type: String
+    field :order, type: Integer
+    field :code, type: String
     field :distribution_method, type: Symbol, default: :at_point
     field :collector_id, type: Integer
     field :collection_date, type: Date
@@ -86,7 +87,9 @@ module Distribution
     end
 
     def set_order
-      self.order = self.package_list.order_number_for(self.distribution_method).to_s + METHODS_IDENTIFICATOR[self.distribution_method]
+      order_num = self.package_list.order_number_for(self.distribution_method)
+      self.order = order_num
+      self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method]
     end
 
   end
