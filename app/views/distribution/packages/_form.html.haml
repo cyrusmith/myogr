@@ -60,7 +60,7 @@
               %ul.button-bar
                 %li
                   = link_to remove_from_cabinet_path(item_id),
-                            title: 'Уже получено(удалить из личного кабинета)', remote:true do
+                            title: 'Уже получено(удалить из личного кабинета)', remote:true, confirm: 'Внимание! Все товары из удаляемой закупки будут безвозвратно удалены из вашего личного кабинета!' do
                     %i.icon-trash.icon-large
                 %li
                   = link_to '#', class: 'remove_custom_tid', title: 'Отложить(забрать в следующий раз)' do
