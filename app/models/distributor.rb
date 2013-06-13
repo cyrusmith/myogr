@@ -9,7 +9,7 @@ class Distributor < ForumModels
 
   def self.in_distribution_for_user(user_id)
     self.joins(:product_orders)
-        .where('color = 5')
+        .where('color != 1')
         .where(ProductOrder.table_name => {member_id: user_id, show_buyer: 1})
         .where('ibf_zakup.status NOT IN (-2, 2)')
         .group(self.primary_key)

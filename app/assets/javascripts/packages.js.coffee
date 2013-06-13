@@ -66,7 +66,7 @@ jQuery ->
     numberOfMonths: [1, 3]
     defaultDate: package_date if package_date != ''
     maxDate: '+2m'
-    minDate: '+2d'
+    minDate: '0'
     beforeShowDay: (date) =>
       if (window.days_off? and window.days_off != {})
         string_date = date.format('isoDate')

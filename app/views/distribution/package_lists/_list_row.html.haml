@@ -12,6 +12,7 @@
     - elsif possible_events.size == 1
       - new_state = possible_events.first.to_s
       = link_to t('distribution.package_lists.events.' + new_state), distribution_point_fire_package_list_event_path(point,list,new_state),
+                confirm: 'Вы уверены, что хотите перевести ведомость в следующую стадию?',
                 remote: true,
                 method: :put
   %td
