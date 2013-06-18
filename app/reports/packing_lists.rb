@@ -68,7 +68,7 @@ class PackingLists < Prawn::Document
 
     data = []
     list.items.each do |item|
-      data << new_row(num, item.item_id, item.title, User.find(item.organizer).try(:display_name), '')
+      data << new_row(num, item.item_id, item.title, item.organizer, '')
       num = num + 1
     end
 
