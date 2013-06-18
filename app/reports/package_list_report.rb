@@ -1,6 +1,6 @@
 # encoding: utf-8
 class PackageListReport < Prawn::Document
-  delegate :h, :raw, :t, to: :@view
+  delegate :h, :raw, :t, :truncate, to: :@view
   Widths = [50, 110, 75, 40, 75, 70, 110]
   Headers = ['№', 'Id/Ник', 'Документ', 'Мест', 'Дата получения', 'Сумма за просрочку', 'Подпись']
 
@@ -60,7 +60,7 @@ class PackageListReport < Prawn::Document
     end
     data = []
     dataset.each do |row|
-      username = row.user.nil? ? "" : "#{row.user.id}/#{row.user.display_name}"
+      username = row.user.nil? ? '' : "#{row.user.id}/#{row.user.display_name}"
       data << new_row(row.code, username, row.document_number, row.items.count)
     end
     table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
@@ -69,7 +69,7 @@ class PackageListReport < Prawn::Document
   end
 
   def new_row(code, user, doc_num, orders_num)
-    row = [code, CGI.unescapeHTML(user)[0..17], CGI.unescapeHTML(doc_num), orders_num, '', '', '']
+    row = [code, truncate(CGI.unescapeHTML(user), length: 17, omission: ''), CGI.unescapeHTML(doc_num), orders_num, '', '', '']
     make_table([row]) do |t|
       t.column_widths = Widths
       t.columns(0).size = 14

@@ -1,6 +1,6 @@
 # encoding: utf-8
 class PackingLists < Prawn::Document
-  delegate :params, :h, :raw, :t, :number_to_currency, :point, to: :@view
+  delegate :params, :h, :raw, :t, :truncate, :point, to: :@view
   Widths = [30, 60, 270, 80, 100]
   Headers = %w(№ Закупка Наименование Организатор Примечание)
   @@num = 1
@@ -28,7 +28,7 @@ class PackingLists < Prawn::Document
   end
 
   def new_row(num, item_id, title, organizer_name, comment)
-    row = [num, item_id, CGI.unescapeHTML(title)[0..49], CGI.unescapeHTML(organizer_name), comment]
+    row = [num, item_id, truncate(CGI.unescapeHTML(title), length: 45, omission: ''), CGI.unescapeHTML(organizer_name), comment]
     make_table([row]) do |t|
       t.column_widths = Widths
       t.cells.style :borders => [:left, :right], :padding => 2, :size => 9
