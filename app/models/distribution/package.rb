@@ -28,11 +28,14 @@ module Distribution
     field :document_number, type: String
     validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
+    index({distribution_method: 1})
+    index({package_list_id: 1, distribution_method: 1})
+
     embeds_many :items, class_name: 'Distribution::PackageItem'
     embeds_many :package_state_transitions, class_name: 'Distribution::PackageStateTransition'
 
     t_belongs_to :user
-    belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages
+    belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages, index:true
 
     accepts_nested_attributes_for :items, allow_destroy: true
 

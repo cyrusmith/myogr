@@ -48,7 +48,7 @@ module Distribution
 
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
 
-    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists
+    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists, index: true
 
     embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
