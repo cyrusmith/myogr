@@ -1,21 +1,23 @@
 # encoding: utf-8
 class PackingLists < Prawn::Document
-  delegate :params, :h, :raw, :t, :number_to_currency, :point, to: :@view
+  delegate :params, :h, :raw, :t, :truncate, :point, to: :@view
   Widths = [30, 60, 270, 80, 100]
   Headers = %w(№ Закупка Наименование Организатор Примечание)
   @@num = 1
 
   def initialize(package_list, view)
     @timer_start = Time.now
-    super(margin: [10])
+    super(margin: [10], page_size: 'A5', page_layout: :landscape)
     @package_list = package_list
     @view = view
     @@num = 1
   end
 
   def to_pdf
+    first_page = true
     Distribution::Package::METHODS.each do |method_name|
       @package_list.packages.distribution_method(method_name).sort { |a, b| a.order.to_i <=> b.order.to_i }.each do |package|
+        first_page ? first_page = false : start_new_page
         pa package
       end
     end
@@ -28,7 +30,7 @@ class PackingLists < Prawn::Document
   end
 
   def new_row(num, item_id, title, organizer_name, comment)
-    row = [num, item_id, CGI.unescapeHTML(title)[0..49], CGI.unescapeHTML(organizer_name), comment]
+    row = [num, item_id, truncate(CGI.unescapeHTML(title), length: 45, omission: ''), CGI.unescapeHTML(organizer_name), comment]
     make_table([row]) do |t|
       t.column_widths = Widths
       t.cells.style :borders => [:left, :right], :padding => 2, :size => 9

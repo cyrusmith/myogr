@@ -1,6 +1,6 @@
 # encoding: utf-8
 class PackageListReport < Prawn::Document
-  delegate :h, :raw, :t, to: :@view
+  delegate :h, :raw, :t, :truncate, to: :@view
   Widths = [50, 110, 75, 40, 75, 70, 110]
   Headers = ['№', 'Id/Ник', 'Документ', 'Мест', 'Дата получения', 'Сумма за просрочку', 'Подпись']
 
@@ -31,17 +31,17 @@ class PackageListReport < Prawn::Document
   def new_list(dataset, method)
     unless dataset.empty?
       start_new_page if @@tables > 0
-      start_page = page_count
+      start_position = @page_number
       formatted_package_date = Russian::strftime @package_list.date, '%d.%m.%y'
-      text "Ведомость от #{formatted_package_date} / #{t('distribution.package.methods.' + method.to_s)}", :size => 12, :style => :bold
+      text "Ведомость от #{formatted_package_date} / #{t('distribution.package.methods.' + method.to_s)}. В ведомости #{dataset.count.to_s + ' ' + Russian::p(dataset.count, 'пользователь', 'пользователя', 'пользователей')}", :size => 12, :style => :bold
       move_down 5
       text "Центр раздач: #{@package_list.point.address.full_address}"
       new_package_table dataset
       @@tables += 1
       creation_date = Time.now.strftime("Лист сгенерирован %e %b %Y %H:%M")
       i = 1
-      total_pages = page_count - start_page
-      for page in start_page..page_count do
+      total_pages = (@page_number - start_position) + 1
+      for page in start_position..@page_number do
         go_to_page(page)
         bounding_box([bounds.right-250, bounds.bottom + 25], :width => 250) {
           text creation_date, :align => :right, :style => :italic, :size => 6
@@ -60,7 +60,7 @@ class PackageListReport < Prawn::Document
     end
     data = []
     dataset.each do |row|
-      username = row.user.nil? ? "" : "#{row.user.id}/#{row.user.display_name}"
+      username = row.user.nil? ? '' : "#{row.user.id}/#{row.user.display_name}"
       data << new_row(row.code, username, row.document_number, row.items.count)
     end
     table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
@@ -69,7 +69,7 @@ class PackageListReport < Prawn::Document
   end
 
   def new_row(code, user, doc_num, orders_num)
-    row = [code, CGI.unescapeHTML(user)[0..17], CGI.unescapeHTML(doc_num), orders_num, '', '', '']
+    row = [code, truncate(CGI.unescapeHTML(user), length: 17, omission: ''), CGI.unescapeHTML(doc_num), orders_num, '', '', '']
     make_table([row]) do |t|
       t.column_widths = Widths
       t.columns(0).size = 14
