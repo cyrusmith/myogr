@@ -58,7 +58,7 @@ Ogromno::Application.routes.draw do
         get 'package_list' => 'package_lists#package_list_report'
       end
       put 'package_list/:id/fire_event/:event'=> 'package_lists#fire_event', :as => :fire_package_list_event
-      get 'package_list/days_off'=> 'package_lists#days_off'
+      get 'package_list/days_info'=> 'package_lists#days_info'
       get 'package_list/switch_day_off' => 'package_lists#switch_day_off', :as => :switch_day_off
       get 'package_list/change_limit' => 'package_lists#change_limit'
       get 'package_list' => 'package_lists#show'

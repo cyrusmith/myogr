@@ -27,6 +27,10 @@
       = render 'addresses/fields', f: builder
 
   .field
+    = f.label :work_schedule, t('.work_schedule')
+    = f.text_area :work_schedule, cols: 20, rows:7
+
+  .field
     = f.label :comment, t('.comment')
     = f.text_field :comment
 

@@ -4,19 +4,23 @@ module Distribution
     include Mongoid::Timestamps
     include Mongoid::Paranoia
 
-    before_save :check_head_permission, :check_employees_permissions
+    before_save :check_head_permission
+    before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
     after_create :initialize_package_lists
 
     field :title, type: String
     field :head_user, type: Integer
     field :employees, type: Array
     field :default_day_package_limit, type: Integer, default: Distribution::Settings.day_package_limit
+    field :work_schedule, type: String
     field :comment, type: String
+
+    validates :head_user, presence: true
 
     embeds_one :address
     has_many :package_lists, class_name: 'Distribution::PackageList', inverse_of: :point, dependent: :destroy
 
-    attr_accessible :title, :head_name, :employees_names, :default_day_package_limit, :comment, :address, :address_fields
+    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :comment, :address, :address_fields
 
     def head_name
       User.find(self.head_user).try :display_name if self.head_user.present?
@@ -35,15 +39,15 @@ module Distribution
       self.employees = array.map { |name| User.find_by_members_display_name(name.strip).try(:id) }.delete_if { |x| x.nil? }
     end
 
-    def get_marked_days(exclude_filled_dates = false, start_date=nil, num_months=3.month)
+    def get_days_info(exclude_filled_dates = false, start_date=nil, num_months=3.month)
       start_date = start_date || Date.today.beginning_of_month
-      start_date = Date.parse start_date unless start_date.is_a? Date
+      start_date = Date.parse(start_date) unless start_date.is_a? Date
       range_package_lists = self.package_lists.where(:date.gte => start_date, :date.lte => start_date + num_months)
-      days_off = range_package_lists.select { |list| list.is_day_off }.map { |list| {list.date => 'day-off'} }
-      filled_package_lists = []
-      filled_package_lists = range_package_lists.select { |list| list.packages.not_case.count >= list.package_limit }.map { |list| {list.date => 'limit-filled'} } unless exclude_filled_dates
-      closed_package_lists = range_package_lists.select { |list| list.closed? }.map { |list| {list.date => 'closed'} }
-      days_off + filled_package_lists + closed_package_lists
+      info = []
+      range_package_lists.each do |list|
+        info << {list.date.iso8601 => list.get_info(exclude_filled_dates)}
+      end
+      info
     end
 
     accepts_nested_attributes_for :address,

@@ -16,7 +16,7 @@ module Distribution
     # GET /distribution_centers/1.json
     def show
       @distribution_point = Point.find(params[:id])
-      @marked_days = @distribution_point.get_marked_days.inject Hash.new, :merge
+      @calendar_days_info = @distribution_point.get_days_info.inject Hash.new, :merge
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_point }
@@ -59,7 +59,7 @@ module Distribution
     def update
       @distribution_point = Point.find(params[:id])
       respond_to do |format|
-        if @distribution_point.update_attributes(params[:distribution_center_distribution_center])
+        if @distribution_point.update_attributes(params[:distribution_point])
           format.html { redirect_to @distribution_point, notice: 'Distribution center was successfully updated.' }
           format.json { head :no_content }
         else
