@@ -31,17 +31,17 @@ class PackageListReport < Prawn::Document
   def new_list(dataset, method)
     unless dataset.empty?
       start_new_page if @@tables > 0
-      start_page = page_count
+      start_position = @page_number
       formatted_package_date = Russian::strftime @package_list.date, '%d.%m.%y'
-      text "Ведомость от #{formatted_package_date} / #{t('distribution.package.methods.' + method.to_s)}", :size => 12, :style => :bold
+      text "Ведомость от #{formatted_package_date} / #{t('distribution.package.methods.' + method.to_s)}. В ведомости #{dataset.count.to_s + ' ' + Russian::p(dataset.count, 'пользователь', 'пользователя', 'пользователей')}", :size => 12, :style => :bold
       move_down 5
       text "Центр раздач: #{@package_list.point.address.full_address}"
       new_package_table dataset
       @@tables += 1
       creation_date = Time.now.strftime("Лист сгенерирован %e %b %Y %H:%M")
       i = 1
-      total_pages = page_count - start_page
-      for page in start_page..page_count do
+      total_pages = (@page_number - start_position) + 1
+      for page in start_position..@page_number do
         go_to_page(page)
         bounding_box([bounds.right-250, bounds.bottom + 25], :width => 250) {
           text creation_date, :align => :right, :style => :italic, :size => 6

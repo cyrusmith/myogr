@@ -7,15 +7,17 @@ class PackingLists < Prawn::Document
 
   def initialize(package_list, view)
     @timer_start = Time.now
-    super(margin: [10])
+    super(margin: [10], page_size: 'A5', page_layout: :landscape)
     @package_list = package_list
     @view = view
     @@num = 1
   end
 
   def to_pdf
+    first_page = true
     Distribution::Package::METHODS.each do |method_name|
       @package_list.packages.distribution_method(method_name).sort { |a, b| a.order.to_i <=> b.order.to_i }.each do |package|
+        first_page ? first_page = false : start_new_page
         pa package
       end
     end
