@@ -76,7 +76,7 @@
 
   .field
     = f.label :document_number, t('.document_number')
-    = f.text_field :document_number
+    = f.text_field :document_number, required: true
     = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
   .actions
     = f.submit disabled: (true if @package_form.new?)
