@@ -357,9 +357,10 @@ ru:
         enter: "Войти в панель управления"
       form:
         title: Название
-        head_user: "Начальник ЦР"
-        comment: "Примечание"
-        employees: "Сотрудники"
+        head_user: Начальник ЦР
+        comment: Примечание
+        work_schedule: Расписание работы
+        employees: Сотрудники
         default_package_limit: "Кол-во заказов к обработке в день"
     package_lists:
       form:
