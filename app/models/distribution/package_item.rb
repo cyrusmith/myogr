@@ -8,7 +8,8 @@ module Distribution
 
     field :item_id, type: Integer
     field :title, type: String
-    field :organizer, type: Integer
+    field :organizer_id, type: Integer
+    field :organizer, type: String
     #состояние закупки, в тот момент, когда пользователь отправил ее в сборку
     field :state_on_creation, type:String
     field :is_user_participate, type: Boolean, default: true
@@ -21,7 +22,7 @@ module Distribution
 
     validates_presence_of :item_id
 
-    attr_accessible :item_id, :title, :organizer, :is_next_time_pickup, :state_on_creation, :is_user_participate
+    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate
 
     def next_time_pickup?
       self.next_time_pickup
@@ -32,7 +33,7 @@ module Distribution
     def get_info
       distributor = Distributor.find self.item_id
       self.title = distributor.title
-      self.organizer = distributor.starter_id
+      self.organizer = distributor.organizer
     end
 
   end

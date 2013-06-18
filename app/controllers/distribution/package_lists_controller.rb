@@ -1,5 +1,8 @@
 module Distribution
   class PackageListsController < Admin::AdminController
+
+    skip_authorize_resource :only => [:find_package, :days_info]
+
     # GET /package_lists
     # GET /package_lists.json
     def index
@@ -108,9 +111,9 @@ module Distribution
       render json: @available_packages.sort_by { |a| a[:label] }
     end
 
-    def days_off
+    def days_info
       @point = Point.find(params[:point_id])
-      marked_days = @point.get_marked_days(current_user.case?, params[:start_date])
+      marked_days = @point.get_days_info(current_user.case?, params[:start_date])
       active_record = current_user.packages.active.first
       if !active_record.nil? and active_record.package_list.point == @point
         marked_days << {active_record.package_list.date => 'active-record'}

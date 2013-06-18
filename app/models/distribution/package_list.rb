@@ -1,9 +1,10 @@
+# coding: utf-8
 module Distribution
   class PackageList < ::Schedule
     include Mongoid::Document
     paginates_per 50
 
-    before_save :check_package_limit
+    before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil?}
 
     field :package_limit, type: Integer
     field :closed_by, type: String
@@ -63,10 +64,26 @@ module Distribution
       self.packages.each { |package| package.fire_state_event(event_name) } if Package.new.state_paths.events.include? event_name
     end
 
+    def get_info(is_filled_selectable=false)
+      if day_off?
+        [false , 'day-off', 'Нерабочий день'] if day_off?
+      elsif closed?
+        [false, 'closed', 'Запись закрыта']
+      elsif limit_filled?
+        [is_filled_selectable, 'limit-filled', 'Лимит записей исчерпан']
+      else
+        [ true, '', "Записано #{self.packages.not_case.count} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
+      end
+    end
+
+    def limit_filled?
+      self.packages.not_case.count >= self.package_limit
+    end
+
     private
 
-    def check_package_limit
-      self.package_limit = self.point.default_day_package_limit if self.package_limit.nil?
+    def set_package_limit
+      self.package_limit = self.point.default_day_package_limit
     end
 
   end

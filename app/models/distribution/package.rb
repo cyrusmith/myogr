@@ -25,7 +25,6 @@ module Distribution
     field :distribution_method, type: Symbol, default: :at_point
     field :collector_id, type: Integer
     field :collection_date, type: Date
-    field :comment, type: String
     field :document_number, type: String
     validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
@@ -37,7 +36,7 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes, :comment, :collector_id, :collection_date, :distribution_method, :document_number
+    attr_accessible :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
 
     state_machine :state, :initial => :accepted do
       store_audit_trail

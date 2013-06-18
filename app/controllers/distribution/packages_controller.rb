@@ -28,10 +28,7 @@ module Distribution
     # GET /distribution/packages/new
     # GET /distribution/packages/new.json
     def new
-      @distribution_package = Package.new
-      @distribution_points = Point.all
-      @found_items = Distributor.in_distribution_for_user current_user
-      @marked_days = @distribution_points.first.get_marked_days(current_user.case?).inject Hash.new, :merge if @distribution_points.count == 1
+      @package_form = PackageForm.new Package.new, current_user
 
       respond_to do |format|
         format.html # new.html.erb
@@ -41,14 +38,7 @@ module Distribution
 
     # GET /distribution/packages/1/edit
     def edit
-      @distribution_package = Package.find(params[:id])
-      @distribution_points = Point.all
-      already_added_items = @distribution_package.items
-      already_added_items_ids = already_added_items.map(&:item_id)
-      items_from_db = Distributor.in_distribution_for_user current_user
-      @found_items = already_added_items.current_pickup + items_from_db.delete_if { |item| item.id.in? already_added_items_ids }
-      @marked_days = @distribution_package.package_list.point.get_marked_days(current_user.case?).inject Hash.new, :merge
-      @marked_days[@distribution_package.package_list.date] = 'active-record'
+      @package_form = PackageForm.new Package.find(params[:id]), current_user
     end
 
     # POST /distribution/packages
@@ -77,18 +67,13 @@ module Distribution
           current_pickup_ids.each { |id| @distribution_package.items.new(create_item_hash(id)) }
         end
       else
-        unless params[:distribution_point].blank?
-          @chosen_point = Point.find(params[:distribution_point])
-          @marked_days = @chosen_point.get_marked_days(current_user.case?).inject Hash.new, :merge
-        end
-        chosen_package_list = @chosen_point.package_lists.find_or_create_by(date: params[:package_date]) unless @chosen_point.nil? and params[:package_date].blank?
-        chosen_package_list.packages << @distribution_package if chosen_package_list
-        @distribution_points = Point.all
-        @found_items = if params[:tid] and !params[:tid].empty?
+        chosen_point = Point.find(params[:distribution_point]) unless params[:distribution_point].blank?
+        found_items = if params[:tid] and !params[:tid].empty?
                          Distributor.where(tid: params[:tid].uniq)
                        else
                          Distributor.in_distribution_for_user current_user
                        end
+        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point, items: found_items
       end
       respond_to do |format|
         if no_errors? and @distribution_package.save
@@ -169,7 +154,8 @@ module Distribution
       {
        item_id: distributor.tid,
        title: distributor.title,
-       organizer: distributor.starter_id,
+       organizer: distributor.organizer,
+       organizer_id: distributor.starter_id,
        is_next_time_pickup: is_next_time_pickup,
        state_on_creation: distributor.color,
        is_user_participate: distributor.user_participate?(current_user)

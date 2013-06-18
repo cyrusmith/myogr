@@ -1,6 +1,6 @@
 - javascipt 'distribution/point'
 = javascript_tag do
-  window.days_off = #{raw @marked_days.to_json}
+  window.days_off = #{raw @calendar_days_info.to_json}
 
 = render 'distribution/shared/tab_menu', point: @distribution_point, active: 'main'
 

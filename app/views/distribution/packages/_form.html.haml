@@ -1,41 +1,43 @@
 - javascipt 'packages'
 = javascript_tag do
-  window.days_off = #{raw @marked_days.to_json}
+  window.days_off = #{raw @package_form.days_info.to_json}
 
-= form_for @distribution_package do |f|
+- package_list = @package_form.package_list
+= form_for @package_form.package do |f|
   %h4
     Запись в центр раздач на
-    - if @distribution_points.count > 1
-      - point = @distribution_package.package_list.try('point') || @chosen_point
+    - points = @package_form.points
+    - if points.count > 1
+      - point = @package_form.chosen_point
       - default_value = point.nil? ? '' : point.id
       = select_tag 'distribution_point',
-          options_from_collection_for_select(@distribution_points, :id, :address, default_value),
+          options_from_collection_for_select(points, :id, :address, default_value),
           required: true, autofocus: true, prompt: default_value.blank? ? '(Выберите ЦР)' : false
     - else
-      - point = @distribution_points.first
+      - point = points.first
       = hidden_field_tag 'distribution_point', point.id
       = point.address.to_s
-  - unless @distribution_package.new_record?
-    - method = @distribution_package.distribution_method
+  - unless @package_form.new?
     %h5
-      Вы записаны в ЦР на #{@distribution_package.package_list.point.address.to_s}. Дата получения #{ Russian::strftime @distribution_package.package_list.date, '%e %B(%A)'}.
-      Номер записи - #{@distribution_package.code}.
-
-  - if @distribution_package.errors.any?
-    - errors = @distribution_package.errors
+      Вы записаны в ЦР на #{@package_form.chosen_point.address.to_s}. Дата получения #{ Russian::strftime package_list.date, '%e %B(%A)'}.
+      Номер записи - #{@package_form.code}.
+  %p.work-schedule
+    = raw point.try(:work_schedule)
+  - if @package_form.errors.any?
+    - errors = @package_form.errors
     .notice.error
       %i.icon-remove-sign.icon-large
       - if errors.size == 1
         = errors.full_messages.first
       -else
         %ul.no-margin
-          - @distribution_package.errors.full_messages.each do |msg|
+          - @package_form.errors.full_messages.each do |msg|
             %li= msg
 
-  #calendar{style: ('display:none' if @distribution_package.package_list.nil? and @chosen_point.nil?)}
+  #calendar{style: ('display:none' if package_list.nil? and @package_form.chosen_point.nil?)}
     #calendar-loading
       %span#krutilka
-    = hidden_field_tag :package_date, @distribution_package.package_list.nil? ? '' : @distribution_package.package_list.date.to_date.iso8601
+    = hidden_field_tag :package_date, package_list.nil? ? '' : package_list.date.to_date.iso8601
 
   %fieldset#package-items
     %legend
@@ -49,12 +51,12 @@
           %td Организатор
           %td
       %tbody
-        - @found_items.each do |item|
+        - @package_form.shown_items.each do |item|
           - item_id = item.is_a?(Distributor) ? item.id : item.item_id
           %tr{id:item_id}
             %td= item_id
             %td= raw item.title
-            %td= User.find(item.organizer).display_name
+            %td= item.organizer
             %td{nowrap: 'nowrap'}
               = hidden_field_tag 'tid[]', item_id
               %ul.button-bar
@@ -74,15 +76,12 @@
 
   .field
     = f.label :document_number, t('.document_number')
-    = f.text_field :document_number, required: true
+    = f.text_field :document_number
     = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
-  .field
-    = f.label :comment, t('common.comment')
-    = f.text_area :comment, cols: 50, rows: 2
   .actions
-    = f.submit disabled: (true if @distribution_package.new_record?)
+    = f.submit disabled: (true if @package_form.new?)
     -#%span#errors
     -#  %i.icon-remove-sign
-    - unless @distribution_package.new_record?
+    - unless @package_form.new?
       или
-      = link_to 'Отменить запись', distribution_package_path(@distribution_package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
+      = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'

@@ -2,14 +2,19 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-fetchDaysOff = (pointId) ->
+fetchDaysInfo = (pointId) ->
   start_date = ''
   arr = window.location.href.split("/")
-  full = arr[0] + "//" + arr[2]
-  url = full + '/distribution/points/' + pointId + '/package_list/days_off'
+  fullurl = arr[0] + "//" + arr[2]
+  points_controller_url = fullurl + '/distribution/points/' + pointId
+  url = points_controller_url + '/package_list/days_info'
   if (year? && month?)
     start_date = new Date(year, month-1, 1)
-
+  $.ajax(
+    url: points_controller_url + '.json'
+    success: (data) =>
+      $('p.work-schedule').html(data['work_schedule'])
+  )
   $.ajax(
     url:url
     data:{start_date: dateFormat(start_date, 'isoDate')}
@@ -55,7 +60,7 @@ jQuery ->
   else
     $('#distribution_point').change(->
       pointId = $(this).val()
-      fetchDaysOff(pointId)
+      fetchDaysInfo(pointId)
     )
 
   package_date = $('#package_date').val()
@@ -71,22 +76,7 @@ jQuery ->
       if (window.days_off? and window.days_off != {})
         string_date = date.format('isoDate')
         if (window.days_off[string_date])
-          style = window.days_off[string_date]
-          switch style
-            when  'limit-filled'
-              tip = 'Лимит записей исчерпан'
-              return [false, style, tip]
-            when 'day-off'
-              tip = 'Нерабочий день'
-              return [false, style, tip]
-            when 'closed'
-              tip = 'Запись закрыта'
-              return [false, style, tip]
-            when 'active-record'
-              tip = 'Вы записаны на этот день'
-              return [true, style, tip]
-            else
-              return [false, '', 'Неизвестная ошибка']
+          return window.days_off[string_date]
         else
           return [true, '', '']
       else

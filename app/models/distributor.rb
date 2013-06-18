@@ -20,7 +20,7 @@ class Distributor < ForumModels
   end
 
   def organizer
-    self.starter_id
+    User.find(self.starter_id).try(:display_name)
   end
 
   def remove_from_cabinet(user_id)
