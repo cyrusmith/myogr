@@ -6,6 +6,7 @@ class PackingLists < Prawn::Document
   @@num = 1
 
   def initialize(package_list, view)
+    @timer_start = Time.now
     super(margin: [10])
     @package_list = package_list
     @view = view
@@ -18,7 +19,7 @@ class PackingLists < Prawn::Document
         pa package
       end
     end
-    creation_date = Time.zone.now.strftime("Лист сгенерирован %e %b %Y %H:%M")
+    creation_date = Time.zone.now.strftime("Лист сгенерирован %e %b %Y %H:%M. Время генерации #{Time.now - @timer_start}")
     go_to_page(page_count)
     bounding_box([bounds.right-250, bounds.bottom + 25], :width => 250) {
       text creation_date, :align => :right, :style => :italic, :size => 6

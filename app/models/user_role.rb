@@ -12,4 +12,6 @@ class UserRole
   DISTRIB_CENTER_MANAGER = :distrib_manager
   DISTRIB_CENTER_EMPLOYEE = :distrib_employee
 
+  index({user_id: 1}, {unique: true})
+  index({user_id: 1, id: 1})
 end
