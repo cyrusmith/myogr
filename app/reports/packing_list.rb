@@ -35,7 +35,7 @@ class PackingList < Prawn::Document
     move_down 10
 
     data = []
-    @package.items.each do |item|
+    @package.items.current_pickup.each do |item|
       data << new_row(item.item_id, item.title, User.find(item.organizer).try(:display_name), '')
       @@num = @@num + 1
     end

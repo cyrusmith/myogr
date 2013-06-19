@@ -4,19 +4,7 @@
 
 - package_list = @package_form.package_list
 = form_for @package_form.package do |f|
-  %h4
-    Запись в центр раздач на
-    - points = @package_form.points
-    - if points.count > 1
-      - point = @package_form.chosen_point
-      - default_value = point.nil? ? '' : point.id
-      = select_tag 'distribution_point',
-          options_from_collection_for_select(points, :id, :address, default_value),
-          required: true, autofocus: true, prompt: default_value.blank? ? '(Выберите ЦР)' : false
-    - else
-      - point = points.first
-      = hidden_field_tag 'distribution_point', point.id
-      = point.address.to_s
+  = render 'distribution/packages/form/point_control', points: @package_form.points, chosen_point: @package_form.chosen_point
   - unless @package_form.new?
     %h5
       Вы записаны в ЦР на #{@package_form.chosen_point.address.to_s}. Дата получения #{ Russian::strftime package_list.date, '%e %B(%A)'}.

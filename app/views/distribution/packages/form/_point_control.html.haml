@@ -1,0 +1,11 @@
+%h4
+  Запись в центр раздач на
+  - if points.count > 1
+    - default_value = chosen_point.nil? ? '' : point.id
+    = select_tag 'distribution_point',
+        options_from_collection_for_select(points, :id, :address, default_value),
+        required: true, autofocus: true, prompt: default_value.blank? ? '(Выберите ЦР)' : false
+  - else
+    - point = points.first
+    = hidden_field_tag 'distribution_point', point.id
+    = point.address.to_s

@@ -70,7 +70,7 @@ class PackingLists < Prawn::Document
     end
 
     data = []
-    list.items.each do |item|
+    list.items.current_pickup.each do |item|
       data << new_row(num, item.item_id, item.title, item.organizer, '')
       num = num + 1
     end
