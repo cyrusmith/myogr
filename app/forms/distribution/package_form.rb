@@ -8,7 +8,7 @@ module Distribution
       @package = package
       @user = user
       @is_new_package = package.new_record?
-      @point = option[:point] || package.package_list.try(:point)
+      @point = option[:point] || package.package_list.try(:point) || (points.first if points.count == 1)
       @items = option[:items] || get_items
     end
 

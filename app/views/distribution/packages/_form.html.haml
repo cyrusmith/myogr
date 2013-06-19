@@ -22,7 +22,7 @@
       Вы записаны в ЦР на #{@package_form.chosen_point.address.to_s}. Дата получения #{ Russian::strftime package_list.date, '%e %B(%A)'}.
       Номер записи - #{@package_form.code}.
   %p.work-schedule
-    = raw point.try(:work_schedule)
+    = raw @package_form.chosen_point.try(:work_schedule)
   - if @package_form.errors.any?
     - errors = @package_form.errors
     .notice.error
