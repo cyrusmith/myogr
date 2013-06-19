@@ -11,7 +11,8 @@ fill_package_list = (package_id) ->
     async: true
     success: (data) =>
       $.each(data.items, (index, value) =>
-        $('#package_items_list').append('<tr class = "item_record"><td>' + value.item_id + '</td><td>' + value.title + '</td><td><img src = "/assets/cross.png" id = "' + value.item_id + '"/></td></tr>')
+        if (!value.is_next_time_pickup)
+          $('#package_items_list').append('<tr class = "item_record"><td>' + value.item_id + '</td><td>' + value.title + '</td><td><img src = "/assets/cross.png" id = "' + value.item_id + '"/></td></tr>')
       )
       false
   )

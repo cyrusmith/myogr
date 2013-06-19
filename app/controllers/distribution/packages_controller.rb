@@ -18,7 +18,6 @@ module Distribution
     # GET /distribution/packages/1.json
     def show
       @distribution_package = Package.find(params[:id])
-      @found_items = @distribution_package.items
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_package }
