@@ -46,6 +46,10 @@ module Distribution
       end
     end
 
+    state_machine.states.map do |state|
+      scope state.name, where(:state => state.name.to_s)
+    end
+
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
 
     belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists, index: true
@@ -53,6 +57,10 @@ module Distribution
     embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
     attr_accessible :package_limit, :is_closed, :closed_by
+
+    def number
+      Russian::strftime self.date, '%d%m%Y'
+    end
 
     def order_number_for(method)
       max_order = self.packages.where(distribution_method: method).max(:order)
@@ -70,7 +78,7 @@ module Distribution
       elsif closed?
         [false, 'closed', 'Запись закрыта']
       elsif limit_filled?
-        [is_filled_selectable, 'limit-filled', 'Лимит записей исчерпан']
+        [is_filled_selectable, is_filled_selectable ? '' : 'limit-filled', 'Лимит записей исчерпан']
       else
         [ true, '', "Записано #{self.packages.not_case.count} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
       end
