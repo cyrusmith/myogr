@@ -12,6 +12,7 @@ module Distribution
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
+    scope :in_states, lambda {|*states| where(:state.in => states)}
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])
@@ -74,6 +75,10 @@ module Distribution
           false
         end
       end
+    end
+
+    state_machine.states.map do |state|
+      scope state.name, where(:state => state.name.to_s)
     end
 
     include StateMachineScopes

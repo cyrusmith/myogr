@@ -1,14 +1,22 @@
 %h4=point.title
 %ul{class: 'tabs left'}
+
   - if active == 'main'
     %li.current= link_to 'Главная', 'javascript:void(0)'
   -else
     %li= link_to 'Главная', distribution_point_path(point)
+
   - if active == 'package_lists'
     %li.current= link_to 'Ведомости', 'javascript:void(0)'
   -else
     %li= link_to 'Ведомости', distribution_point_package_lists_path(point)
+
   - if active == 'collect_package'
     %li.current= link_to 'Сборка заказа', 'javascript:void(0)'
   -else
     %li= link_to 'Сборка заказа', distribution_point_collect_package_path(point)
+
+  - if active == 'issue_package'
+    %li.current= link_to 'Выдача заказа', 'javascript:void(0)'
+  -else
+    %li= link_to 'Выдача заказа', distribution_point_issue_package_path(point)

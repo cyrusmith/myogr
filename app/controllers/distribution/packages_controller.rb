@@ -5,14 +5,14 @@ module Distribution
     before_filter :check_active_package, only: [:new, :create]
     before_filter :check_changeability, only: [:edit, :update]
 
-        def index
-          @distribution_packages = current_user.packages
+    def index
+      @distribution_packages = current_user.packages
 
-          respond_to do |format|
-            format.html # index.html.erb
-            format.json { render json: @distribution_packages }
-          end
-        end
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @distribution_packages }
+      end
+    end
 
     # GET /distribution/packages/1
     # GET /distribution/packages/1.json
@@ -68,10 +68,10 @@ module Distribution
       else
         chosen_point = Point.find(params[:distribution_point]) unless params[:distribution_point].blank?
         found_items = if params[:tid] and !params[:tid].empty?
-                         Distributor.where(tid: params[:tid].uniq)
-                       else
-                         Distributor.in_distribution_for_user current_user
-                       end
+                        Distributor.where(tid: params[:tid].uniq)
+                      else
+                        Distributor.in_distribution_for_user current_user
+                      end
         @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point, items: found_items
       end
       respond_to do |format|
@@ -151,13 +151,13 @@ module Distribution
     def create_item_hash(distributor, is_next_time_pickup = false)
       distributor = Distributor.find distributor unless distributor.is_a? Distributor
       {
-       item_id: distributor.tid,
-       title: distributor.title,
-       organizer: distributor.organizer,
-       organizer_id: distributor.starter_id,
-       is_next_time_pickup: is_next_time_pickup,
-       state_on_creation: distributor.color,
-       is_user_participate: distributor.user_participate?(current_user)
+          item_id: distributor.tid,
+          title: distributor.title,
+          organizer: distributor.organizer,
+          organizer_id: distributor.starter_id,
+          is_next_time_pickup: is_next_time_pickup,
+          state_on_creation: distributor.color,
+          is_user_participate: distributor.user_participate?(current_user)
       }
     end
 

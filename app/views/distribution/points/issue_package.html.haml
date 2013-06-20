@@ -1,0 +1,18 @@
+- javascipt 'distribution/issue_package'
+%h3 Выдача записи
+= render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
+
+.tab-content
+  = form_tag
+  = label_tag :package_list, 'Номер ведомости'
+  - distributing_lists = @point.package_lists.distributing.desc(:date)
+  - today_list = distributing_lists.where(date: Date.today).first #must be one
+  - default_list = today_list.nil? ? distributing_lists.first : today_list
+  = select_tag :package_list, options_from_collection_for_select(distributing_lists, :id, :number, default_list.id), class: 'chzn-select', data: {package_list_source: distribution_point_package_list_path(@point, '')}
+
+  = select_tag :packages, options_from_collection_for_select(default_list.packages.in_states(:collected, :in_distribution).asc(:order), :id, :code), include_blank: true, required:true, autofocus: true, class: 'chzn-select', data: { package_source: distribution_package_path('')}
+
+  .actions
+  = submit_tag :issue_package, confirm: 'Вы уверены, что хотите изменить статус заказа на выданный?', class: 'disabled', disabled:true
+
+

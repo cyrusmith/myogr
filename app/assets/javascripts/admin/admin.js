@@ -20,6 +20,7 @@
 //= require common
 //= require dataTables/jquery.dataTables
 //= require date.format
+//= require chosen-jquery
 
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {

@@ -111,6 +111,21 @@ module Distribution
       render json: @available_packages.sort_by { |a| a[:label] }
     end
 
+    def packages
+      package_list = PackageList.find(params[:package_list_id])
+      @packages = if (params[:state])
+                    case params[:state]
+                      when 'for_issue'
+                        package_list.packages.in_states(:collected, :in_distribution).asc(:order).all
+                      when
+                        package_list.packages.in_states(params[:state]).asc(:order).all
+                    end
+                  else
+                    package_list.packages.asc(:order).all
+                  end
+      render json: @packages
+    end
+
     def days_info
       @point = Point.find(params[:point_id])
       marked_days = @point.get_days_info(current_user.case?, params[:start_date])
