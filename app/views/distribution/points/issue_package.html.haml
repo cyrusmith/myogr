@@ -13,6 +13,6 @@
   = select_tag :packages, options_from_collection_for_select(default_list.packages.in_states(:collected, :in_distribution).asc(:order), :id, :code), include_blank: true, required:true, autofocus: true, class: 'chzn-select', data: { package_source: distribution_package_path('')}
 
   .actions
-  = submit_tag :issue_package, confirm: 'Вы уверены, что хотите изменить статус заказа на выданный?', class: 'disabled', disabled:true
+    = submit_tag t('distribution.package.events.to_issued'), id:'issue_package', confirm: 'Вы уверены, что хотите изменить статус заказа на выданный?', class: 'disabled', disabled:true
 
 
