@@ -1,6 +1,11 @@
-%h4 Запись №#{ Russian::strftime @distribution_package.package_list.date, '%d%m%Y'}/#{@distribution_package.code} на #{ Russian::strftime @distribution_package.package_list.date, '%e %B'} в ЦР на #{@distribution_package.package_list.point.address.to_s}
+- package_list = @distribution_package.package_list
+- point = package_list.point
+%h4 Запись №#{ Russian::strftime package_list.date, '%d%m%Y'}/#{@distribution_package.code} на #{ Russian::strftime package_list.date, '%e %B'} в ЦР на #{point.address.to_s}
 %h5
   %strong Статус записи: #{t('distribution.package.states.' + @distribution_package.state)}
+%h6  Время работы Центра раздач:
+%p
+  = raw point.work_schedule
 %p
   %strong Закупки к выдаче:
 %table.tight
@@ -9,12 +14,7 @@
       %td Название закупки
       %td Организатор
   %tbody
-    - @found_items.each do |item|
+    - @distribution_package.items.current_pickup.each do |item|
       %tr
         %td= t item.title
-        %td= User.find(item.organizer).display_name
-
-%p
-  %strong Примечание:
-  %br
-  = @distribution_package.comment
+        %td= item.organizer

@@ -52,10 +52,12 @@ Ogromno::Application.routes.draw do
   namespace :distribution do
     resources :packages
     resources :points do
-      match 'collect_package' => 'points#collect_package'
+      get 'collect_package' => 'points#collect_package'
+      match 'issue_package' => 'points#issue_package', :via => [:get, :post]
       resources :package_lists do
         get 'packing_lists' => 'package_lists#packing_lists'
         get 'package_list' => 'package_lists#package_list_report'
+        get 'packages/(:state)' => 'package_lists#packages'
       end
       put 'package_list/:id/fire_event/:event'=> 'package_lists#fire_event', :as => :fire_package_list_event
       get 'package_list/days_info'=> 'package_lists#days_info'

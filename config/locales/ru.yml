@@ -404,6 +404,8 @@ ru:
     password_recovery_mail_sent: "Информация по восстановлению пароля была успешно отправлена на электронную почту."
     wrong_credentials: "Пользователя с таким именем или адресом не существует."
     new_password_success: "Новый пароль был успешно установлен"
+    state_change_error: "Ошибка перевода в состояние %{new_state}"
+    state_change_complete: "Перевод в состояние %{new_state} завершен"
   headers:
     ditribution_center_list: "Центры раздач"
   pdf:

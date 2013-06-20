@@ -28,6 +28,10 @@ module Distribution
       self.next_time_pickup
     end
 
+    def set_next_time_pickup
+      self.is_next_time_pickup = true
+    end
+
     private
 
     def get_info

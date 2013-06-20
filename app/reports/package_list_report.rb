@@ -61,7 +61,7 @@ class PackageListReport < Prawn::Document
     data = []
     dataset.each do |row|
       username = row.user.nil? ? '' : "#{row.user.id}/#{row.user.display_name}"
-      data << new_row(row.code, username, row.document_number, row.items.count)
+      data << new_row(row.code, username, row.document_number, row.items.current_pickup.count)
     end
     table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
       row(0).style :background_color => 'cccccc'

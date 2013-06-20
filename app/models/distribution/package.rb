@@ -12,6 +12,7 @@ module Distribution
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
+    scope :in_states, lambda {|*states| where(:state.in => states)}
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])
@@ -76,13 +77,17 @@ module Distribution
       end
     end
 
+    state_machine.states.map do |state|
+      scope state.name, where(:state => state.name.to_s)
+    end
+
     include StateMachineScopes
     state_machine_scopes :state
 
     def collect!(collector, collected_items)
       self.collector_id = collector
       self.items.each do |item|
-        item.delete if !collected_items.index(item.item_id)
+        item.set_next_time_pickup if !collected_items.include?(item.item_id)
       end
       #TODO уточнить, нужно ли хранить дату последнего или всех обновлений заказов
       self.finish_collecting if self.can_finish_collecting?
