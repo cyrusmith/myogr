@@ -16,7 +16,7 @@ module Distribution
     # GET /distribution_centers/1.json
     def show
       @distribution_point = Point.find(params[:id])
-      @calendar_days_info = @distribution_point.get_days_info.inject Hash.new, :merge
+      @calendar_days_info = @distribution_point.get_days_info(true, admin_access: true).inject Hash.new, :merge
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_point }

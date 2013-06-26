@@ -20,6 +20,7 @@ module Ogromno
     config.autoload_paths << "#{config.root}/app/reports"
     config.autoload_paths << "#{config.root}/app/jobs"
     config.autoload_paths << "#{config.root}/app/forms"
+    config.autoload_paths << "#{config.root}/app/services"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

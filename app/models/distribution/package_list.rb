@@ -4,7 +4,7 @@ module Distribution
     include Mongoid::Document
     paginates_per 50
 
-    before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil?}
+    before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
 
     field :package_limit, type: Integer
     field :closed_by, type: String
@@ -72,16 +72,18 @@ module Distribution
       self.packages.each { |package| package.fire_state_event(event_name) } if Package.new.state_paths.events.include? event_name
     end
 
-    def get_info(is_filled_selectable=false)
-      if day_off?
-        [false , 'day-off', 'Нерабочий день'] if day_off?
+    def get_info(is_filled_selectable=false, admin_access = false)
+      info = if day_off?
+        [false, 'day-off', 'Нерабочий день']
       elsif closed?
         [false, 'closed', 'Запись закрыта']
-      elsif limit_filled?
-        [is_filled_selectable, is_filled_selectable ? '' : 'limit-filled', 'Лимит записей исчерпан']
+      elsif limit_filled? and !is_filled_selectable
+        [false, 'limit-filled', 'Лимит записей исчерпан']
       else
-        [ true, '', "Записано #{self.packages.not_case.count} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
+        [true, '', "Записано #{self.packages.not_case.count} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
       end
+      info[0] = true if admin_access
+      info
     end
 
     def limit_filled?

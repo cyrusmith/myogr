@@ -18,7 +18,6 @@ fetchDaysInfo = (pointId) ->
   $.ajax(
     url:url
     data:{start_date: dateFormat(start_date, 'isoDate')}
-#    TODO некрасиво, попробовать ajaxStart
     beforeSend: ->
       $('#calendar').slideDown()
       $('#calendar-loading').show()
