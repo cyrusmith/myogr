@@ -1,0 +1,5 @@
+<%- if !(@distribution_package.nil?) %>
+$('#package-info').html('<%= j render(@distribution_package) %>');
+<%- else %>
+alert('Запись не найдена');
+<%- end %>

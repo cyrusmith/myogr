@@ -4,26 +4,17 @@
 
 .tab-content
   = form_tag
-  = hidden_field_tag :package_list, '', data: {package_source: distribution_packages_path}
   = hidden_field_tag :collected_items
   .field
     = label_tag :collector, 'Сборщик'
-    = text_field_tag :collector,'', data: {autocomplete_source: @employees_string.to_s}
+    = select_tag :package_list, options_from_collection_for_select(@employees, :id, :display_name, @last), class: 'chzn-select', style: 'width:250px'
 
   .field
-    = label_tag :package_number, 'Сборка'
-    = text_field_tag :package_number, '', data: {autocomplete_source: distribution_point_find_package_path}
+    = render 'package_choose', point: @point, list: @list, distributing_lists: @point.package_lists.collecting.desc(:date), states: :collecting
 
-  %fieldset#package_items
-    %legend Список магазинов
-    %table#package_items_list
-      %tr
-        %th
-        %th Магазин
-        %th Готовность
-    .field
-      = label_tag :number, 'Номер'
-      = text_field_tag :number
+  .field
+    = label_tag :number, 'Номер'
+    = text_field_tag :number
 
   .actions
     = submit_tag 'Заказ собран', disabled: 'disabled'

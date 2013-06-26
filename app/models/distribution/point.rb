@@ -39,13 +39,15 @@ module Distribution
       self.employees = array.map { |name| User.find_by_members_display_name(name.strip).try(:id) }.delete_if { |x| x.nil? }
     end
 
-    def get_days_info(exclude_filled_dates = false, start_date=nil, num_months=3.month)
-      start_date = start_date || Date.today.beginning_of_month
+    def get_days_info(exclude_filled_dates = false, options ={})
+      start_date = options[:start_date] || Date.today.beginning_of_month
       start_date = Date.parse(start_date) unless start_date.is_a? Date
+      num_months = options[:num_months] || 3.months
+      admin_access = options[:admin_access]
       range_package_lists = self.package_lists.where(:date.gte => start_date, :date.lte => start_date + num_months)
       info = []
       range_package_lists.each do |list|
-        info << {list.date.iso8601 => list.get_info(exclude_filled_dates)}
+        info << {list.date.iso8601 => list.get_info(exclude_filled_dates, admin_access)}
       end
       info
     end

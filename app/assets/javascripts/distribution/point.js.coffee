@@ -63,17 +63,13 @@ jQuery ->
       fetchDaysOff(year, month)
     beforeShowDay: (date) =>
       if (window.days_off? and window.days_off != {})
-        string_date = date.format('yyyy-mm-dd')
+        string_date = date.format('isoDate')
         if (window.days_off[string_date])
-          style = window.days_off[string_date]
-          tip = 'Нерабочий день'
-          if style == 'limit-filled'
-            tip = 'Лимит записей исчерпан'
-          return [true, style, tip ]
+          return window.days_off[string_date]
         else
           return [true, '', '']
       else
-        return [true, '', '']
+      return [true, '', '']
     onSelect: (date) =>
       dc = $('#dc')[0].value
       url = '/distribution/points/' + dc + '/package_list/'

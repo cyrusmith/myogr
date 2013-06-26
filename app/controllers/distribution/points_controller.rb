@@ -16,7 +16,7 @@ module Distribution
     # GET /distribution_centers/1.json
     def show
       @distribution_point = Point.find(params[:id])
-      @calendar_days_info = @distribution_point.get_days_info.inject Hash.new, :merge
+      @calendar_days_info = @distribution_point.get_days_info(true, admin_access: true).inject Hash.new, :merge
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_point }
@@ -88,9 +88,11 @@ module Distribution
         package = Package.find(params[:package_list])
         package.collect! Integer(params[:collector]), items
         package.save
+        @list = package.package_list
       end
       @point = Point.find(params[:point_id])
-      @employees_string = @point.employees.map{|id| id.to_s} <<  @point.head_user.to_s
+      employee_ids = @point.employees <<  @point.head_user
+      @employees = employee_ids.map{|id| User.find(id)}
       respond_to do |format|
         format.html # show.html.erb
         format.js
@@ -100,7 +102,9 @@ module Distribution
     def issue_package
       @point = Point.find(params[:point_id])
       if (params[:packages])
-        if Package.find(params[:packages]).to_issued then
+        package = Package.find(params[:packages])
+        @list = package.package_list
+        if package.to_issued then
           flash[:success] = t('notifications.state_change_complete', new_state: t('distribution.package.states.issued'))
         else
           flash[:error] = t('notifications.state_change_error', new_state: t('distribution.package.states.issued'))

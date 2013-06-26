@@ -2,6 +2,12 @@
 = javascript_tag do
   window.days_off = #{raw @package_form.days_info.to_json}
 
+- unless current_user.case?
+  #sticky-notification.notice
+    С услугой "Кейс" вы сможете забирать товары без очереди даже в те дни, когда лимит записи уже исчерпан!
+    = link_to 'Подключить кейс', 'http://ogromno.com/index.php?act=zak&CODE=15'
+    %a.icon-remove{:href => '#close'}
+
 - package_list = @package_form.package_list
 = form_for @package_form.package do |f|
   = render 'distribution/packages/form/point_control', points: @package_form.points, chosen_point: @package_form.chosen_point
@@ -66,10 +72,12 @@
     = f.label :document_number, t('.document_number')
     = f.text_field :document_number, required: true
     = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
-  .actions
+  .actions.box
     = f.submit disabled: (true if @package_form.new?)
     -#%span#errors
     -#  %i.icon-remove-sign
     - unless @package_form.new?
       или
       = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
+      %p.small-font
+        Остались вопросы? Смотрите наш #{link_to 'скринкаст', 'http://youtu.be/whtdSajP5yE'} или задайте вопрос на #{link_to 'форуме', 'http://ogromno.com/index.php?s=&showtopic=50478&view=findpost&p=2600343'}
