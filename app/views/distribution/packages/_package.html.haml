@@ -5,22 +5,24 @@
     %td Код: #{@distribution_package.code}
   %tr
     %td Сборщик: #{@distribution_package.collector_id}
-    %td Дата сборки: #{Russian::strftime @distribution_package.collection_date, '%d.%m.%Y'}
+    %td Дата сборки: #{Russian::strftime @distribution_package.collection_date, '%d.%m.%Y' if @distribution_package.collection_date}
   %tr
     %td Пользователь: #{@distribution_package.user.display_name}
     %td Документ пользователя: #{@distribution_package.document_number}
 
 
 %h5 Закупки к выдаче:
-%table.tight
+%table#package_list.tight
   %thead
     %tr
+      %th
       %th
       %th Название закупки
       %th Организатор
   %tbody
     - @distribution_package.items.current_pickup.each do |item|
-      %tr
+      %tr{id: item.item_id, class: 'item_record'}
+        %td= image_tag( item.is_collected ? 'check.png' : 'cross.png')
         %td= t item.item_id
         %td= t item.title
         %td= item.organizer

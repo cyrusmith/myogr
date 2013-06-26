@@ -88,9 +88,11 @@ module Distribution
         package = Package.find(params[:package_list])
         package.collect! Integer(params[:collector]), items
         package.save
+        @list = package.package_list
       end
       @point = Point.find(params[:point_id])
-      @employees_string = @point.employees.map{|id| id.to_s} <<  @point.head_user.to_s
+      employee_ids = @point.employees <<  @point.head_user
+      @employees = employee_ids.map{|id| User.find(id)}
       respond_to do |format|
         format.html # show.html.erb
         format.js

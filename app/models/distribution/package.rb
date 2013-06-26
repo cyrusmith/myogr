@@ -87,7 +87,7 @@ module Distribution
     def collect!(collector, collected_items)
       self.collector_id = collector
       self.items.each do |item|
-        item.set_next_time_pickup if !collected_items.include?(item.item_id)
+        item.collected if !collected_items.include?(item.item_id)
       end
       #TODO уточнить, нужно ли хранить дату последнего или всех обновлений заказов
       self.finish_collecting if self.can_finish_collecting?
