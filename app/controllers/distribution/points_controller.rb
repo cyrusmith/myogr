@@ -100,7 +100,9 @@ module Distribution
     def issue_package
       @point = Point.find(params[:point_id])
       if (params[:packages])
-        if Package.find(params[:packages]).to_issued then
+        package = Package.find(params[:packages])
+        @list = package.package_list
+        if package.to_issued then
           flash[:success] = t('notifications.state_change_complete', new_state: t('distribution.package.states.issued'))
         else
           flash[:error] = t('notifications.state_change_error', new_state: t('distribution.package.states.issued'))

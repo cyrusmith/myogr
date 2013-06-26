@@ -21,6 +21,7 @@ module Distribution
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @distribution_package }
+        format.js
       end
     end
 

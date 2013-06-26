@@ -4,7 +4,6 @@ repopulatePackageSelect = (packages) ->
   for new_package in packages
     option = '<option value="' + new_package._id + '">' + new_package.code + '</option>'
     select.append(option)
-    select.trigger("liszt:updated");
 $ ->
   # enable chosen js
   $('.chzn-select').chosen
@@ -13,6 +12,14 @@ $ ->
     width: '100px'
 
   $('#packages_chzn .chzn-search input[type="text"]').focus()
+
+  $('#krutilka').krutilka
+    size: 32
+    petals: 15
+    petalWidth: 2
+    petalLength: 8
+    time: 2500
+  $('#krutilka').trigger('hide')
 
   $('#package_list').change(->
     list_id = $(this).val()
@@ -24,23 +31,29 @@ $ ->
         $('#packages').trigger("liszt:updated")
         $('input:submit').addClass('disabled')
         $('input:submit').attr('disabled', 'disabled')
+        $('#krutilka').trigger('show')
+
       success: (data) =>
         repopulatePackageSelect(data)
       complete: ->
         $('#packages').removeAttr('disabled')
         $('#packages').trigger("liszt:updated")
-        $('#packages_chzn .chzn-search input[type="text"]').focus();
+        $('#krutilka').trigger('hide')
+        $('#packages_chzn .chzn-search input[type="text"]').focus()
     )
   )
 
   $('#packages').change(->
-    checkDocumentBlock = $('#check-document')
     $.ajax(
-      url: $(this).data('package-source')  + $(this).val() + '.json'
-      success: (data) =>
-        alert('Проверьте документ: ' + data.document_number)
+      url: $(this).data('package-source')  + $(this).val()
+      dataType: "script"
+      beforeSend: ->
+        $('input:submit').addClass('disabled')
+        $('input:submit').attr('disabled', 'disabled')
+        $('#krutilka').trigger('show')
       complete: ->
         $('input:submit').removeClass('disabled')
         $('input:submit').removeAttr('disabled')
+        $('#krutilka').trigger('hide')
     )
   )

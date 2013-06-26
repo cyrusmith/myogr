@@ -58,8 +58,8 @@ module Distribution
 
     attr_accessible :package_limit, :is_closed, :closed_by
 
-    def number
-      Russian::strftime self.date, '%d%m%Y'
+    def human_date
+      Russian::strftime self.date, '%d.%m.%Y'
     end
 
     def order_number_for(method)
