@@ -7,7 +7,7 @@ module Distribution
     # GET /package_lists.json
     def index
       @point = Point.find(params[:point_id])
-      @package_lists = @point.package_lists.where(is_day_off: false).order_by(:date.asc).page params[:page]
+      @package_lists = @point.package_lists.where(:is_day_off => false, :state.nin => [:archived]).order_by(:date.asc).page params[:page]
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: PackageListsDatatable.new(view_context) }
