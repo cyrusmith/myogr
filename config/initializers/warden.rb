@@ -23,7 +23,8 @@ Warden::Strategies.add(:cookie) do
   end
 
   def authenticate!
-    user = User.find_by_member_login_key cookies['pass_hash']
+    user = User.where member_login_key: cookies['pass_hash']
+    user = user.count > 1 ? user.find(cookies['member_id']) : user.first
     if user.present? and user.member_login_key_expire > Time.now.to_i
       success! user
     else
@@ -35,12 +36,11 @@ end
 Warden::Manager.after_authentication do |user, auth, opts|
   auth.env['action_dispatch.cookies']['pass_hash'] = if Time.now.to_i > user.member_login_key_expire
                                                        token = user.generate_remember_token
-                                                       token['domain'] = '.' + auth.env['HTTP_HOST']
                                                        token
                                                      else
-                                                       {value: user.member_login_key, expires: Time.at(user.member_login_key_expire), domain: '.' + auth.env['HTTP_HOST']}
+                                                       {value: user.member_login_key, expires: Time.at(user.member_login_key_expire)}
                                                      end
-  auth.env['action_dispatch.cookies']['member_id'] = {value: user.id, expires: 1.year.from_now, domain: '.' + auth.env['HTTP_HOST']}
+  auth.env['action_dispatch.cookies']['member_id'] = {value: user.id, expires: 1.year.from_now}
 end
 
 Warden::Manager.before_logout do |user, auth, opts|
