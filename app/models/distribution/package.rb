@@ -12,7 +12,7 @@ module Distribution
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
-    scope :in_states, lambda {|*states| where(:state.in => states)}
+    scope :in_states, lambda {|states_array| where(:state.in => states_array)}
     scope :active, where(:state.in => ACTIVE_STATES)
     scope :case, where(:distribution_method => :case)
     scope :not_case, where(:distribution_method.nin => [:case])

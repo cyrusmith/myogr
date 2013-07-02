@@ -24,6 +24,7 @@ module Distribution
       end
       after_transition :to => :distributing do |package_list|
         package_list.packages_fire_event(:finish_collecting)
+        package_list.packages_fire_event(:to_distribution)
       end
 
       event :archive do
