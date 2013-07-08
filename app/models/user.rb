@@ -13,7 +13,7 @@ class User < ForumModels
   t_has_many :packages, :class_name => 'Distribution::Package'
   t_has_many :banners
   t_has_many :records
-  t_has_one :user_role
+  has_and_belongs_to_many :roles
 
   attr_accessor :password
   #TODO выделить атрибуты для редактирования админом attr_protected
@@ -52,19 +52,19 @@ class User < ForumModels
     end
   end
 
-  def has_role?(role_name)
-    if self.user_role.nil?
-      self.user_role = UserRole.create(user_id: self.id, roles: Array.new)
-      self.save
-      false
-    else
-      self.user_role.roles.include?(role_name)
-    end
+  # @param [Symbol, Role] role
+  def has_role?(role)
+    return false if self.roles.empty?
+    role = Role.find_by_name(role) if role.is_a?(Symbol) or role.is_a?(String)
+    self.roles.include?(role)
   end
 
-  def add_role(role_name)
-    self.user_role.roles << role_name
-    self.user_role.save
+  def add_role(role)
+    role = Role.find_by_name(role) if role.is_a?(Symbol) or role.is_a?(String)
+    unless self.roles.include? role
+      role.users << self
+      role.save
+    end
   end
 
   def valid_password?(password)
@@ -87,7 +87,7 @@ class User < ForumModels
   def create_extra
     user_id = self.credential.changed_attributes[Credential.primary_key]
     self.extra = Extra.create!(id: user_id)
-    self.user_role = UserRole.create!(user_id: user_id, roles: Array.new)
+    #self.user_role = UserRole.create!(user_id: user_id, roles: Array.new)
   end
 
   def set_default_values
