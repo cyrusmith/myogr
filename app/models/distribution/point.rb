@@ -1,24 +1,20 @@
 module Distribution
-  class Point
-    include Mongoid::Document
-    include Mongoid::Timestamps
-    include Mongoid::Paranoia
+  class Point < ActiveRecord::Base
+
+    include Tenacity
+    include StElsewhere
 
     before_save :check_head_permission
     before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
     after_create :initialize_package_lists
 
-    field :title, type: String
-    field :head_user, type: Integer
-    field :employees, type: Array
-    field :default_day_package_limit, type: Integer, default: Distribution::Settings.day_package_limit
-    field :work_schedule, type: String
-    field :comment, type: String
-
     validates :head_user, presence: true
 
-    embeds_one :address
-    has_many :package_lists, class_name: 'Distribution::PackageList', inverse_of: :point, dependent: :destroy
+    has_one :address, as: :addressable, dependent: :destroy
+    has_many :package_lists, :class_name => 'Distribution::PackageList', dependent: :destroy
+    #t_has_many :employees, class_name: 'User', through: :points_users, foreign_key: :user_id
+    has_many :points_users
+    has_many_elsewhere :employees, class_name: 'User', :through => :points_users
 
     attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :comment, :address, :address_fields
 
@@ -44,7 +40,7 @@ module Distribution
       start_date = Date.parse(start_date) unless start_date.is_a? Date
       num_months = options[:num_months] || 3.months
       admin_access = options[:admin_access]
-      range_package_lists = self.package_lists.where(:date.gte => start_date, :date.lte => start_date + num_months)
+      range_package_lists = self.package_lists.joins(:schedule).where(schedules: {date: start_date..(start_date+num_months)})
       info = []
       range_package_lists.each do |list|
         info << {list.date.iso8601 => list.get_info(exclude_filled_dates, admin_access)}

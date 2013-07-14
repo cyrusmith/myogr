@@ -1,10 +1,7 @@
 module Distribution
-  class PackageListStateTransition
-    include Mongoid::Document
-    field :event, type: String
-    field :from, type: String
-    field :to, type: String
-    field :created_at, type: Time
-    embedded_in :package_list
+  class PackageListStateTransition < ActiveRecord::Base
+    belongs_to :distribution_package_list, :class_name => 'Distribution::PackageList'
+
+    attr_accessible :package_list_id, :event, :from, :to
   end
 end
