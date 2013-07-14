@@ -5,7 +5,12 @@ namespace :mongoid_to_ar_migration do
       userrole.roles.each do |rolename|
         role = Role.find_by_name rolename
         role = Role.create! name: rolename if role.nil?
-        role.users << User.find(userrole.user_id)
+        user =  begin
+                  User.find(userrole.user_id)
+                rescue ActiveRecord::RecordNotFound
+                  nil
+                end
+        role.users << user unless user.nil?
       end
     end
   end
