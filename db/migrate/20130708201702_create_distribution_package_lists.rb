@@ -6,5 +6,6 @@ class CreateDistributionPackageLists < ActiveRecord::Migration
       t.integer :closed_by
       t.references :point
     end
+    add_index :distribution_package_lists, :point_id
   end
 end

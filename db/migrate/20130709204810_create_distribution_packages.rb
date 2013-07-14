@@ -12,5 +12,7 @@ class CreateDistributionPackages < ActiveRecord::Migration
       t.references :package_list
       t.timestamps
     end
+    add_index :distribution_packages, :user_id
+    add_index :distribution_packages, :package_list_id
   end
 end

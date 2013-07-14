@@ -13,5 +13,7 @@ class CreateDistributionPackageItems < ActiveRecord::Migration
       t.boolean :is_next_time_pickup, default: false
       t.references :package
     end
+    add_index :distribution_package_items, :item_id
+    add_index :distribution_package_items, :user_id
   end
 end
