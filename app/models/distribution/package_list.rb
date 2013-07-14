@@ -1,13 +1,11 @@
 # coding: utf-8
 module Distribution
-  class PackageList < ::Schedule
-    include Mongoid::Document
+  class PackageList < ActiveRecord::Base
     paginates_per 50
 
-    before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
+    delegate :date, :date=, :day_off?,  :is_day_off, :is_day_off=, :from, :from=, :till, :till=, to: :schedule
 
-    field :package_limit, type: Integer
-    field :closed_by, type: String
+    before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
 
     state_machine :state, :initial => :forming do
       store_audit_trail
@@ -51,11 +49,12 @@ module Distribution
       scope state.name, where(:state => state.name.to_s)
     end
 
+    has_one :schedule, as: :extension, dependent: :destroy
     has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
 
-    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists, index: true
+    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists
 
-    embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
+    #embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
     attr_accessible :package_limit, :is_closed, :closed_by
 
@@ -64,7 +63,8 @@ module Distribution
     end
 
     def order_number_for(method)
-      max_order = self.packages.where(distribution_method: method).max(:order)
+      packages = self.packages
+      max_order = packages.try(where(distribution_method: method).max(:order)) unless packages.empty?
       max_order ? max_order + 1 : 1
     end
 

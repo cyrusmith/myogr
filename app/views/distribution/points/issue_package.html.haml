@@ -4,7 +4,7 @@
 
 .tab-content
   = form_tag
-  = render 'package_choose', point: @point, list: @list, distributing_lists: point.package_lists.distributing.desc(:date), states: [:collected, :in_distribution]
+  = render 'package_choose', point: @point, list: @list, distributing_lists: point.package_lists.distributing.joins{schedule}.order{schedule.date.desc}, states: [:collected, :in_distribution]
 
   .actions
     = submit_tag t('distribution.package.events.to_issued'), id:'issue_package', confirm: 'Вы уверены, что хотите изменить статус заказа на выданный?', class: 'disabled', disabled:true

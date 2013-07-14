@@ -50,7 +50,7 @@ module Distribution
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
-        @package_list = @distribution_point.package_lists.find_or_create_by(date: params[:package_date])
+        @package_list = @distribution_point.package_lists.joins{schedule}.where(schedule: {date: params[:package_date]}).first
         @package_list.packages << @distribution_package
         if params[:tid] and !params[:tid].empty?
           current_pickup_ids = params[:tid].uniq.map(&:to_i)
@@ -95,7 +95,7 @@ module Distribution
         is_point_changed = !(@distribution_package.package_list.point == distribution_point)
         is_date_changed = !(@distribution_package.package_list.date == Date.parse(params[:package_date]))
         if is_point_changed or is_date_changed
-          @distribution_package.package_list = distribution_point.package_lists.find_or_create_by date: params[:package_date]
+          @distribution_package.package_list = distribution_point.package_lists.joins{schedule}.where(schedule: {date: params[:package_date]}).first
           @distribution_package.set_order
         end
       end
@@ -140,7 +140,7 @@ module Distribution
     private
 
     def check_active_package
-      user_active_packages = current_user.packages.active
+      user_active_packages = current_user.packages.empty? ? Array.new() : current_user.packages.active
       redirect_to edit_distribution_package_path(user_active_packages.first) if user_active_packages.count > 0
     end
 

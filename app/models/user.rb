@@ -1,5 +1,6 @@
 class User < ForumModels
   include Tenacity
+  include StElsewhere
   self.table_name = 'ibf_members'
 
   scope :verified, where(is_verified: true)
@@ -13,6 +14,8 @@ class User < ForumModels
   t_has_many :packages, :class_name => 'Distribution::Package'
   t_has_many :banners
   t_has_many :records
+  has_many_elsewhere :points, class_name: 'User', :through => :points_users
+
   has_and_belongs_to_many :roles
 
   attr_accessor :password
@@ -55,12 +58,12 @@ class User < ForumModels
   # @param [Symbol, Role] role
   def has_role?(role)
     return false if self.roles.empty?
-    role = Role.find_by_name(role) if role.is_a?(Symbol) or role.is_a?(String)
+    role = Role.find_by_name(role.to_s) if role.is_a?(Symbol) or role.is_a?(String)
     self.roles.include?(role)
   end
 
   def add_role(role)
-    role = Role.find_by_name(role) if role.is_a?(Symbol) or role.is_a?(String)
+    role = Role.find_by_name(role.to_s) if role.is_a?(Symbol) or role.is_a?(String)
     unless self.roles.include? role
       role.users << self
       role.save

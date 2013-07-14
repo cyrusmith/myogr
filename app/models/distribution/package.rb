@@ -1,42 +1,29 @@
 # encoding: utf-8
 module Distribution
-  class Package
-    include Mongoid::Document
-    include Mongoid::Timestamps
-    include Mongoid::Paranoia
+  class Package < ActiveRecord::Base
     include Tenacity
 
     ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution]
-    FINAL_STATES = [:issued, :utilized]
+    FINAL_STATES = [:issued.to_s, :utilized.to_s]
     METHODS = [:at_point, :case, :delivery]
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
-    scope :in_states, lambda {|states_array| where(:state.in => states_array)}
-    scope :active, where(:state.in => ACTIVE_STATES)
-    scope :case, where(:distribution_method => :case)
-    scope :not_case, where(:distribution_method.nin => [:case])
-    scope :distribution_method, ->(method_name) { where(:distribution_method => method_name) }
+    scope :in_states, lambda {|states_array| where{state.in states_array.map{|v| v.to_s}} }
+    scope :active, where(state: ACTIVE_STATES.map{|state| state.to_s})
+    scope :case, where(distribution_method: 'case')
+    scope :not_case, where{distribution_method.not_eq 'case'}
+    scope :distribution_method, ->(method_name) { where(distribution_method: method_name.to_s) }
     #scope :not_case, self.not.where(:distribution_method => :case)
 
     before_create :set_order
 
-    field :order, type: Integer
-    field :code, type: String
-    field :distribution_method, type: Symbol, default: :at_point
-    field :collector_id, type: Integer
-    field :collection_date, type: Date
-    field :document_number, type: String
     validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
-    index({distribution_method: 1})
-    index({package_list_id: 1, distribution_method: 1})
-
-    embeds_many :items, class_name: 'Distribution::PackageItem'
-    embeds_many :package_state_transitions, class_name: 'Distribution::PackageStateTransition'
+    has_many :items, class_name: 'Distribution::PackageItem'
 
     t_belongs_to :user
-    belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages, index:true
+    belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
@@ -84,6 +71,10 @@ module Distribution
     include StateMachineScopes
     state_machine_scopes :state
 
+    def active?
+      ACTIVE_STATES.include? self.state.to_sym
+    end
+
     def collect!(collector, collected_items)
       self.collector_id = collector
       self.items.each do |item|
@@ -96,7 +87,7 @@ module Distribution
     def set_order
       order_num = self.package_list.order_number_for(self.distribution_method)
       self.order = order_num
-      self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method]
+      self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method.to_sym]
     end
 
   end

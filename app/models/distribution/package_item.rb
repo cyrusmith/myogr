@@ -1,22 +1,9 @@
 module Distribution
-  class PackageItem
-    include Mongoid::Document
-    include Mongoid::Timestamps
-    include Mongoid::Paranoia
+  class PackageItem < ActiveRecord::Base
 
     before_create :get_info
 
-    field :item_id, type: Integer
-    field :title, type: String
-    field :organizer_id, type: Integer
-    field :organizer, type: String
-    #состояние закупки, в тот момент, когда пользователь отправил ее в сборку
-    field :state_on_creation, type:String
-    field :is_collected, type: Boolean, default: false
-    field :is_user_participate, type: Boolean, default: true
-    field :is_next_time_pickup, type: Boolean, default: false
-
-    embedded_in :package
+    belongs_to :package
 
     scope :current_pickup, where(is_next_time_pickup: false)
     scope :next_time_pickup, where(is_next_time_pickup: true)

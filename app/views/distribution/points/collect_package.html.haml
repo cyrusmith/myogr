@@ -10,7 +10,7 @@
     = select_tag :package_list, options_from_collection_for_select(@employees, :id, :display_name, @last), class: 'chzn-select', style: 'width:250px'
 
   .field
-    = render 'package_choose', point: @point, list: @list, distributing_lists: @point.package_lists.collecting.desc(:date), states: :collecting
+    = render 'package_choose', point: @point, list: @list, distributing_lists: @point.package_lists.collecting.joins{schedule}.order{schedule.date}, states: :collecting
 
   .field
     = label_tag :number, 'Номер'
