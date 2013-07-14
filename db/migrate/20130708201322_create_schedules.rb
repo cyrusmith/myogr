@@ -7,5 +7,6 @@ class CreateSchedules < ActiveRecord::Migration
       t.time :till
       t.references :extension, polymorphic: true
     end
+    add_index :schedules, [:extension_id, :extension_type]
   end
 end

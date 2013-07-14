@@ -8,5 +8,6 @@ class CreateAddresses < ActiveRecord::Migration
       t.float :geo_y
       t.references :addressable, polymorphic: true
     end
+    add_index :addresses, [:addressable_id, :addressable_type]
   end
 end
