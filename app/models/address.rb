@@ -1,14 +1,9 @@
-class Address
-  include Mongoid::Document
+class Address < ActiveRecord::Base
 
   before_save :set_location
 
-  field :city, type: String
-  field :district, type: String
-  field :street, type: String
-  field :location, type: Array
+  belongs_to :addressable, polymorphic: true
 
-  embedded_in :distribution_point
   attr_accessible :city, :district, :street
 
   def to_s

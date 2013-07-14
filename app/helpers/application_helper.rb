@@ -24,7 +24,8 @@ module ApplicationHelper
   end
 
   def get_package_path
-    active_package = current_user.packages.active.first
+    user_packages = current_user.packages
+    active_package = user_packages.empty? ? nil : user_packages.select{|package| package.active?}.first
     return new_distribution_package_path if active_package.nil?
     if active_package.changeable?
       edit_distribution_package_path(active_package)

@@ -20,19 +20,19 @@
                   size: 100,
                   hint: t('common.hints.percentage_tooltip', part: limitable_packages, whole: package_limit) + '. ' + t('common.hints.case_tooltip', cases: cases)
   %td
-    - number_of_collected_packages = list.packages.where(:state.nin => [:accepted, :collecting]).count
+    - number_of_collected_packages = list.packages.where{state.not_in ['accepted', 'collecting']}.count
     = progressbar total_packages, number_of_collected_packages,
                   size: 100,
                   hint: t('common.hints.percentage_tooltip', part: number_of_collected_packages, whole:total_packages),
                   color: 'blue'
   %td
-    - number_of_issued_packages = list.packages.where(:state.in => Distribution::Package::FINAL_STATES).count
+    - number_of_issued_packages = list.packages.where{state.in Distribution::Package::FINAL_STATES}.count
     = progressbar total_packages, number_of_issued_packages,
                   size: 100,
                   hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:total_packages),
                   color: 'green'
   %td
-    = select_tag 'action_on_' + list.id, options_for_select([ ['(Выберите действие)', ''],
+    = select_tag 'action_on_' + list.id.to_s, options_for_select([ ['(Выберите действие)', ''],
                                                               ['Распечатать ведомости', 1, {class: 'pdf', source: distribution_point_package_list_package_list_path(point, list)}],
                                                               ['Распечатать упаковочные листы', 2, {class: 'pdf', source: distribution_point_package_list_packing_lists_path(point, list)}]]), class: 'actions'
 

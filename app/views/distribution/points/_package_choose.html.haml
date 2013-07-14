@@ -1,13 +1,13 @@
 - javascipt 'distribution/package_choose'
 = label_tag :package_list, 'Номер ведомости'
-- today_list = distributing_lists.where(date: Date.today).first #must be one
+- today_list = distributing_lists.joins{schedule}.where{schedule.date == Date.today}.first #must be one
 - default_list = list || today_list || distributing_lists.first
 - states_array = states.is_a?(Array) ? states : Array[states]
 - if default_list
   = select_tag :package_list, options_from_collection_for_select(distributing_lists, :id, :human_date, default_list.id), class: 'chzn-select', data: {package_list_source: distribution_point_package_list_path(@point, '')}
 
   = select_tag :packages,
-               options_from_collection_for_select(default_list.packages.in_states(states_array).asc(:order), :id, :code),
+               options_from_collection_for_select(default_list.packages.in_states(states_array).order(:order), :id, :code),
                data: { package_source: distribution_package_path('')},
                include_blank: true,
                required:true,
