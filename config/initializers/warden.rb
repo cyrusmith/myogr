@@ -23,7 +23,8 @@ Warden::Strategies.add(:cookie) do
   end
 
   def authenticate!
-    user = User.find_by_member_login_key cookies['pass_hash']
+    user = User.where member_login_key: cookies['pass_hash']
+    user = user.count > 1 ? user.find(cookies['member_id']) : user.first
     if user.present? and user.member_login_key_expire > Time.now.to_i
       success! user
     else
