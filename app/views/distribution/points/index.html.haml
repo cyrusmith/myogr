@@ -6,7 +6,7 @@
     %th Начальник
     %th
 
-  - @distribution_centers.each do |distribution_center|
+  - @distribution_points.each do |distribution_center|
     %tr
       %td= distribution_center.title
       %td= User.find(distribution_center.head_user).display_name
@@ -17,5 +17,5 @@
 
 %br
 
-= link_to 'Новый центр раздач', new_distribution_point_path if can? :create, @distribution_centers
+= link_to 'Новый центр раздач', new_distribution_point_path if can? :create, @distribution_points
 

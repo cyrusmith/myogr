@@ -22,23 +22,28 @@ module StateMachineScopes
           define_scopes_for(machine_name, prefix)
         end
       else
-        state_machines.keys.each do |machine_name|
-          define_scopes_for(machine_name, prefix)
+        machine_keys = state_machines.keys;
+        if machine_keys.size == 1
+          define_scopes_for(machine_keys[0], prefix, false)
+        else
+          machine_keys.each do |machine_name|
+            define_scopes_for(machine_name, prefix)
+          end
         end
       end
     end
 
     private
 
-    def define_scopes_for(machine_name, prefix)
+    def define_scopes_for(machine_name, prefix, machine_name_in_scope = true)
       state_machines[machine_name.to_sym].states.keys.compact.each do |state|
-        scope_name = [prefix, machine_name, state].compact.join('_')
+        scope_name = (machine_name_in_scope ? [prefix, machine_name, state] : [prefix, state]).compact.join('_')
         debugger if scope_name.to_s == 'state'
         if self.respond_to? scope_name
           raise MethodAlreadyDefinedError.new("Already defined method called \"#{scope_name}\"")
         end
         self.class_eval do
-          scope :"#{scope_name}", where(:state => state)
+          scope :"#{scope_name}", where(:state => state.to_s)
         end
       end
     end

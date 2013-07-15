@@ -2,17 +2,23 @@
 module Distribution
   class PackageList < ActiveRecord::Base
     paginates_per 50
-
     delegate :date, :date=, :day_off?,  :is_day_off, :is_day_off=, :from, :from=, :till, :till=, to: :schedule
 
     before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
+
+    attr_accessible :package_limit, :is_closed, :closed_by
+
+    has_one :schedule, as: :extension, dependent: :destroy
+    has_many :packages, class_name: 'Distribution::Package'
+    belongs_to :point, class_name: 'Distribution::Point'
+
+    accepts_nested_attributes_for :packages
 
     state_machine :state, :initial => :forming do
       store_audit_trail
       event :to_collecting do
         transition :forming => :collecting
       end
-      #TODO тут кроется потенциальный глюк, так как транзакций в монго нет, а операции атомарны только в рамках одного объекта.
       after_transition :to => :collecting do |package_list|
         package_list.packages_fire_event(:start_collecting)
       end
@@ -45,19 +51,8 @@ module Distribution
       end
     end
 
-    state_machine.states.map do |state|
-      scope state.name, where(:state => state.name.to_s)
-    end
-
-    has_one :schedule, as: :extension, dependent: :destroy
-    has_many :packages, class_name: 'Distribution::Package'
-
-    belongs_to :point, class_name: 'Distribution::Point'
-
-    #embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
-
-    attr_accessible :package_limit, :is_closed, :closed_by
-    accepts_nested_attributes_for :packages
+    include StateMachineScopes
+    state_machine_scopes
 
     def human_date
       Russian::strftime self.date, '%d.%m.%Y'

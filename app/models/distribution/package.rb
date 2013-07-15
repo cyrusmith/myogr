@@ -3,30 +3,30 @@ module Distribution
   class Package < ActiveRecord::Base
     include Tenacity
 
-    ACTIVE_STATES = [:accepted, :collecting, :collected, :in_distribution]
-    FINAL_STATES = [:issued.to_s, :utilized.to_s]
-    METHODS = [:at_point, :case, :delivery]
+    ACTIVE_STATES = :accepted, :collecting, :collected, :in_distribution
+    FINAL_STATES = :issued, :utilized
+    METHODS = :at_point, :case, :delivery
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
-    scope :in_states, lambda {|states_array| where{state.in states_array.map{|v| v.to_s}} }
-    scope :active, where(state: ACTIVE_STATES.map{|state| state.to_s})
-    scope :case, where(distribution_method: 'case')
-    scope :not_case, where{distribution_method.not_eq 'case'}
-    scope :distribution_method, ->(method_name) { where(distribution_method: method_name.to_s) }
-    #scope :not_case, self.not.where(:distribution_method => :case)
-
     before_create :set_order
 
-    validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
+    attr_accessible :user_id, :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
 
+    validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
     t_belongs_to :user
     belongs_to :package_list, class_name: 'Distribution::PackageList'
     has_many :items, class_name: 'Distribution::PackageItem'
+
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :user_id, :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
+    scope :in_states, lambda {|states_array| where{state.in states_array.map(&:to_s)} }
+    scope :not_in_states, lambda {|states_array| where{state.not_in states_array.map(&:to_s)} }
+    scope :active, self.where(state: ACTIVE_STATES.map(&:to_s))
+    scope :case, where(distribution_method: 'case')
+    scope :not_case, where{distribution_method.not_eq 'case'}
+    scope :distribution_method, ->(method_name) { where(distribution_method: method_name.to_s) }
 
     state_machine :state, :initial => :accepted do
       store_audit_trail
@@ -61,17 +61,41 @@ module Distribution
           false
         end
       end
+
+      state :accepted, :collecting do
+        def collected?
+          false
+        end
+      end
+
+      state all - [:accepted, :collecting] do
+        def collected?
+          true
+        end
+      end
+
+      state :issued, :utilized do
+        def completed?
+          true
+        end
+      end
+
+      state all - [:issued, :utilized] do
+        def completed?
+          false
+        end
+      end
     end
 
-    state_machine.states.map do |state|
-      scope state.name, where(:state => state.name.to_s)
-    end
-
-    #include StateMachineScopes
-    #state_machine_scopes :state
+    include StateMachineScopes
+    state_machine_scopes
 
     def active?
       ACTIVE_STATES.include? self.state.to_sym
+    end
+
+    def case?
+      self.distribution_method.eql?('case')
     end
 
     def collect!(collector, collected_items)

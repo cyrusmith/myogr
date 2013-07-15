@@ -1,6 +1,5 @@
 module Distribution
   class Point < ActiveRecord::Base
-
     include Tenacity
     include StElsewhere
 
@@ -8,15 +7,17 @@ module Distribution
     before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
     after_create :initialize_package_lists
 
+    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :address, :address_fields
+
     validates :head_user, presence: true
 
     has_one :address, as: :addressable, dependent: :destroy
     has_many :package_lists, :class_name => 'Distribution::PackageList', dependent: :destroy
-    #t_has_many :employees, class_name: 'User', through: :points_users, foreign_key: :user_id
     has_many :points_users
     has_many_elsewhere :employees, class_name: 'User', :through => :points_users
 
-    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :comment, :address, :address_fields
+    accepts_nested_attributes_for :address,
+                                  reject_if: lambda { |a| a[:title].blank? and a[:head_user].blank? }
 
     def head_name
       User.find(self.head_user).try :display_name if self.head_user.present?
@@ -47,9 +48,6 @@ module Distribution
       end
       info
     end
-
-    accepts_nested_attributes_for :address,
-                                  reject_if: lambda { |a| a[:title].blank? and a[:head_user].blank? }
 
     private
 

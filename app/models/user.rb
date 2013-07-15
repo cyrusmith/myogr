@@ -3,11 +3,14 @@ class User < ForumModels
   include StElsewhere
   self.table_name = 'ibf_members'
 
-  scope :verified, where(is_verified: true)
-  scope :not_verified, where(is_verified: false)
-
   before_create :create_credential, :set_default_values, :generate_verification_data
   after_create :create_extra
+
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
+  attr_accessor :password
+
+  validates :password, length: {minimum: 6, maximum: 30}, on: :create
+  validates :members_l_display_name, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 60}
 
   has_one :credential, foreign_key: 'converge_id'
   has_one :extra, foreign_key: 'id'
@@ -15,16 +18,10 @@ class User < ForumModels
   t_has_many :banners
   t_has_many :records
   has_many_elsewhere :points, class_name: 'User', :through => :points_users
-
   has_and_belongs_to_many :roles
 
-  attr_accessor :password
-  #TODO выделить атрибуты для редактирования админом attr_protected
-  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
-
-  #validates :name, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 4, maximum: 30}
-  validates :password, length: {minimum: 6, maximum: 30}, on: :create
-  validates :members_l_display_name, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 60}
+  scope :verified, where(is_verified: true)
+  scope :not_verified, where(is_verified: false)
 
   def generate_verification_data
     self.verification_code = Digest::MD5.hexdigest(self.email + Time.now.to_i.to_s)

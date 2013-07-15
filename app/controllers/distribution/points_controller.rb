@@ -4,11 +4,11 @@ module Distribution
     # GET /distribution_centers
     # GET /distribution_centers.json
     def index
-      @distribution_centers = Point.all
+      @distribution_points = Point.all
 
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @distribution_centers }
+        format.json { render json: @distribution_points }
       end
     end
 
@@ -48,7 +48,7 @@ module Distribution
           format.html { redirect_to distribution_points_path, notice: 'Distribution center was successfully created.' }
           format.json { render json: @distribution_point, status: :created, location: @distribution_point }
         else
-          format.html { render action: "new" }
+          format.html { render action: 'new' }
           format.json { render json: @distribution_point.errors, status: :unprocessable_entity }
         end
       end
@@ -63,7 +63,7 @@ module Distribution
           format.html { redirect_to @distribution_point, notice: 'Distribution center was successfully updated.' }
           format.json { head :no_content }
         else
-          format.html { render action: "edit" }
+          format.html { render action: 'edit' }
           format.json { render json: @distribution_point.errors, status: :unprocessable_entity }
         end
       end
@@ -86,7 +86,7 @@ module Distribution
       if (params[:package_list])
         items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map {|deb| Integer(deb)}
         package = Package.find(params[:package_list])
-        package.collect! Integer(params[:collector]), items
+        package.collect! params[:collector].to_i, items
         package.save
         @list = package.package_list
       end

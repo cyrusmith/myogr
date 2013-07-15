@@ -1,7 +1,9 @@
-- package_limit = list.package_limit
-- limitable_packages = list.packages.not_case.count
-- total_packages = list.packages.count
-- cases = total_packages - limitable_packages
+- package_limit = data.package_limit
+- limitable_packages = data.limitable_packages
+- total_packages = data.total_packages
+- cases = data.case_packages
+- list = data.package_list
+- point = data.point
 %tr{id: list.id}
   %td=list.date
   %td
@@ -12,6 +14,7 @@
     - elsif possible_events.size == 1
       - new_state = possible_events.first.to_s
       = link_to t('distribution.package_lists.events.' + new_state), distribution_point_fire_package_list_event_path(point,list,new_state),
+                class: 'fire-event-link',
                 confirm: 'Вы уверены, что хотите перевести ведомость в следующую стадию?',
                 remote: true,
                 method: :put
@@ -20,16 +23,16 @@
                   size: 100,
                   hint: t('common.hints.percentage_tooltip', part: limitable_packages, whole: package_limit) + '. ' + t('common.hints.case_tooltip', cases: cases)
   %td
-    - number_of_collected_packages = list.packages.where{state.not_in ['accepted', 'collecting']}.count
-    = progressbar total_packages, number_of_collected_packages,
+    - collected_packages = data.collected_packages
+    = progressbar total_packages, collected_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: number_of_collected_packages, whole:total_packages),
+                  hint: t('common.hints.percentage_tooltip', part: collected_packages, whole:total_packages),
                   color: 'blue'
   %td
-    - number_of_issued_packages = list.packages.where{state.in Distribution::Package::FINAL_STATES}.count
-    = progressbar total_packages, number_of_issued_packages,
+    - issued_packages = data.issued_packages
+    = progressbar total_packages, issued_packages,
                   size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: number_of_issued_packages, whole:total_packages),
+                  hint: t('common.hints.percentage_tooltip', part: issued_packages, whole:total_packages),
                   color: 'green'
   %td
     = select_tag 'action_on_' + list.id.to_s, options_for_select([ ['(Выберите действие)', ''],
