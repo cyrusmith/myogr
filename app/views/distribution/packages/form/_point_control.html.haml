@@ -8,4 +8,4 @@
   - else
     - point = points.first
     = hidden_field_tag 'distribution_point', point.id
-    = point.address.to_s
+    = point.address.short_address
