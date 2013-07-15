@@ -17,11 +17,6 @@ module Ogromno
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths << "#{config.root}/lib"
-    config.autoload_paths << "#{config.root}/app/reports"
-    config.autoload_paths << "#{config.root}/app/jobs"
-    config.autoload_paths << "#{config.root}/app/forms"
-    config.autoload_paths << "#{config.root}/app/services"
-    config.autoload_paths << "#{config.root}/app/datarows"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
