@@ -4,11 +4,11 @@ class Credential < ForumModels
 
   before_save :set_timestamp
 
-  belongs_to :member, foreign_key: 'id'
-
   attr_accessible :converge_email, :converge_joined, :converge_pass_hash, :converge_pass_salt, :converge_password
 
   validates :converge_email, :presence => true, :uniqueness => {:case_sensitive => false}, :email => true, :on => :create
+
+  belongs_to :member, foreign_key: 'id'
 
   def converge_password=(password)
     self.converge_pass_salt = generate_salt

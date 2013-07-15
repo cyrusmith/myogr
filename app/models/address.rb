@@ -2,11 +2,11 @@ class Address < ActiveRecord::Base
 
   before_save :set_location
 
-  belongs_to :addressable, polymorphic: true
-
   attr_accessible :city, :district, :street
 
-  def to_s
+  belongs_to :addressable, polymorphic: true
+
+  def short_address
     "#{self.street}"
   end
 
@@ -15,7 +15,7 @@ class Address < ActiveRecord::Base
   end
 
   def set_location
-    #TODO запрос к яндексу по адресу и городу
+    #TODO запрос по адресу и городу
   end
 
 end

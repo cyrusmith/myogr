@@ -13,7 +13,7 @@
   = render 'distribution/packages/form/point_control', points: @package_form.points, chosen_point: @package_form.chosen_point
   - unless @package_form.new?
     %h5
-      Вы записаны в ЦР на #{@package_form.chosen_point.address.to_s}. Дата получения #{ Russian::strftime package_list.date, '%e %B(%A)'}.
+      Вы записаны в ЦР на #{@package_form.chosen_point.address.short_address}. Дата получения #{ Russian::strftime package_list.date, '%e %B(%A)'}.
       Номер записи - #{@package_form.code}.
   %p.work-schedule
     = raw @package_form.chosen_point.try(:work_schedule)
