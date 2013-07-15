@@ -20,14 +20,13 @@ module Distribution
 
     validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
 
-    has_many :items, class_name: 'Distribution::PackageItem'
 
     t_belongs_to :user
-    belongs_to :package_list, class_name: 'Distribution::PackageList', inverse_of: :packages
-
+    belongs_to :package_list, class_name: 'Distribution::PackageList'
+    has_many :items, class_name: 'Distribution::PackageItem'
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    attr_accessible :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
+    attr_accessible :user_id, :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
 
     state_machine :state, :initial => :accepted do
       store_audit_trail
@@ -68,8 +67,8 @@ module Distribution
       scope state.name, where(:state => state.name.to_s)
     end
 
-    include StateMachineScopes
-    state_machine_scopes :state
+    #include StateMachineScopes
+    #state_machine_scopes :state
 
     def active?
       ACTIVE_STATES.include? self.state.to_sym
@@ -85,6 +84,7 @@ module Distribution
     end
 
     def set_order
+      return if self.package_list.nil?
       order_num = self.package_list.order_number_for(self.distribution_method)
       self.order = order_num
       self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method.to_sym]
