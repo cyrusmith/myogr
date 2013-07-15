@@ -50,7 +50,7 @@ module Distribution
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
-        @package_list = @distribution_point.package_lists.joins{schedule}.where(schedule: {date: params[:package_date]}).first
+        @package_list = @distribution_point.package_lists.joins { schedule }.where(schedule: {date: params[:package_date]}).first
         @package_list.packages << @distribution_package
         if params[:tid] and !params[:tid].empty?
           current_pickup_ids = params[:tid].uniq.map(&:to_i)
@@ -95,7 +95,7 @@ module Distribution
         is_point_changed = !(@distribution_package.package_list.point == distribution_point)
         is_date_changed = !(@distribution_package.package_list.date == Date.parse(params[:package_date]))
         if is_point_changed or is_date_changed
-          @distribution_package.package_list = distribution_point.package_lists.joins{schedule}.where(schedule: {date: params[:package_date]}).first
+          @distribution_package.package_list = distribution_point.package_lists.joins { schedule }.where(schedule: {date: params[:package_date]}).first
           @distribution_package.set_order
         end
       end
@@ -106,14 +106,19 @@ module Distribution
           tid = tid.to_i
           if tid.in? existing_item_ids.keys
             #TODO оптимально не искать каждый раз объекты в таблице. Уменьшить количество запросов
-            @distribution_package.items.where(item_id: tid).each { |item| item.is_next_time_pickup = false } if existing_item_ids[tid]
+            if existing_item_ids[tid]
+              @distribution_package.items.where(item_id: tid).each do |item|
+                item.is_next_time_pickup = false
+                item.save
+              end
+            end
             existing_item_ids.delete(tid)
           else
             @distribution_package.items.new(create_item_hash(tid))
           end
         end
       end
-      existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.is_next_time_pickup = true } }
+      existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.update_attribute(:is_next_time_pickup, true) } }
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
           format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.code} успешно обновлены"} }
@@ -140,7 +145,7 @@ module Distribution
     private
 
     def check_active_package
-      user_active_packages = current_user.packages.empty? ? Array.new() : current_user.packages.select{|p| p.active?}
+      user_active_packages = current_user.packages.empty? ? Array.new() : current_user.packages.select { |p| p.active? }
       redirect_to edit_distribution_package_path(user_active_packages.first) if user_active_packages.count > 0
     end
 
