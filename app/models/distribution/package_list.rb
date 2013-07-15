@@ -65,7 +65,7 @@ module Distribution
 
     def order_number_for(method)
       packages = self.packages
-      max_order = packages.try(where(distribution_method: method).max(:order)) unless packages.empty?
+      max_order = packages.where(distribution_method: method).max(:order) unless packages.empty?
       max_order ? max_order + 1 : 1
     end
 
