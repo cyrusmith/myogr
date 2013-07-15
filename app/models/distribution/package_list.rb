@@ -50,9 +50,9 @@ module Distribution
     end
 
     has_one :schedule, as: :extension, dependent: :destroy
-    has_many :packages, class_name: 'Distribution::Package', inverse_of: :package_list
+    has_many :packages, class_name: 'Distribution::Package'
 
-    belongs_to :point, class_name: 'Distribution::Point', inverse_of: :package_lists
+    belongs_to :point, class_name: 'Distribution::Point'
 
     #embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
@@ -65,7 +65,7 @@ module Distribution
 
     def order_number_for(method)
       packages = self.packages
-      max_order = packages.where(distribution_method: method).max(:order) unless packages.empty?
+      max_order = packages.where(distribution_method: method).maximum(:order) unless packages.empty?
       max_order ? max_order + 1 : 1
     end
 
