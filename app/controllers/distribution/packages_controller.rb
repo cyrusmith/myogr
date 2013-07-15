@@ -140,7 +140,7 @@ module Distribution
     private
 
     def check_active_package
-      user_active_packages = current_user.packages.empty? ? Array.new() : current_user.packages.active
+      user_active_packages = current_user.packages.empty? ? Array.new() : current_user.packages.select{|p| p.active?}
       redirect_to edit_distribution_package_path(user_active_packages.first) if user_active_packages.count > 0
     end
 
