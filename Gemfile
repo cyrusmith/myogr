@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,12 +13,13 @@ gem 'russian'
 gem 'settingslogic'
 gem 'bson_ext', '>= 1.3.0'
 gem 'tenacity'
+gem 'mongoid'
 #gem 'devise', '>= 1.3.3'
 gem 'rails_warden'
 gem 'cancan'
 gem 'debugger-linecache'
 gem 'mini_magick'
-gem 'carrierwave'
+gem 'carrierwave-mongoid'
 gem 'money-rails'
 gem 'kaminari'
 gem 'state_machine'
