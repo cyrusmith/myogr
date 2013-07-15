@@ -57,6 +57,7 @@ module Distribution
     #embeds_many :package_list_state_transitions, class_name: 'Distribution::PackageListStateTransition'
 
     attr_accessible :package_limit, :is_closed, :closed_by
+    accepts_nested_attributes_for :packages
 
     def human_date
       Russian::strftime self.date, '%d.%m.%Y'

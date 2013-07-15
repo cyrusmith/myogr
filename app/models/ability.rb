@@ -20,7 +20,7 @@ class Ability
       else
         can :create, Banner
         can :manage, Record
-        can :manage, Distribution::Package, :user_id => user.id
+        can :manage, Distribution::Package
         can :read, Distribution::Point
     end
     #if
