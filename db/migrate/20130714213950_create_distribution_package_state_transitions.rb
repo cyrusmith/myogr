@@ -7,6 +7,6 @@ class CreateDistributionPackageStateTransitions < ActiveRecord::Migration
       t.string :to
       t.timestamp :created_at
     end
-    add_index :distribution_package_state_transitions, :package_id
+    add_index :distribution_package_state_transitions, :package_id, name: :package_state_tr
   end
 end

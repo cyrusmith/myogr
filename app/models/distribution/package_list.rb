@@ -1,14 +1,14 @@
 # coding: utf-8
 module Distribution
   class PackageList < ActiveRecord::Base
+    acts_as_schedule_extension
     paginates_per 50
-    delegate :date, :date=, :day_off?,  :is_day_off, :is_day_off=, :from, :from=, :till, :till=, to: :schedule
+    delegate :day_off?, to: :schedule
 
     before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
 
-    attr_accessible :package_limit, :is_closed, :closed_by
+    attr_accessible :date, :is_day_off, :from, :till, :package_limit, :is_closed, :closed_by
 
-    has_one :schedule, as: :extension, dependent: :destroy
     has_many :packages, class_name: 'Distribution::Package'
     belongs_to :point, class_name: 'Distribution::Point'
 
