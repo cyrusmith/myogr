@@ -13,7 +13,6 @@ module Distribution
     belongs_to :point, class_name: 'Distribution::Point'
 
     accepts_nested_attributes_for :packages
-    #accepts_nested_attributes_for :schedule, allow_destroy: true
 
     state_machine :state, :initial => :forming do
       store_audit_trail
@@ -92,10 +91,6 @@ module Distribution
 
     def set_package_limit
       self.package_limit = self.point.default_day_package_limit
-    end
-
-    def create_schedule
-
     end
 
   end

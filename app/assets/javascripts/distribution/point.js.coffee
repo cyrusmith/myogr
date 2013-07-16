@@ -1,13 +1,13 @@
 #window.days_off = {}
 fetchDaysOff = (year, month) ->
   start_date = ''
-  url = document.URL + '/package_list/days_off'
+  url = document.URL + '/package_list/days_info'
   if (year? && month?)
     start_date = new Date(year, month-1, 1)
 
   $.ajax(
     url:url
-    data:{start_date: start_date.format('dd-mm-yyyy')}
+    data:{start_date: start_date.format('dd-mm-yyyy'), admin_access: true}
     async: false
     success: (data) =>
       $.each(data, (index, value) =>

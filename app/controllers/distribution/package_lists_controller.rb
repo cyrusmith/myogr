@@ -7,7 +7,7 @@ module Distribution
     # GET /package_lists.json
     def index
       @point = Point.find(params[:point_id])
-      @package_lists = @point.package_lists.joins { schedule }.where { (schedule.is_day_off == false) & (state.not_in ['archived']) }.order { schedule.date.asc }.page params[:page]
+      @package_lists = @point.package_lists.includes(:schedule).where { (schedule.is_day_off == false) & (state.not_in ['archived']) }.order { schedule.date.asc }.page params[:page]
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @package_lists }
@@ -22,7 +22,7 @@ module Distribution
                         PackageList.find(params[:id])
                       elsif params[:date].present?
                         date = Date.parse params[:date]
-                        package_list = @point.package_lists.joins { schedule }.where(schedule: {date: date}).first
+                        package_list = @point.package_lists.includes(:schedule).where(schedule: {date: date}).first
                         if package_list.nil?
                           @point.package_lists.create(date: date, package_limit: @point.default_day_package_limit)
                         else
@@ -128,8 +128,8 @@ module Distribution
 
     def days_info
       @point = Point.find(params[:point_id])
-      marked_days = @point.get_days_info(current_user.case?, params[:start_date])
-      active_record = current_user.packages.active.first
+      marked_days = @point.get_days_info(current_user.case?, params)
+      active_record = current_user.packages.select(&:active?).first
       if !active_record.nil? and active_record.package_list.point == @point
         marked_days << {active_record.package_list.date => 'active-record'}
       end
@@ -139,7 +139,7 @@ module Distribution
     def switch_day_off
       @point = Point.find(params[:point_id])
       date = Date.parse params[:date]
-      @package_list = @point.package_lists.joins{schedule}.where( schedule: {date: date}).first
+      @package_list = @point.package_lists.includes(:schedule).where( schedule: {date: date}).first
       if @package_list.day_off?
         @package_list.is_day_off = false
       else
@@ -155,7 +155,8 @@ module Distribution
     def change_limit
       @point = Point.find(params[:point_id])
       date = Date.parse params[:date]
-      @package_list = @point.package_lists.joins{schedule}.where( schedule: {date: date}).first
+      @package_list = @point.package_lists.includes(:schedule).where(schedule: {date: date}).first
+      @package_list = @point.package_lists.create(date: date) unless @package_list
       if params[:new_limit].present? and params[:new_limit].to_i >= @package_list.packages.count
         @package_list.update_attribute :package_limit, params[:new_limit]
       end
