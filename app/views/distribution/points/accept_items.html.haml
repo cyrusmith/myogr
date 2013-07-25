@@ -1,0 +1,16 @@
+=form_tag
+
+.field
+  = label_tag :barcode, 'Введите штрихк-код'
+  = text_field_tag :barcode
+
+%table#accept_list.tight
+  %tr
+    %th Отправитель
+    %th Название
+    %th Получатель
+
+
+.actions
+  = submit_tag 'Принять товар'
+  = button_tag 'Распечатать форму'

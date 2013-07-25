@@ -28,6 +28,9 @@ gem 'prawn', git: 'git://github.com/prawnpdf/prawn.git', submodules: true
 gem 'prawnto_2', :require => 'prawnto'
 gem 'whenever', :require => false
 gem 'chosen-rails'
+gem 'barby'
+gem 'has_barcode'
+gem 'select2-rails'
 
 group :development do
   gem 'better_errors'

@@ -16,6 +16,7 @@
 //= require jquery.ui.datepicker-ru
 //= require jquery.moodular
 //= require chosen-jquery
+//= require select2
 //= require krutilka
 //= require kickstart/kickstart
 //= require common

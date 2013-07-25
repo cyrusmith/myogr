@@ -1,0 +1,2 @@
+module Distribution::BarcodesHelper
+end

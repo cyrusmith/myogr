@@ -112,5 +112,10 @@ module Distribution
       end
     end
 
+    def accept_items
+      @point = Point.find(params[:point_id])
+
+    end
+
   end
 end

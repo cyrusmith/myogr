@@ -5,12 +5,14 @@ class Distributor < ForumModels
 
   has_many :product_orders, foreign_key: 'tid'
 
+  scope :owned, ->(owner_id) { where { (starter_id.eq owner_id) & (color.not_in [1, 6]) } }
+
   def self.in_distribution_for_user(user_id)
     self.joins(:product_orders)
-        .where('color = 5')
-        .where(ProductOrder.table_name => {member_id: user_id, show_buyer: 1})
-        .where('ibf_zakup.status NOT IN (-2, 2)')
-        .group(self.primary_key)
+    .where('color = 5')
+    .where(ProductOrder.table_name => {member_id: user_id, show_buyer: 1})
+    .where('ibf_zakup.status NOT IN (-2, 2)')
+    .group(self.primary_key)
   end
 
   def user_participate? (user_id)
@@ -26,5 +28,9 @@ class Distributor < ForumModels
       order.show_buyer = 0
       order.save!
     end
+  end
+
+  def link
+    "#{::Settings.forum_url}/index.php?showtopic=#{self.id}"
   end
 end

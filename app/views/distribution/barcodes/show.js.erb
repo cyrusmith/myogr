@@ -1,0 +1,5 @@
+<%- if !(@barcode.nil?) %>
+$('#accept_list').append('<%= j render(@barcode.package_item) %>');
+<%- else %>
+alert('Заказ с таким штрихкод не найден!');
+<%- end %>

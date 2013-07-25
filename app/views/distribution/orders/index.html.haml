@@ -1,0 +1,14 @@
+= javascipt 'distribution/orders'
+%h3 Передача заказов в Центр раздач
+
+= render 'filter_panel', distributors: @distributors, users: @users
+%table
+  %tr
+    %th Пользователь
+    %th Закупка
+    %th Штрихкод
+    %th Состояние
+  - @orders.each do |order|
+    = render 'order_row', order: order, unused_barcodes:@unused_barcodes
+
+= paginate @orders

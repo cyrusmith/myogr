@@ -1,0 +1,15 @@
+=javascipt 'distribution/barcodes'
+%h3 Печать штрих-кодов
+
+=form_tag distribution_barcodes_path
+.field
+  = label_tag :quantity, 'Количество штрих-кодов:'
+  = number_field_tag :quantity, in: 1..100
+.field
+  = label_tag :owner, 'Пользователь:'
+  -#TODO список с автокомплитом
+  -#= select_tag :owner, options_for_select([]) ,class: 'select2'
+  = number_field_tag :owner
+.actions
+  = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
+
