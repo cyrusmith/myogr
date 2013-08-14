@@ -60,7 +60,7 @@ class DistributorsController < ApplicationController
   end
 
   def unfinished_orders
-    customers = ProductOrder.where(tid: params[:id]).participate.group(:member_id).map{|order| order.member_id} - Distribution::PackageItem.where(item_id:params[:id]).in_distribution.map{|order| order.user_id}
+    customers = ProductOrderItem.where(tid: params[:id]).participate.group(:member_id).map{|order| order.member_id} - Distribution::PackageItem.where(item_id:params[:id]).in_distribution.map{|order| order.user_id}
     result = customers.map do |customer|
       user = User.find(customer)
       [user.id, user.members_l_display_name]

@@ -1,13 +1,13 @@
 .filters
   %fieldset
     %legend Поиск
-    = form_tag distribution_orders_path, method: :get
-    .field
-      = label_tag :distributors, 'Закупки:'
-      = select_tag :distributors, options_for_select(distributors.map{|distributor| [CGI.unescapeHTML(distributor.title), distributor.id]}, (params[:distributors] unless params[:distributors].nil?)), multiple: true
-    .field
-      = label_tag :users, 'Участники:'
-      = select_tag :users, options_from_collection_for_select(users, :id, :display_name,(params[:users] unless params[:users].nil?)), multiple: true
-    .actions
-      = submit_tag 'Искать'
-      = link_to 'Сбросить фильтр', distribution_orders_path
+    = form_tag(distribution_orders_path, method: :get) do
+      .field
+        = label_tag :distributors, 'Закупки:'
+        = select_tag :distributors, options_for_select(distributors.map{|distributor| [CGI.unescapeHTML(distributor.title), distributor.id]}, (params[:distributors] unless params[:distributors].nil?)), multiple: true
+      .field
+        = label_tag :users, 'Участники:'
+        = select_tag :users, options_from_collection_for_select(users, :id, :display_name,(params[:users] unless params[:users].nil?)), multiple: true
+      .actions
+        = submit_tag 'Искать'
+        = link_to 'Сбросить фильтр', distribution_orders_path

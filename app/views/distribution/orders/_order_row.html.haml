@@ -1,20 +1,27 @@
-- package_item = Distribution::PackageItem.find_by_item_id(order.id)
+- package_item = Distribution::PackageItem.where(item_id:order["tid"], user_id:order["member_id"]).first
+
 %tr
   %td
-    = order.customer.display_name
+    = order['members_display_name']
   %td
-    = link_to CGI.unescapeHTML(order.distributor.title), order.distributor.link
-  %td
+    = link_to CGI.unescapeHTML(order["title"]), "#{::Settings.forum_url}/index.php?showtopic=#{order["tid"]}"
+  %td.center
+    = hidden_field_tag :user, order["member_id"]
+    = hidden_field_tag :distributor, order["tid"]
     - if package_item.nil?
-      = hidden_field_tag :user, order.id
-      = select_tag :barcode, options_from_collection_for_select(unused_barcodes, :id, :barcode_string), include_blank: true, class: 'select2'
+      = hidden_field_tag :barcode, '', class: 'barcode_select'
     - elsif (package_item.pending?)
-      = hidden_field_tag :order, order.id
-      = select_tag :barcode, options_from_collection_for_select(unused_barcodes, :id, :barcode_string, package_item.barcode.value), include_blank: true, class: 'select2'
+      = hidden_field_tag :barcode, '', class: 'barcode_select'
     - else
       = package_item.barcode.value
   %td
     - if package_item.nil?
       Не сдан в цр
     - else
-      = t('distribution.item.states' + package_item.state)
+      = t('distribution.item.states.' + package_item.state)
+  %td
+    - if package_item.nil?
+      = link_to '#', class: 'add-to-list', title: 'Добавить в ведомость' do
+        %i.icon-plus
+    - elsif (package_item.pending?)
+    - else

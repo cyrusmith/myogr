@@ -1,4 +1,5 @@
 class Distribution::Barcode < ActiveRecord::Base
+  include HasBarcode
 
   after_create :set_value
 
@@ -9,6 +10,11 @@ class Distribution::Barcode < ActiveRecord::Base
   scope :unused, ->(owner) { where(owner: owner, package_item_id: nil) }
   scope :max_value, ->(owner) { where(owner: owner).order('value DESC') }
 
+  #has_barcode :barcode,
+  #            :outputter => :pdf,
+  #            :type => :code_128,
+  #            :value => Proc.new { |p| p.value }
+
   def value
     read_attribute :value
   end
@@ -18,11 +24,13 @@ class Distribution::Barcode < ActiveRecord::Base
   end
 
   def self.create_batch(owner, creator, quantity=1)
+    created_barcodes = []
     self.transaction do
       quantity.times do
-        Distribution::Barcode.create! owner: owner, creator: creator
+        created_barcodes << Distribution::Barcode.create!(owner: owner, creator: creator)
       end
     end
+    created_barcodes
   end
 
   private

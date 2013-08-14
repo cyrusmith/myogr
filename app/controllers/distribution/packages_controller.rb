@@ -163,7 +163,8 @@ module Distribution
           organizer_id: distributor.starter_id,
           is_next_time_pickup: is_next_time_pickup,
           state_on_creation: distributor.color,
-          is_user_participate: distributor.user_participate?(current_user)
+          is_user_participate: distributor.user_participate?(current_user),
+          user_id: current_user.id
       }
     end
 

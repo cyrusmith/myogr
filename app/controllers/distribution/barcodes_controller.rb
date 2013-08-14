@@ -11,22 +11,26 @@ module Distribution
     end
 
     def create
-      message = unless params[:quantity].empty? or params[:owner].empty?
-                  barcode_quantity = params[:quantity].to_i
-                  begin
-                    Barcode.create_batch params[:owner], current_user.id, barcode_quantity
-                  rescue Exception
-                    {alert: 'Произошла ошибка при создании штрих-кодов'}
-                  end
-                  {success: 'Штрих-коды были успешно созданы'}
-                else
-                  {alert: 'Поля заполнены некорректно'}
-                end
-      redirect_to new_distribution_barcode_path, flash: message
+      unless params[:quantity].empty? or params[:owner].empty?
+        barcode_quantity = params[:quantity].to_i
+        begin
+          barcodes = Barcode.create_batch params[:owner], current_user.id, barcode_quantity
+        rescue Exception
+          redirect_to new_distribution_barcode_path, flash: {alert: 'Произошла ошибка при создании штрих-кодов'}
+        end
+        print(barcodes)
+      else
+        redirect_to new_distribution_barcode_path, flash: {alert: 'Поля заполнены некорректно'}
+      end
     end
 
-    def attach
-      @owner_items = Distributor.owned(current_user.id)
+    private
+
+    def print(barcodes)
+      output = BarcodeLabelForm.new(barcodes, view_context).to_pdf
+      filename = Time.now.to_i.to_s
+      File.open("barcodes/#{filename}.pdf", 'wb'){|f| f.write output }
+      send_data output, :type => :pdf, :disposition => 'inline'
     end
 
   end

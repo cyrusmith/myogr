@@ -1,15 +1,26 @@
 =javascipt 'distribution/barcodes'
 %h3 Печать штрих-кодов
 
-=form_tag distribution_barcodes_path
+=form_tag distribution_barcodes_path, target: '_blank'
 .field
   = label_tag :quantity, 'Количество штрих-кодов:'
-  = number_field_tag :quantity, in: 1..100
+  = number_field_tag :quantity, 1, in: 1..100
 .field
   = label_tag :owner, 'Пользователь:'
-  -#TODO список с автокомплитом
-  -#= select_tag :owner, options_for_select([]) ,class: 'select2'
-  = number_field_tag :owner
+  = hidden_field_tag :owner
+
+%fieldset#payment.field
+  %legend Оплата
+  %h6#total_price
+    К оплате
+    %span=Distribution::Settings.barcode_price
+    руб.
+  %p Выберите способ оплаты:
+  = hidden_field_tag :barcode_price, Distribution::Settings.barcode_price
+  = radio_button_tag :payment_method, :cash, true
+  = label_tag :payment_method_cash, 'Наличные'
+  = radio_button_tag :payment_method, :account
+  = label_tag :payment_method_account, 'Списать со счета'
 .actions
   = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
 

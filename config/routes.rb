@@ -54,10 +54,13 @@ Ogromno::Application.routes.draw do
   namespace :distribution do
     resources :orders do
       get 'page/:page', :action => :index, :as => 'paged', :on => :collection
+      match 'send' => 'orders#send', :via => [:post], :on => :collection
     end
     #get 'orders/page/:page' => 'orders#index', :as => 'orders'
     resources :packages
-    resources :barcodes, only: [:show, :new, :create]
+    resources :barcodes, only: [:show, :new, :create] do
+      get 'print' => 'barcodes#print'
+    end
     resources :points do
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]

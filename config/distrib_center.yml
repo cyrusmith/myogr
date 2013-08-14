@@ -1,6 +1,7 @@
 # Distribution centers options
 defaults: &defaults
   day_package_limit: 100
+  barcode_price: 15
 development:
   <<: *defaults
 
