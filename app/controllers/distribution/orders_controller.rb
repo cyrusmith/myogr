@@ -1,3 +1,4 @@
+# coding: utf-8
 module Distribution
   class OrdersController < ApplicationController
     def index
@@ -22,7 +23,7 @@ module Distribution
 
       query_string << ' GROUP BY zak.tid, zak.member_id ORDER BY users.members_display_name, zak.tid'
       @orders = ActiveRecord::Base.establish_connection(:ogromno).connection.select_all(query_string)
-      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page]).per(10)
+      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page]).per(25)
       @orders.instance_eval <<-EVAL
       def current_page
         #{params[:page] || 1}
@@ -31,7 +32,7 @@ module Distribution
         count
       end
       def limit_value
-        10
+        25
       end
       def total_count
         self.size
@@ -41,12 +42,33 @@ module Distribution
       end
       EVAL
       ActiveRecord::Base.establish_connection
-      @users = User.where(id: @orders.uniq { |order| order['member_id'] }.map{|order| order['member_id']}).order('members_display_name')
+      @users = User.where(id: @orders.uniq { |order| order['member_id'] }.map { |order| order['member_id'] }).order('members_display_name')
       #@orders = @orders.page(params[:page].nil? ? 1 : params[:page])
+      respond_to do |format|
+        format.html
+        format.json {render json: @orders}
+        format.js
+      end
     end
-  end
 
-  def send
+    def send_to_distrbution
+      if (params[:user] && params[:distributor] && params[:barcode])
+        #TODO обрабатывать заказы и привязывать к нему штрих-код в одной транзакции
+        (0...(params[:user].length)).each do |i|
+          user_id = params[:user][i]
+          distributor = Distributor.find(params[:distributor][i])
+          barcode_id = params[:barcode][i]
+          order = PackageItem.create!(item_id: distributor.id, title: distributor.title,
+                              organizer: User.find(distributor.starter_id).display_name, organizer_id: distributor.starter_id,
+                              user_id: user_id)
+          #TODO добавить проверку на свободность штрихкода
+          order.barcode = Barcode.find(barcode_id)
+          order.save
+        end
+      else
+        redirect_to distribution_orders_path, flash: {alert: 'Вы не выбрали заказы для отправки в ЦР'}
+      end
+    end
 
   end
 end

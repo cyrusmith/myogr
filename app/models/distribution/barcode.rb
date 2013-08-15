@@ -1,5 +1,4 @@
 class Distribution::Barcode < ActiveRecord::Base
-  include HasBarcode
 
   after_create :set_value
 
@@ -10,17 +9,12 @@ class Distribution::Barcode < ActiveRecord::Base
   scope :unused, ->(owner) { where(owner: owner, package_item_id: nil) }
   scope :max_value, ->(owner) { where(owner: owner).order('value DESC') }
 
-  #has_barcode :barcode,
-  #            :outputter => :pdf,
-  #            :type => :code_128,
-  #            :value => Proc.new { |p| p.value }
-
   def value
     read_attribute :value
   end
 
-  def barcode_string
-    '%06d' % self.owner + '%08d' % self.value
+  def barcode_string(space_between = false)
+    '%06d' % self.owner + (space_between ? ' ' : '') + '%08d' % self.value
   end
 
   def self.create_batch(owner, creator, quantity=1)

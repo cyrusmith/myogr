@@ -1,0 +1,9 @@
+%table#orders
+  %tr
+    %th Пользователь
+    %th Закупка
+    %th Штрихкод
+    %th Состояние
+    %th Действия
+  - @paginated_orders.each do |order|
+    = render 'order_row', order: order

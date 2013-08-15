@@ -29,6 +29,12 @@ disableTableRow = (row) ->
   $('#orders .barcode_select').select2('destroy')
   initSelectFields()
 
+addToListAction = ->
+  $(document).on 'click', 'a.add-to-list', (event) ->
+    clickedRow = $(this).parent().parent()
+    addToForm(clickedRow)
+    disableTableRow(clickedRow)
+
 jQuery ->
   $('#distributors').select2
     placeholder: "Выберите закупки для фильтрации"
@@ -37,7 +43,4 @@ jQuery ->
     placeholder: "Поиск по пользователям"
     width: '300px'
     initSelectFields()
-  $('a.add-to-list').click ->
-    clickedRow = $(this).parent().parent()
-    addToForm(clickedRow)
-    disableTableRow(clickedRow)
+    addToListAction()

@@ -4,16 +4,16 @@
   %td
     = order['members_display_name']
   %td
-    = link_to CGI.unescapeHTML(order["title"]), "#{::Settings.forum_url}/index.php?showtopic=#{order["tid"]}"
+    = link_to CGI.unescapeHTML(order['title']), "#{::Settings.forum_url}/index.php?showtopic=#{order["tid"]}"
   %td.center
-    = hidden_field_tag :user, order["member_id"]
-    = hidden_field_tag :distributor, order["tid"]
+    = hidden_field_tag 'user[]', order['member_id']
+    = hidden_field_tag 'distributor[]', order['tid']
     - if package_item.nil?
-      = hidden_field_tag :barcode, '', class: 'barcode_select'
+      = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
     - elsif (package_item.pending?)
-      = hidden_field_tag :barcode, '', class: 'barcode_select'
+      = package_item.barcode.barcode_string(true)
     - else
-      = package_item.barcode.value
+      = package_item.barcode.barcode_string(true)
   %td
     - if package_item.nil?
       Не сдан в цр
@@ -21,7 +21,7 @@
       = t('distribution.item.states.' + package_item.state)
   %td
     - if package_item.nil?
-      = link_to '#', class: 'add-to-list', title: 'Добавить в ведомость' do
+      = link_to 'javascript:void(0)', class: 'add-to-list', title: 'Добавить в ведомость' do
         %i.icon-plus
     - elsif (package_item.pending?)
     - else

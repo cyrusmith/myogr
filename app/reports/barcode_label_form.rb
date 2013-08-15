@@ -22,7 +22,7 @@ class BarcodeLabelForm < Prawn::Document
       outputter = Barby::PrawnOutputter.new(barcodeGenerator)
       outputter.annotate_pdf(self, xdim:0.7, y:50)
       move_down 67
-      text('%06d' % barcode.owner + ' ' + '%08d' % barcode.value, align: :center, size: 14)
+      text(barcode.barcode_string(true), align: :center, size: 14)
       move_down 2
       user = User.find(barcode.owner)
       text (user ? "Отправитель: #{user.display_name}" : 'Инвентаризация')

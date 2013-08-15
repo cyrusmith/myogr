@@ -54,7 +54,7 @@ Ogromno::Application.routes.draw do
   namespace :distribution do
     resources :orders do
       get 'page/:page', :action => :index, :as => 'paged', :on => :collection
-      match 'send' => 'orders#send', :via => [:post], :on => :collection
+      match 'send' => 'orders#send_to_distrbution', :on => :collection
     end
     #get 'orders/page/:page' => 'orders#index', :as => 'orders'
     resources :packages

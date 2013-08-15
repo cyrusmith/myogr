@@ -7,6 +7,7 @@ module Distribution
 
     validates_presence_of :item_id
 
+    has_one :barcode, :class_name => 'Distribution::Barcode'
     belongs_to :package
 
     scope :current_pickup, where(is_next_time_pickup: false)

@@ -1,18 +1,12 @@
 = javascript_tag do
-  unusedBarcodes = #{raw @unused_barcodes.map{|code| {id:code.id, text:code.barcode_string}}.to_json}
+  unusedBarcodes = #{raw @unused_barcodes.map{|code| {id:code.id, text:code.barcode_string(true)}}.to_json}
 = javascript 'distribution/orders'
 %h3 Передача заказов в Центр раздач
 
 = render 'filter_panel', distributors: @distributors, users: @users
 = render 'send_form'
-%table#orders
-  %tr
-    %th Пользователь
-    %th Закупка
-    %th Штрихкод
-    %th Состояние
-    %th Действия
-  - @paginated_orders.each do |order|
-    = render 'order_row', order: order
+#product
+  = render 'orders'
 
-= paginate @orders
+#paginator
+  = paginate @orders, remote:true

@@ -1,4 +1,4 @@
 = form_tag(send_distribution_orders_path, method: :post) do
   %table#send-orders
   .actions
-    = submit_tag 'Отправить данные в ЦР'
+    = submit_tag 'Отправить данные в ЦР', confirm: 'Вы уверены, что хотите отправить выбранные заказы в ЦР?'
