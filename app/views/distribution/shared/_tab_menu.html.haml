@@ -30,3 +30,8 @@
     %li.current= link_to 'Выбытие', 'javascript:void(0)'
   - else
     %li= link_to 'Выбытие', distribution_point_issuance_path(point)
+
+  - if active == 'revision'
+    %li.current= link_to 'Инвентаризация', 'javascript:void(0)'
+  - else
+    %li= link_to 'Инвентаризация', distribution_point_revision_path(point)

@@ -110,6 +110,25 @@ module Distribution
       @point = Point.find(params[:point_id])
     end
 
+    def revision
+      @point = Point.find(params[:point_id])
+      @revision_barcodes = Barcode.where(owner: 0)
+      if (params[:commit])
+        (0...(params[:sender].length)).each do |i|
+          sender_id = params[:sender][i]
+          reciever_id = params[:reciever][i]
+          barcode_id = params[:barcode][i]
+          #TODO закупка
+          order = PackageItem.create!(item_id: distributor.id, title: distributor.title,
+                                      organizer: User.find(sender_id).display_name, organizer_id: sender_id,
+                                      user_id: reciever_id)
+          #TODO добавить проверку на свободность штрихкода
+          order.barcode = Barcode.find(barcode_id)
+          order.save
+        end
+      end
+    end
+
     def collect_package
       if (params[:package_list])
         items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map { |deb| Integer(deb) }
