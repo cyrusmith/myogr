@@ -8,10 +8,8 @@
   %td.center
     = hidden_field_tag 'user[]', order['member_id']
     = hidden_field_tag 'distributor[]', order['tid']
-    - if package_item.nil?
+    - if package_item.nil? || package_item.barcode.nil?
       = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
-    - elsif (package_item.pending?)
-      = package_item.barcode.barcode_string(true)
     - else
       = package_item.barcode.barcode_string(true)
   %td

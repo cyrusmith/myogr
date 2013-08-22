@@ -57,11 +57,15 @@ Ogromno::Application.routes.draw do
       match 'send' => 'orders#send_to_distrbution', :on => :collection
     end
     #get 'orders/page/:page' => 'orders#index', :as => 'orders'
-    resources :packages
-    resources :barcodes, only: [:show, :new, :create] do
+    resources :packages do
+      get 'find' => 'packages#find', defaults: {format: :json}
+    end
+    resources :barcodes, only: [:index, :show, :new, :create] do
       get 'print' => 'barcodes#print'
     end
     resources :points do
+      match 'reception' => 'points#reception', :via => [:get, :post]
+      match 'issuance' => 'points#issuance', :via => [:get, :post]
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]
       match 'accept_items' => 'points#accept_items', :via => [:get, :post]

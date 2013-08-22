@@ -2,6 +2,19 @@
 module Distribution
   class BarcodesController < Admin::AdminController
 
+    def index
+      @barcode = if params[:barcode_string]
+                   barcode = Barcode.where(barcode_string: params[:barcode_string].gsub(/\s/, ''))
+                   barcode = barcode.joins(:package_item).where( package_item: {state: params[:state]}) if params[:state]
+                   barcode.first
+                 else
+                   nil
+                 end
+      respond_to do |format|
+        format.json { @barcode ? render : render(json: nil)}
+      end
+    end
+
     def show
       @barcode = Barcode.find(params[:id])
       respond_to do |format|

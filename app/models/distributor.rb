@@ -8,7 +8,7 @@ class Distributor < ForumModels
   scope :owned, ->(owner_id) { where { (starter_id.eq owner_id) & (color.not_in [1, 6]) } }
 
   def self.in_distribution_for_user(user_id)
-    self.joins(:product_orders)
+    self.joins(:product_order_items)
     .where('color = 5')
     .where(ProductOrderItem.table_name => {member_id: user_id, show_buyer: 1})
     .where('ibf_zakup.status NOT IN (-2, 2)')
@@ -16,7 +16,7 @@ class Distributor < ForumModels
   end
 
   def user_participate? (user_id)
-    Distributor.joins(:product_orders).where(tid: self.tid, ProductOrderItem.table_name => {member_id: user_id}).count > 0
+    Distributor.joins(:product_order_items).where(tid: self.tid, ProductOrderItem.table_name => {member_id: user_id}).count > 0
   end
 
   def organizer

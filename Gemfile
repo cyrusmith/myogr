@@ -31,6 +31,7 @@ gem 'chosen-rails'
 gem 'barby'
 gem 'has_barcode'
 gem 'select2-rails'
+gem 'rabl'
 
 group :development do
   gem 'better_errors'

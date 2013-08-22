@@ -1,6 +1,5 @@
 module Distribution
   class PointsController < Admin::AdminController
-
     # GET /distribution_centers
     # GET /distribution_centers.json
     def index
@@ -82,17 +81,46 @@ module Distribution
       end
     end
 
+    # Прием товара
+    def reception
+      @point = Point.find(params[:point_id])
+      if params[:commit]
+        recieved_from = params[:recieved_from]
+        accepted_items = []
+        params[:package_item_id].each do |package_item_id|
+          package_item = PackageItem.find package_item_id
+          if package_item.can_accept?
+            package_item.location = @point.id
+            package_item.recieved_from = recieved_from
+            package_item.accept
+            accepted_items << package_item
+          else
+            raise StandardError, 'Item reception failed'
+          end
+          output = ReceptionSummary.new(@point, accepted_items, view_context).to_pdf
+          send_data output, :type => :pdf, :disposition => 'inline'
+        end
+      else
+        render
+      end
+    end
+
+    # Выбытие товара
+    def issuance
+      @point = Point.find(params[:point_id])
+    end
+
     def collect_package
       if (params[:package_list])
-        items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map {|deb| Integer(deb)}
+        items = params[:collected_items].split(/ /).delete_if { |c| c.blank? }.uniq.map { |deb| Integer(deb) }
         package = Package.find(params[:package_list])
         package.collect! params[:collector].to_i, items
         package.save
         @list = package.package_list
       end
       @point = Point.find(params[:point_id])
-      employee_ids = @point.employees <<  @point.head_user
-      @employees = employee_ids.map{|id| User.find(id)}
+      employee_ids = @point.employees << @point.head_user
+      @employees = employee_ids.map { |id| User.find(id) }
       respond_to do |format|
         format.html # show.html.erb
         format.js

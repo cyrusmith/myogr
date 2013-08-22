@@ -1,0 +1,22 @@
+= javascipt 'distribution/issuance'
+
+%h3 Выбытие
+
+= render 'distribution/shared/tab_menu', point: @point, active: 'issuance'
+
+.tab-content
+  = form_tag distribution_point_issuance_path do
+    = hidden_field_tag :point_id, @point.id
+    .field
+      = radio_button_tag :input_type, :document_number, true, id: :input_type_document
+      = label_tag :input_type_document, 'Паспорт'
+      = radio_button_tag :input_type, :user_id, false, id: :input_type_user
+      = label_tag :input_type_user, 'Id пользователя'
+
+    = label_tag :user, 'Введите номер паспорта/id пользователя'
+    = text_field_tag :user, nil,  autofocus: true
+
+    %ul#reception_list
+
+    .actions
+      = submit_tag 'Выдать'
