@@ -15,6 +15,7 @@ module Distribution
     # GET /distribution_centers/1.json
     def show
       @distribution_point = Point.find(params[:id])
+      cookies[:point_id] = params[:id]
       @calendar_days_info = @distribution_point.get_days_info(true, admin_access: true).inject Hash.new, :merge
       respond_to do |format|
         format.html # show.html.erb
@@ -179,10 +180,6 @@ module Distribution
       else
         render 'choose_recipient_form'
       end
-    end
-
-    def accept_items
-      @point = Point.find(params[:point_id])
     end
 
   end

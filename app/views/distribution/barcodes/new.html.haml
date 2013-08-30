@@ -1,26 +1,29 @@
 =javascipt 'distribution/barcodes'
 %h3 Печать штрих-кодов
+- point = Distribution::Point.find(cookies[:point_id])
+= render 'distribution/shared/tab_menu', point: point, active: 'barcode_print'
 
-=form_tag distribution_barcodes_path, target: '_blank'
-.field
-  = label_tag :quantity, 'Количество штрих-кодов:'
-  = number_field_tag :quantity, 1, in: 1..100
-.field
-  = label_tag :owner, 'Пользователь:'
-  = hidden_field_tag :owner
+.tab-content
+  =form_tag distribution_barcodes_path, target: '_blank'
+  .field
+    = label_tag :quantity, 'Количество штрих-кодов:'
+    = number_field_tag :quantity, 1, in: 1..100
+  .field
+    = label_tag :owner, 'Пользователь:'
+    = hidden_field_tag :owner
 
-%fieldset#payment.field
-  %legend Оплата
-  %h6#total_price
-    К оплате
-    %span=Distribution::Settings.barcode_price
-    руб.
-  %p Выберите способ оплаты:
-  = hidden_field_tag :barcode_price, Distribution::Settings.barcode_price
-  = radio_button_tag :payment_method, :cash, true
-  = label_tag :payment_method_cash, 'Наличные'
-  = radio_button_tag :payment_method, :account
-  = label_tag :payment_method_account, 'Списать со счета'
-.actions
-  = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
+  %fieldset#payment.field
+    %legend Оплата
+    %h6#total_price
+      К оплате
+      %span=Distribution::Settings.barcode_price
+      руб.
+    %p Выберите способ оплаты:
+    = hidden_field_tag :barcode_price, Distribution::Settings.barcode_price
+    = radio_button_tag :payment_method, :cash, true
+    = label_tag :payment_method_cash, 'Наличные'
+    = radio_button_tag :payment_method, :account
+    = label_tag :payment_method_account, 'Списать со счета'
+  .actions
+    = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
 
