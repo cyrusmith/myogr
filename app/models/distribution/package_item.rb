@@ -1,10 +1,9 @@
 module Distribution
   class PackageItem < ActiveRecord::Base
-    self.table_name_prefix = 'distribution_'
 
     before_create :get_info
 
-    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :user_id, :location, :recieved_from
+    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :user_id
 
     validates_presence_of :item_id
 

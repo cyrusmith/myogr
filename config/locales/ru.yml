@@ -300,6 +300,7 @@ ru:
   common:
     image: Изображение
     comment: Примечание
+    find: Найти
     hints:
       percentage_tooltip: "%{part} из %{whole}"
       case_tooltip: "Кейсов %{cases}"

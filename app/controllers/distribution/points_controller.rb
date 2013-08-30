@@ -148,20 +148,41 @@ module Distribution
 
     def issue_package
       @point = Point.find(params[:point_id])
-      if (params[:packages])
-        package = Package.find(params[:packages])
-        @list = package.package_list
-        if package.to_issued then
-          flash[:success] = t('notifications.state_change_complete', new_state: t('distribution.package.states.issued'))
+      if params[:commit]
+        if params[:user_data] and params[:data_type]
+          unsorted_items = if (params[:data_type] == :document)
+                             packages = Package.where(document_number: params[:user_data]).active.all
+                             users << packages.each(&:user_id)
+                             result = []
+                             users.each { |user| result << PackageItem.where(user_id: user).order('package_id DESC, is_next_time_pickup DESC').accepted }
+                             result
+                           else
+                             @package_items = PackageItem.where(user_id: params[:user_data]).order('package_id DESC, is_next_time_pickup DESC').accepted
+                           end
+          @items_hash = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
+          unsorted_items.each do |item|
+            if item.package_id.nil?
+              (item.next_time_pickup? ? @items_hash[item.user_id][:later] : @items_hash[item.user_id][:new]) << item
+            else
+              @items_hash[item.user_id][item.package_id] << item
+            end
+          end
         else
-          flash[:error] = t('notifications.state_change_error', new_state: t('distribution.package.states.issued'))
+          result = Distribution::ProcessorUtil.issue_package_items(params[:item_id])
+          message = if result
+                      {success: 'Закупки упешно выданы'}
+                    else
+                      {alert: 'Произошла ошибка при внесении изменений в базу данных! Попробуйте приозвести выдачу снова'}
+                    end
+          redirect_to distribution_point_issue_package_path(@point), flash: message
         end
+      else
+        render 'choose_recipient_form'
       end
     end
 
     def accept_items
       @point = Point.find(params[:point_id])
-
     end
 
   end

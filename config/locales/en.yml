@@ -11,3 +11,5 @@ en:
   mail:
     subject:
       password_recovery: "Recover your password on Ogromno"
+  common:
+    find: "Find"

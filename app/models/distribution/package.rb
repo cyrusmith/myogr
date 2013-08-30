@@ -115,6 +115,5 @@ module Distribution
       self.order = order_num
       self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method.to_sym]
     end
-
   end
 end
