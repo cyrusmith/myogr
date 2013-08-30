@@ -1,5 +1,6 @@
 module Distribution
   class PackageItem < ActiveRecord::Base
+    self.table_name_prefix = 'distribution_'
 
     before_create :get_info
 

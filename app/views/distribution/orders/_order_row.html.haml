@@ -16,7 +16,7 @@
     - if package_item.nil?
       Не сдан в цр
     - else
-      = t('distribution.item.states.' + package_item.state)
+      = t('distribution.item.states.' + package_item.state) unless package_item.state
   %td
     - if package_item.nil?
       = link_to 'javascript:void(0)', class: 'add-to-list', title: 'Добавить в ведомость' do

@@ -1,5 +1,5 @@
 = javascript_tag do
-  revisionBarcodes = #{raw @revision_barcodes.map{|code| {id:code.id, text:code.barcode_string(true)}}.to_json}
+  window.revisionBarcodes = #{raw @revision_barcodes.map{|code| {id:code.id, text:code.barcode_string(true)}}.to_json}
 = javascipt 'distribution/revision'
 
 %h3 Инвентаризация
@@ -11,6 +11,7 @@
     #revision_data
       .revision_row
         = hidden_field_tag 'sender[]', '', class: 'sender_select'
+        = hidden_field_tag 'title[]', '', class: 'title_select'
         = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
         = hidden_field_tag 'reciever[]', '', class: 'reciever_select'
 

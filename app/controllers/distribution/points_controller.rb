@@ -158,7 +158,7 @@ module Distribution
                              users.each { |user| result << PackageItem.where(user_id: user).order('package_id DESC, is_next_time_pickup DESC').accepted }
                              result
                            else
-                             @package_items = PackageItem.where(user_id: params[:user_data]).order('package_id DESC, is_next_time_pickup DESC').accepted
+                             PackageItem.where(user_id: params[:user_data]).order('package_id DESC, is_next_time_pickup DESC').accepted
                            end
           @items_hash = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
           unsorted_items.each do |item|
