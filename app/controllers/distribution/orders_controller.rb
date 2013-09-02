@@ -23,7 +23,7 @@ module Distribution
 
       query_string << ' GROUP BY zak.tid, zak.member_id ORDER BY users.members_display_name, zak.tid'
       @orders = ActiveRecord::Base.establish_connection(:ogromno).connection.select_all(query_string)
-      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page]).per(25)
+      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page] && 1).per(25)
       @orders.instance_eval <<-EVAL
       def current_page
         #{params[:page] || 1}

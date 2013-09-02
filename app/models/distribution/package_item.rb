@@ -4,7 +4,7 @@ module Distribution
 
     before_create :get_info
 
-    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :user_id
+    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :location, :user_id
 
     validates_presence_of :item_id
 
