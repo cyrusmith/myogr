@@ -14,12 +14,14 @@ class Ability
       cannot :edit, Distribution::Point
       can :manage, Distribution::PackageList
       can :manage, Distribution::Package
+      can :manage, Distribution::Barcode
     elsif user.has_role?(UserRole::SALON_ADMINISTRATOR)
       can :manage, Admin::Record
     else
       can :create, Banner
       can :manage, Record
       can :manage, Distribution::Package, :user_id => user.id
+      can :manage, Distribution::Barcode, :owner => user.id
       can :read, Distribution::Point
     end
   end

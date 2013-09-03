@@ -1,6 +1,8 @@
 # coding: utf-8
 module Distribution
   class PackageList < ActiveRecord::Base
+    self.table_name_prefix = 'distribution_'
+
     acts_as_schedule_extension
     paginates_per 50
     delegate :day_off?, to: :schedule

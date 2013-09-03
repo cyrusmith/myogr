@@ -1,0 +1,5 @@
+= javascipt 'distribution/barcodes'
+=form_tag
+
+.field
+  = select_tag :item_id, options_for_select(@owner_items.map{|i| [i.title, i.id]}), include_blank: true, id: 'select'

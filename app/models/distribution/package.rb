@@ -3,6 +3,8 @@ module Distribution
   class Package < ActiveRecord::Base
     include Tenacity
 
+    self.table_name_prefix = 'distribution_'
+
     ACTIVE_STATES = :accepted, :collecting, :collected, :in_distribution
     FINAL_STATES = :issued, :utilized
     METHODS = :at_point, :case, :delivery
@@ -113,6 +115,5 @@ module Distribution
       self.order = order_num
       self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method.to_sym]
     end
-
   end
 end

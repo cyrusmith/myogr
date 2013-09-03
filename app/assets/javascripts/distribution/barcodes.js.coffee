@@ -1,0 +1,24 @@
+arr = window.location.href.split("/")
+fullurl = arr[0] + "//" + arr[2]
+jQuery ->
+  formatUserSelect = (user) ->
+    user.username
+  formatUserResult = (user) ->
+    '<div>' + user.username + '</div>'
+  $('#quantity').change(->
+    totalPrice = $(this).val() * $('#barcode_price').val()
+    $('#total_price>span').text(totalPrice)
+  )
+
+  $('#owner').select2
+    placeholder: "Выберите пользователя"
+    width: '300px'
+    minimumInputLength: 3
+    ajax:
+      url: fullurl + '/user/find'
+      data: (term, page) ->
+        { term: term }
+      results: (data, page) ->
+        {results: data}
+    formatResult: formatUserResult
+    formatSelection: formatUserSelect

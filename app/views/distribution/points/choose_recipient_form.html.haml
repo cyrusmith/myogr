@@ -1,0 +1,17 @@
+%h3 Выдача записи
+= render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
+
+.tab-content
+  = form_tag distribution_point_issue_package_path, method: :get do
+    .field
+      = label_tag :user_data, 'Пользователь:'
+      = text_field_tag :user_data
+
+      = label_tag :data_type, 'Тип ввода:'
+      = radio_button_tag :data_type, :document, true
+      = label_tag :data_type_document, 'Номер документа'
+      = radio_button_tag :data_type, :id
+      = label_tag :data_type_id, 'Идентификатор пользователя'
+
+    .actions
+      = submit_tag t('common.find')

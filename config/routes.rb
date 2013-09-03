@@ -40,7 +40,9 @@ Ogromno::Application.routes.draw do
   resources :sessions
 
   resources :banners
+
   resources :distributors, :except => [:destroy, :update]
+  match 'distributor/:id/unfinished_orders' => 'distributors#unfinished_orders', :as => :unfinished_orders
 
   match 'new_banner/step1' => 'banners#create_step1', :as => :create_banner_step1
   match 'new_banner/step2/:type' => 'banners#create_step2', :as => :create_banner_step2
@@ -50,10 +52,24 @@ Ogromno::Application.routes.draw do
   get 'distributor/remove/:tid' => 'distributors#remove', :as => :remove_from_cabinet
 
   namespace :distribution do
-    resources :packages
+    resources :orders do
+      get 'page/:page', :action => :index, :as => 'paged', :on => :collection
+      match 'send' => 'orders#send_to_distrbution', :on => :collection
+    end
+    #get 'orders/page/:page' => 'orders#index', :as => 'orders'
+    resources :packages do
+      get 'find' => 'packages#find', defaults: {format: :json}
+    end
+    resources :barcodes, only: [:index, :show, :new, :create] do
+      get 'print' => 'barcodes#print'
+    end
     resources :points do
-      get 'collect_package' => 'points#collect_package'
+      match 'reception' => 'points#reception', :via => [:get, :post]
+      match 'issuance' => 'points#issuance', :via => [:get, :post]
+      match 'revision' => 'points#revision', :via => [:get, :post]
+      match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]
+      match 'accept_items' => 'points#accept_items', :via => [:get, :post]
       resources :package_lists do
         get 'packing_lists' => 'package_lists#packing_lists'
         get 'package_list' => 'package_lists#package_list_report'

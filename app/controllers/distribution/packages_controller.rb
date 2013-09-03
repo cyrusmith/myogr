@@ -14,6 +14,15 @@ module Distribution
       end
     end
 
+    def find
+      @package_sets = Package.joins(:package_list).joins(:items).where(package_list: {point_id: params[:point_id]}).in_states([:in_distribution, :collected])
+      @package_sets = if params[:document_number]
+                      package_set.where(document_number: params[:document_number])
+                    else
+                      package_set.where(user_id: params[:user_id])
+                    end
+    end
+
     # GET /distribution/packages/1
     # GET /distribution/packages/1.json
     def show
@@ -163,7 +172,8 @@ module Distribution
           organizer_id: distributor.starter_id,
           is_next_time_pickup: is_next_time_pickup,
           state_on_creation: distributor.color,
-          is_user_participate: distributor.user_participate?(current_user)
+          is_user_participate: distributor.user_participate?(current_user),
+          user_id: current_user.id
       }
     end
 

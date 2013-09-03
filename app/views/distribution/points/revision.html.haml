@@ -1,0 +1,21 @@
+= javascript_tag do
+  window.revisionBarcodes = #{raw @revision_barcodes.map{|code| {id:code.id, text:code.barcode_string(true)}}.to_json}
+= javascipt 'distribution/revision'
+
+%h3 Инвентаризация
+
+= render 'distribution/shared/tab_menu', point: @point, active: 'revision'
+
+.tab-content
+  = form_tag do
+    #revision_data
+      .revision_row
+        = hidden_field_tag 'sender[]', '', class: 'sender_select'
+        = hidden_field_tag 'title[]', '', class: 'title_select'
+        = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
+        = hidden_field_tag 'reciever[]', '', class: 'reciever_select'
+
+    = link_to 'Добавить ряд', 'javascript:void(0)', id: 'add_row'
+
+    .actions
+      = submit_tag 'Присвоить штрих-коды'

@@ -6,6 +6,13 @@ ru:
     attributes:
       distribution/package:
         document_number: Номер документа
+  views:
+      pagination:
+        first: "Первая"
+        last: "Последняя"
+        previous: "<<"
+        next: ">>"
+        truncate: "..."
   date:
     abbr_day_names:
     - Вс
@@ -293,6 +300,7 @@ ru:
   common:
     image: Изображение
     comment: Примечание
+    find: Найти
     hints:
       percentage_tooltip: "%{part} из %{whole}"
       case_tooltip: "Кейсов %{cases}"
@@ -402,7 +410,11 @@ ru:
         at_point: ЦР
         case: Кейс
         delivery: Доставка
-
+    item:
+      states:
+        pending: ЦР ожидает товар для приемки
+        accepted: Принят в ЦР
+        issued: Выдан получателю
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"
