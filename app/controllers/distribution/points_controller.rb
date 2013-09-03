@@ -1,3 +1,4 @@
+# coding: utf-8
 module Distribution
   class PointsController < Admin::AdminController
     # GET /distribution_centers
