@@ -17,7 +17,4 @@
       Не сдан в цр
     - else
       = t('distribution.item.states.' + package_item.state.to_s) unless package_item.state.nil?
-  %td
-    - if package_item.nil?
-      = link_to 'javascript:void(0)', class: 'add-to-list', title: 'Добавить в ведомость' do
-        %i.icon-plus
+  %td.order_actions

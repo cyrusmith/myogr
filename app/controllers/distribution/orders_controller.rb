@@ -2,8 +2,8 @@
 module Distribution
   class OrdersController < ApplicationController
     def index
-      #@distributors = Distributor.owned current_user.id
-      @distributors = Distributor.owned(1273)
+      #@distributors = Distributor.owned_by current_user.id
+      @distributors = Distributor.owned_by 1273
       @unused_barcodes = Barcode.unused current_user
 
       query_string = "SELECT zak.tid, zak.member_id, topics.title, users.members_display_name
