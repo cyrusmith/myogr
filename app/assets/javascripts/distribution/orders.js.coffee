@@ -40,7 +40,7 @@ disableTableRow = (row) ->
   for index in deleteIndexes
     unusedBarcodes.splice(index, 1)
   barcodeText = barcodeSelect.select2('data')['text']
-  barcodeSelect.parent().html(barcodeText)
+#  barcodeSelect.parent().html(barcodeText)
   barcodeSelect.select2('destroy')
   $('#orders .barcode_select').select2('destroy')
   initSelectFields()
