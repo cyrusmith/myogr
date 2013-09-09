@@ -4,6 +4,6 @@
     %th Закупка
     %th Штрихкод
     %th Состояние
-    %th Действия
+    %th
   - @paginated_orders.each do |order|
     = render 'order_row', order: order
