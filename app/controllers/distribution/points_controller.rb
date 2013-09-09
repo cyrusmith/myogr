@@ -152,8 +152,9 @@ module Distribution
       @point = Point.find(params[:point_id])
       if params[:commit]
         if params[:user_data] and params[:data_type]
-          unsorted_items = if (params[:data_type] == :document)
+          unsorted_items = if (params[:data_type] == 'document')
                              packages = Package.where(document_number: params[:user_data]).active.all
+                             users = []
                              users << packages.each(&:user_id)
                              result = []
                              users.each { |user| result << PackageItem.where(user_id: user).order('package_id DESC, is_next_time_pickup DESC').accepted }

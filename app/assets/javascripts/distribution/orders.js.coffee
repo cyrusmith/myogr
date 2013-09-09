@@ -15,7 +15,7 @@ initSelectFields = ->
     placeholder: "Поиск по пользователям"
     width: '300px'
 
-  $('#orders .barcode_select').select2
+  $('#orders .barcode_select.active').select2
     placeholder: "Выберите штрих-код"
     width: '200px'
     data: { results: unusedBarcodes}
@@ -43,7 +43,7 @@ disableTableRow = (row) ->
     unusedBarcodes.splice(index, 1)
   $('#orders .barcode_select').select2('destroy')
   initSelectFields()
-  barcodeSelect.val('').select2('destroy')
+  barcodeSelect.removeClass('active').val('').select2('destroy')
 
 toggleRemoveAction = (row) ->
   actionBar = row.find('td.order_actions')
@@ -62,7 +62,7 @@ toggleRemoveAction = (row) ->
       unusedBarcodes.sort((a,b)->
         a.text > b.text
       )
-      $('#orders tr#' + orderId).find('input[type=hidden][name*="barcode"]').select2(
+      $('#orders tr#' + orderId).find('input.barcode_select').addClass('active').select2(
         placeholder: "Выберите штрих-код"
         width: '200px'
         data: { results: unusedBarcodes}
