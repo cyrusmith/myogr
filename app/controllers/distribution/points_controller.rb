@@ -96,8 +96,8 @@ module Distribution
             package_item.recieved_from = recieved_from
             package_item.accept
             accepted_items << package_item
-          else
-            raise StandardError, 'Item reception failed'
+          #else
+          #  raise StandardError, 'Item reception failed'
           end
           output = ReceptionSummary.new(@point, accepted_items, view_context).to_pdf
           send_data output, :type => :pdf, :disposition => 'inline'
