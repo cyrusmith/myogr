@@ -25,7 +25,7 @@
     %li= link_to 'Приход', distribution_point_reception_path(point)
 
   - if active == 'issue_package'
-    %li.current= link_to 'Выдача заказа', 'javascript:void(0)'
+    %li.current= link_to 'Выдача заказа', distribution_point_issue_package_path(point)
   -else
     %li= link_to 'Выдача заказа', distribution_point_issue_package_path(point)
 

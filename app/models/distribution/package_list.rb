@@ -36,6 +36,7 @@ module Distribution
       event :archive do
         transition :distributing => :archived
       end
+      #TODO удалить. Автоматом закрывать ведомость если все заказы выданы.
       after_transition :to => :archived do |package_list|
         package_list.packages_fire_event(:to_issued)
       end
