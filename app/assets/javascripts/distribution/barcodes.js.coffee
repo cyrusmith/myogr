@@ -15,7 +15,7 @@ jQuery ->
     width: '300px'
     minimumInputLength: 3
     ajax:
-      url: fullurl + '/user/find'
+      url: fullurl + '/user/find_by_name'
       data: (term, page) ->
         { term: term }
       results: (data, page) ->
