@@ -12,21 +12,28 @@ initDropdown = (type) ->
   if (type == 'document')
     options['placeholder'] = 'Введите номер документа'
     options['url'] = fullurl + '/distribution/packages/find_by_doc'
-  else if (type == 'id')
-    options['placeholder'] = 'Введите пользователя'
+    options['minimumInputLength'] = 3
+  else if (type == 'display_name')
+    options['placeholder'] = 'Введите имя пользователя'
+    options['url'] = fullurl + '/user/find_by_name'
+    options['minimumInputLength'] = 3
+  else if(type == 'id')
+    options['placeholder'] = 'Введите id пользователя'
     options['url'] = fullurl + '/user/find'
-  else
-    options['placeholder'] = ''
-    options['url'] = ''
+    options['minimumInputLength'] = 1
 
   $('input[type=hidden][name=user_data]').select2(
     placeholder: options['placeholder']
     width: '300px'
-    minimumInputLength: 3
+    minimumInputLength: options['minimumInputLength']
     ajax:
       url: options['url']
       data: (term, page) ->
-        { term: term }
+        {
+          term: term,
+          page_limit: 10,
+          page: page,
+        }
       results: (data, page) ->
         {results: data}
     formatResult: formatResult
@@ -38,4 +45,8 @@ jQuery ->
 
   $('input[name=data_type]').click(->
     initDropdown($(this).val())
+  )
+
+  $('input[type=hidden][name=user_data]').on("change", ->
+    $('#recipient_form').submit();
   )

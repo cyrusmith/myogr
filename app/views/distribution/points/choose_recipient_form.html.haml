@@ -4,14 +4,17 @@
 = render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
 
 .tab-content
-  = form_tag distribution_point_issue_package_path, method: :get do
+  = form_tag distribution_point_issue_package_path, method: :get, id: :recipient_form do
     = label_tag :data_type, 'Ввод:'
 
     = radio_button_tag :data_type, :document, true
     = label_tag :data_type_document, 'Документ'
 
+    = radio_button_tag :data_type, :display_name
+    = label_tag :data_type_display_name, 'Имя пользователя'
+
     = radio_button_tag :data_type, :id
-    = label_tag :data_type_id, 'Пользователь'
+    = label_tag :data_type_id, 'ID пользователя'
 
     .field
       = hidden_field_tag :user_data

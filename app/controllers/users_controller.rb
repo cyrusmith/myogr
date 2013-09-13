@@ -131,6 +131,11 @@ class UsersController < ApplicationController
   end
 
   def find
+    @users = User.order(:id).where("id like ?", "%#{params[:term]}").page(params[:page] || 1).per(params[:page_limit] || 10)
+    render json: @users.map{|user| {id:user.id, text: "#{user.id}/#{user.members_l_display_name}"}}
+  end
+
+  def find_by_name
     @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "#{params[:term]}%")
     render json: @users.map{|user| {id:user.id, text: user.members_l_display_name}}
   end

@@ -150,13 +150,13 @@ module Distribution
 
     def issue_package
       @point = Point.find(params[:point_id])
-      if params[:commit]
+      if request.get?
         if params[:user_data] and params[:data_type]
           @items_hash = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
           packages = case params[:data_type]
                        when 'document'
                          Package.where(document_number: params[:user_data]).active.all
-                       when 'id'
+                       when 'id', 'display_name'
                          user_id = params[:user_data].to_i
                          @items_hash[user_id] = {};
                          Package.where(user_id: user_id).active.all
@@ -172,14 +172,16 @@ module Distribution
             @items_hash[user_id][:new] = PackageItem.where(user_id: user_id, package_id: nil).accepted.all
           end
         else
-          result = Distribution::ProcessorUtil.issue_package_items(params[:packages], params[:item_id])
-          message = if result
-                      {success: 'Закупки успешно выданы'}
-                    else
-                      {alert: 'Произошла ошибка при внесении изменений в базу данных! Попробуйте приозвести выдачу снова'}
-                    end
-          redirect_to distribution_point_issue_package_path(@point), flash: message
+          render 'distribution/points/choose_recipient_form'
         end
+      elsif request.post?
+        result = Distribution::ProcessorUtil.issue_package_items(params[:packages], params[:item_id])
+        message = if result
+                    {success: 'Закупки успешно выданы'}
+                  else
+                    {alert: 'Произошла ошибка при внесении изменений в базу данных! Попробуйте приозвести выдачу снова'}
+                  end
+        redirect_to distribution_point_issue_package_path(@point), flash: message
       else
         render 'distribution/points/choose_recipient_form'
       end

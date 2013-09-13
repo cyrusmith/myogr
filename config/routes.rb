@@ -4,6 +4,7 @@ Ogromno::Application.routes.draw do
 
   resources :users, :except => :destroy
   match 'user/find' => 'users#find', :as => :find_users
+  match 'user/find_by_name' => 'users#find_by_name', :as => :find_users_by_name
 
   # if user is not logged in, he can log in, sign up and recover his password. Route is not accessible overwise
   scope constraints: lambda { |request| request.env['warden'].user.nil? } do
