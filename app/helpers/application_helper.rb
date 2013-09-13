@@ -1,7 +1,7 @@
 module ApplicationHelper
   # encoding: utf-8
 
-  def javascipt(*files)
+  def javascript(*files)
     content_for (:head) {javascript_include_tag(*files)}
   end
 

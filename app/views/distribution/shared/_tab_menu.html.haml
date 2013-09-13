@@ -1,26 +1,22 @@
 %h4=point.title
-%ul{class: 'tabs left'}
-
+%ul.tabs.left
   - if active == 'main'
-    %li.current= link_to 'Главная', 'javascript:void(0)'
+    %li.current= link_to 'Главная', 'javascript:void(0);'
   -else
     %li= link_to 'Главная', distribution_point_path(point)
 
   - if active == 'package_lists'
-    %li.current= link_to 'Ведомости', 'javascript:void(0)'
+    %li.current= link_to 'Ведомости', 'javascript:void(0);'
   -else
     %li= link_to 'Ведомости', distribution_point_package_lists_path(point)
 
   - if active == 'barcode_print'
-    %li.current= link_to 'Печать штрих-кодов', 'javascript:void(0)'
+    %li.current= link_to 'Печать штрих-кодов', 'javascript:void(0);'
   -else
     %li= link_to 'Печать штрих-кодов', new_distribution_barcode_path
-  -#- if active == 'collect_package'
-  -#  %li.current= link_to 'Сборка заказа', 'javascript:void(0)'
-  -#-else
-  -#  %li= link_to 'Сборка заказа', distribution_point_collect_package_path(point)
+
   - if active == 'reception'
-    %li.current= link_to 'Приход', 'javascript:void(0)'
+    %li.current= link_to 'Приход', 'javascript:void(0);'
   - else
     %li= link_to 'Приход', distribution_point_reception_path(point)
 
@@ -29,12 +25,7 @@
   -else
     %li= link_to 'Выдача заказа', distribution_point_issue_package_path(point)
 
-  -#- if active == 'issuance'
-  -#  %li.current= link_to 'Выбытие', 'javascript:void(0)'
-  -#- else
-  -#  %li= link_to 'Выбытие', distribution_point_issuance_path(point)
-
   - if active == 'revision'
-    %li.current= link_to 'Инвентаризация', 'javascript:void(0)'
+    %li.current= link_to 'Инвентаризация', 'javascript:void(0);'
   - else
     %li= link_to 'Инвентаризация', distribution_point_revision_path(point)

@@ -157,7 +157,7 @@ module Distribution
                        when 'document'
                          Package.where(document_number: params[:user_data]).active.all
                        when 'id'
-                         user_id = params[:user_data]
+                         user_id = params[:user_data].to_i
                          @items_hash[user_id] = {};
                          Package.where(user_id: user_id).active.all
                        else
@@ -181,7 +181,7 @@ module Distribution
           redirect_to distribution_point_issue_package_path(@point), flash: message
         end
       else
-        render 'choose_recipient_form'
+        render 'distribution/points/choose_recipient_form'
       end
     end
 

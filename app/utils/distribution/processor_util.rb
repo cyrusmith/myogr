@@ -12,7 +12,7 @@ module Distribution
           item.fire_events!(:issue)
           users_ids << item.user_id unless users_ids.include? item.user_id
         end
-        # issue_packages
+        # issue_packdages
         packages_ids.each do |id|
           package = Package.find(id) || Package.new
           package.fire_events!(:to_issued) if package.can_to_issued?

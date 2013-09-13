@@ -1,4 +1,4 @@
-- javascipt 'distribution/issue_package'
+- javascript 'distribution/issue_package'
 %h3 Выдача записи
 = render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
 
@@ -6,7 +6,7 @@
   %ul
     - @items_hash.each do |user, packages|
       %li
-        %h5 Пользователь #{User.find(user).display_name}
+        %h5 Пользователь #{User.find(user).display_name}          ª
         %ul
           - packages.each do |package_key, items|
             %li

@@ -1,6 +1,6 @@
-%h3 Выдача записи
-= javascipt 'distribution/recipient_form'
-= render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
+- javascript 'distribution/recipient_form'
+
+%h3 Выдача записиª
 
 .tab-content
   = form_tag distribution_point_issue_package_path, method: :get do
@@ -13,8 +13,7 @@
     = label_tag :data_type_id, 'Пользователь'
 
     .field
-      = text_field_tag :user_data
-
+      = hidden_field_tag :user_data
 
     .actions
       = submit_tag t('common.find')
