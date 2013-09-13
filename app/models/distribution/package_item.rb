@@ -33,10 +33,6 @@ module Distribution
       self.is_next_time_pickup
     end
 
-    def set_next_time_pickup
-      self.is_next_time_pickup = true
-    end
-
     def collected
       self.is_collected=true
     end

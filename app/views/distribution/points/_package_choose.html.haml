@@ -1,4 +1,4 @@
-- javascipt 'distribution/package_choose'
+- javascript 'distribution/package_choose'
 = label_tag :package_list, 'Номер ведомости'
 - today_list = distributing_lists.joins{schedule}.where{schedule.date == Date.today}.first #must be one
 - default_list = list || today_list || distributing_lists.first

@@ -59,6 +59,7 @@ Ogromno::Application.routes.draw do
     #get 'orders/page/:page' => 'orders#index', :as => 'orders'
     resources :packages do
       get 'find' => 'packages#find', defaults: {format: :json}
+      get 'find_by_doc' => 'packages#find_by_doc', defaults: {format: :json}, :on => :collection
     end
     resources :barcodes, only: [:index, :show, :new, :create] do
       get 'print' => 'barcodes#print'

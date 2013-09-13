@@ -152,34 +152,36 @@ module Distribution
       @point = Point.find(params[:point_id])
       if params[:commit]
         if params[:user_data] and params[:data_type]
-          unsorted_items = if (params[:data_type] == :document)
-                             packages = Package.where(document_number: params[:user_data]).active.all
-                             users << packages.each(&:user_id)
-                             result = []
-                             users.each { |user| result << PackageItem.where(user_id: user).order('package_id DESC, is_next_time_pickup DESC').accepted }
-                             result
-                           else
-                             PackageItem.where(user_id: params[:user_data]).order('package_id DESC, is_next_time_pickup DESC').accepted
-                           end
           @items_hash = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = Array.new } }
-          unsorted_items.each do |item|
-            if item.package_id.nil?
-              (item.next_time_pickup? ? @items_hash[item.user_id][:later] : @items_hash[item.user_id][:new]) << item
-            else
-              @items_hash[item.user_id][item.package_id] << item
-            end
+          packages = case params[:data_type]
+                       when 'document'
+                         Package.where(document_number: params[:user_data]).active.all
+                       when 'id'
+                         user_id = params[:user_data].to_i
+                         @items_hash[user_id] = {};
+                         Package.where(user_id: user_id).active.all
+                       else
+                         Array.new
+                     end
+          packages.each do |package|
+            @items_hash[package.user_id][package.id] = []
+            package.items.select { |item| item.barcode }.each { |item| @items_hash[package.user_id][package.id] << item }
+          end
+          @items_hash.each_key do |user_id|
+            @items_hash[user_id][:later] = PackageItem.where(user_id: user_id, is_next_time_pickup: true).accepted.all
+            @items_hash[user_id][:new] = PackageItem.where(user_id: user_id, package_id: nil).accepted.all
           end
         else
-          result = Distribution::ProcessorUtil.issue_package_items(params[:item_id])
+          result = Distribution::ProcessorUtil.issue_package_items(params[:packages], params[:item_id])
           message = if result
-                      {success: 'Закупки упешно выданы'}
+                      {success: 'Закупки успешно выданы'}
                     else
                       {alert: 'Произошла ошибка при внесении изменений в базу данных! Попробуйте приозвести выдачу снова'}
                     end
           redirect_to distribution_point_issue_package_path(@point), flash: message
         end
       else
-        render 'choose_recipient_form'
+        render 'distribution/points/choose_recipient_form'
       end
     end
 

@@ -15,8 +15,8 @@ class ReceptionSummary < CommonDocument
     text "Принято от: #{@package_items.first.recieved_from}"
     move_down 5
     text "Отправления:"
-    headers = ['Отправитель', 'Наименование', 'Код', 'Получатель']
-    head = make_table([headers], :column_widths => [110, 210, 110, 110]) do |t|
+    headers = ['Отправитель', 'Наименование', 'Код', 'Получатель', 'Упак. не соотв. правилам', 'Маркировка не соотв. правилам', 'Служебные отметки']
+    head = make_table([headers], :column_widths => [90, 140, 100, 90, 40, 40, 40]) do |t|
       t.row(0).align = :center
       t.row(0).valign = :center
       t.row(0).font_style = :bold
@@ -25,8 +25,8 @@ class ReceptionSummary < CommonDocument
     @package_items.each do |item|
       username = item.user.nil? ? '' : "#{item.user.id}/#{item.user.display_name}"
       sender = "#{item.organizer_id}/#{item.organizer}"
-      data << make_table([[sender, CGI.unescapeHTML(item.title), item.barcode.barcode_string(true), username]]) do |t|
-        t.column_widths = [110, 210, 110, 110]
+      data << make_table([[sender, CGI.unescapeHTML(item.title), item.barcode.barcode_string(true), username, '', '', set_marks(item)]]) do |t|
+        t.column_widths = [90, 140, 100, 90, 40, 40, 40]
         t.columns(2).align = :right
         t.cells.style :borders => [:left, :right], :padding => [2, 5]
       end
@@ -40,6 +40,16 @@ class ReceptionSummary < CommonDocument
       cells.borders = []
       row(0).columns([1, 4]).borders = [:bottom]
     end
+  end
+
+  private
+
+  def set_marks(item)
+    result = []
+    result << 'Кейс' if item.user.case?
+    result << 'Запись сегодня' if (!item.package.nil? && item.package.package_list.date.eql?(Date.today) && !item.package.completed?)
+    result << 'Запись завтра' if (!item.package.nil? && item.package.package_list.date.eql?(Date.tomorrow))
+    result.join ','
   end
 
 end

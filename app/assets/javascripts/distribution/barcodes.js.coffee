@@ -2,9 +2,9 @@ arr = window.location.href.split("/")
 fullurl = arr[0] + "//" + arr[2]
 jQuery ->
   formatUserSelect = (user) ->
-    user.username
+    user.text
   formatUserResult = (user) ->
-    '<div>' + user.username + '</div>'
+    '<div>' + user.text + '</div>'
   $('#quantity').change(->
     totalPrice = $(this).val() * $('#barcode_price').val()
     $('#total_price>span').text(totalPrice)
