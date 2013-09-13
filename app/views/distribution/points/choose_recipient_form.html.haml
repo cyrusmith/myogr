@@ -1,6 +1,7 @@
 - javascript 'distribution/recipient_form'
 
-%h3 Выдача записиª
+%h3 Выдача записи
+= render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
 
 .tab-content
   = form_tag distribution_point_issue_package_path, method: :get do

@@ -6,7 +6,7 @@
   %ul
     - @items_hash.each do |user, packages|
       %li
-        %h5 Пользователь #{User.find(user).display_name}          ª
+        %h5 Пользователь #{User.find(user).display_name}
         %ul
           - packages.each do |package_key, items|
             %li
