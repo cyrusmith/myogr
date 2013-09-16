@@ -39,6 +39,7 @@ initDropdown = (type) ->
     formatResult: formatResult
     formatSelection: formatSelect
   )
+  $('input[type=hidden][name=user_data]').select2('open')
 
 jQuery ->
   initDropdown($('input[name=data_type]:checked').val())
