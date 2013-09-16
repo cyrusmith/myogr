@@ -3,7 +3,7 @@ module Distribution
   class OrdersController < ApplicationController
     def index
       #@distributors = Distributor.owned_by current_user.id
-      @distributors = Distributor.owned_by 1273
+      @distributors = Distributor.owned_by current_user.id
       @unused_barcodes = Barcode.unused current_user
 
       query_string = "SELECT zak.zid, zak.tid, zak.member_id, topics.title, users.members_display_name
@@ -11,7 +11,7 @@ module Distribution
                       LEFT JOIN ibf_topics topics ON topics.`tid`=zak.`tid`
                       LEFT JOIN ibf_members users ON users.`id`=zak.`member_id`
                       WHERE zak.`status` NOT IN (-2, 2) AND topics.`color` != 6
-                            AND topics.`starter_id`=#{1273}"
+                            AND topics.`starter_id`=#{current_user.id}"
       unless params[:users].nil?
         query_string << " AND zak.member_id IN (#{params[:users].join(',')})"
       end
