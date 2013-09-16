@@ -2,6 +2,13 @@ arr = window.location.href.split("/")
 fullurl = arr[0] + "//" + arr[2]
 usedBarcodes = new Array()
 
+initNewPage = ->
+  assignedOrders = $('#send-orders')
+  $('#orders .barcode_select').each(->
+
+    $(this).select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
+  )
+
 jQuery ->
   initSelectFields()
   attachAddToBasketAction()

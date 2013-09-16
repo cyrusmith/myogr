@@ -3,7 +3,7 @@ module Distribution
   class OrdersController < ApplicationController
     def index
       #@distributors = Distributor.owned_by current_user.id
-      @distributors = Distributor.owned_by current_user.id
+      @distributors = Distributor.owned_by 1273
       @unused_barcodes = Barcode.unused current_user
 
       query_string = "SELECT zak.zid, zak.tid, zak.member_id, topics.title, users.members_display_name
@@ -11,19 +11,18 @@ module Distribution
                       LEFT JOIN ibf_topics topics ON topics.`tid`=zak.`tid`
                       LEFT JOIN ibf_members users ON users.`id`=zak.`member_id`
                       WHERE zak.`status` NOT IN (-2, 2) AND topics.`color` != 6
-                            AND topics.`starter_id`=#{current_user.id}"
+                            AND topics.`starter_id`=#{1273}"
       unless params[:users].nil?
         query_string << " AND zak.member_id IN (#{params[:users].join(',')})"
       end
       unless params[:distributors].nil?
         filter_value = params[:distributors]
-        #@distributors = @distributors.where { tid.in filter_value }
         query_string << " AND zak.tid IN (#{filter_value.join(',')})"
       end
 
       query_string << ' GROUP BY zak.tid, zak.member_id ORDER BY users.members_display_name, zak.tid'
       @orders = ActiveRecord::Base.establish_connection(:ogromno).connection.select_all(query_string)
-      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page] && 1).per(25)
+      @paginated_orders = Kaminari.paginate_array(@orders).page(params[:page] || 1).per(25)
       @orders.instance_eval <<-EVAL
       def current_page
         #{params[:page] || 1}
