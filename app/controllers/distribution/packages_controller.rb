@@ -24,7 +24,7 @@ module Distribution
     end
 
     def find_by_doc
-      @packages = Package.order(:document_number).where("document_number like ?", "%#{params[:term]}%").in_distribution
+      @packages = Package.order(:document_number).where('REPLACE(`document_number`, " ", "") like ?', "%#{params[:term]}%").in_distribution
       render json: @packages.map{|package| {id:package.document_number, text: package.document_number}}
     end
 
