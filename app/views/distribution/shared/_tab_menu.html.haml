@@ -1,5 +1,5 @@
 %h4=point.title
-%ul.left
+%ul.tabs.left
   %li{class: (active == 'main' ? 'current' :'') }= link_to 'Главная', distribution_point_path(point)
   %li{class: (active == 'package_lists' ? 'current' :'') }= link_to 'Ведомости', distribution_point_package_lists_path(point)
   %li{class: (active == 'barcode_print' ? 'current' :'') }= link_to 'Печать штрих-кодов', new_distribution_barcode_path

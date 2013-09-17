@@ -2,11 +2,22 @@ arr = window.location.href.split("/")
 fullurl = arr[0] + "//" + arr[2]
 usedBarcodes = new Array()
 
-initNewPage = ->
-  assignedOrders = $('#send-orders')
+@initNewPage = ->
+  assignedOrders = $('#send-orders tr')
   $('#orders .barcode_select').each(->
+    inputCell = $(this).parent()
+    userId = inputCell.find('input[name*=user]').val()
+    distributorId = inputCell.find('input[name*=distributor]').val()
+    isInitNeeded = true
+    for order in assignedOrders
+      orderUserId = $(order).find('input[name*=user]').val()
+      orderDistributorId = $(order).find('input[name*=distributor]').val()
+      if (orderDistributorId == distributorId && orderUserId == userId)
+        isInitNeeded = false
+        break
 
-    $(this).select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
+    if (isInitNeeded)
+      $(this).select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
   )
 
 jQuery ->

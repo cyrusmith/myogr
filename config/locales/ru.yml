@@ -359,6 +359,7 @@ ru:
     update_success: "Данные пользователя успешно обновлены."
 
     my_distribution_records: "Запись в центр раздач"
+    send_to_distribution: "Передача заказов в ЦР"
   distribution:
     points:
       index:
