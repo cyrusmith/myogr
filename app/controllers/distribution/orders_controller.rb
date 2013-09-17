@@ -63,6 +63,7 @@ module Distribution
           order.barcode = Barcode.find(barcode_id)
           order.save
         end
+        redirect_to distribution_orders_path, flash: {success: 'Данные по заказам успешно отправлены в ЦР'}
       else
         redirect_to distribution_orders_path, flash: {alert: 'Вы не выбрали заказы для отправки в ЦР'}
       end
