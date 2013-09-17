@@ -1,3 +1,3 @@
-$('#product').html("#{escape_javascript(render 'orders')}");
+$('#product').html("#{escape_javascript(render 'orders_table')}");
 $('#paginator').html("#{escape_javascript(paginate(@orders, :remote => true)) }");
-$('#orders .barcode_select').select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}});
+initNewPage();

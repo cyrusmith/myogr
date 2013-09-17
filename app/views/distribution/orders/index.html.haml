@@ -6,7 +6,7 @@
 = render 'filter_panel', distributors: @distributors, users: @users
 = render 'send_form'
 #product
-  = render 'orders'
+  = render 'orders_table'
 
 #paginator
   = paginate @orders, remote:true
