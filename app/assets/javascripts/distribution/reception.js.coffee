@@ -28,7 +28,7 @@ getPackage = (barcodeInput) ->
                                        </li>
                                      </ul>")
     complete: ->
-      barcodeInput.prop('disabled', false)
+      barcodeInput.prop('disabled', false).focus()
   )
 
 jQuery ->
