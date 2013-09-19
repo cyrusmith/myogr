@@ -16,4 +16,8 @@ class HomeController < ApplicationController
 
   def offer
   end
+
+  def bug_report
+
+  end
 end
