@@ -1,0 +1,83 @@
+<script type="text/javascript">function validateForm() {
+    var formName = document.fileabugform.subject.value;
+    var eMail = document.fileabugform.email.value;
+    if (formName == null || formName == "") {
+        alert('Please Specify Problem Title');
+        return false;
+    }
+    if (eMail == null || eMail == "") {
+        alert('Please specify a valid Email Id');
+        return false;
+    }
+    var atpos = eMail.indexOf("@");
+    var dotpos = eMail.lastIndexOf(".");
+    if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= eMail.length) {
+        alert("Please specify a valid Email Id");
+        return false;
+    }
+    var dueDate = document.getElementById("dueDate").value;
+    if (dueDate != "null" || dueDate != "") {
+        if (dueDate.match(/^(?:(0[1-9]|1[012])[\- \/.](0[1-9]|[12][0-9]|3[01])[\- \/.](19|20)[0-9]{2})$/)) {
+            return true;
+        } else {
+            alert("Please enter valid date");
+            return false;
+        }
+    }
+} </script>
+<div style="display:table; width:730px; margin:5px 0; font-family: 'Lucida Grande',Arial,Helvetica,sans-serif,Tahoma; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; padding:30px; border:1px solid #BBB; box-shadow:0px 0px 3px #aaa; -moz-box-shadow:0px 0px 3px #aaa; -webkit-box-shadow:0px 0px 3px #aaa; background-color:#fff;">
+    <form name="fileabugform" action="https://projects.zoho.com/portal/ogromno/addbugfromiframe.do" method="post"
+          onSubmit="return validateForm()"><input type="hidden" name="projId"
+                                                  value="b8d138cf3c445a756e2974ab7fd72a8b2a292998f290dfc5"/><input
+            type="hidden" name="fId" value="b8d138cf3c445a759bc71e6f273ec074551803d538d0273c"/>
+
+        <div style="width:100%; font: normal 12px 'Lucida Grande',Arial,Helvetica,sans-serif,Tahoma; color:#999;"><h2
+                style="color: #000; margin:3px 0;  font-size: 21px; font-weight: normal; height: 23px; padding-left: 3px; vertical-align:middle;">
+            Сообщите об ошибке/проблеме</h2>
+
+            <div><h3
+                    style="color:#555; margin:20px 0px; font-size:12px; font-weight:normal;padding:5px 0px; text-transform:uppercase; float:left; border-bottom:3px double #e0e0e0;">
+                Информация о проблеме</h3>
+                <table width="100%" cellspacing="0" cellpadding="5" border="0"
+                       style="clear:both;font: normal 12px 'Lucida Grande',Arial,Helvetica,sans-serif,Tahoma; color:#999;">
+                    <tbody>
+                    <tr>
+                        <td width="150px" align="right" style="text-align:right; vertical-align:top;">Наименование проблемы :
+                        </td>
+                        <td width="580px" valign="top" align="left"><input type="text" id="title" name="subject"
+                                                                           style="width:85%; border:1px solid #d0d0d0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; padding:5px; outline:none;"
+                                                                           value=""></td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="text-align:right; vertical-align:top; padding-top:8px;">Описание проблемы :
+                        </td>
+                        <td valign="top" style="padding-top:8px;"><textarea id="description" name="desc" rows="4"
+                                                                            style="width:85%; overflow-y: auto; border:1px solid #d0d0d0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; padding:5px; resize:vertical; outline:none;"></textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h3 style="color:#555; margin:20px 0px; font-size:12px; font-weight:normal;padding:5px 0px; text-transform:uppercase; float:left; border-bottom:3px double #e0e0e0;">
+                    Контактная информация</h3>
+
+                <div style="display:block; width:100%; font: normal 12px 'Lucida Grande',Arial,Helvetica,sans-serif,Tahoma; color:#999; ">
+                    <div style="float:left; width:30px;"></div>
+                    <div style="float:right; width:700px; display:block; ">
+                        <div style="float:left; width:50%;padding:5px 0 ; height:28px;">
+                            <div style="float:left; width:33% ;font-weight: normal; text-align:right; padding-top:3px;">
+                                Эл.почта :
+                            </div>
+                            <div style="float:left; padding-left:5px; width:65%"><input type="text"
+                                                                                        style="width:65%; border-color: #d0d0d0; border-style: solid; border-width: 1px; color: #3A3A3A; font-size: 12px; font-weight: normal; border-radius:3px; padding:3px; outline:none;"
+                                                                                        name="email"/></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="float:left; text-align:center; background-color:#FFF;  width:100%; padding:30px 0px 0px 0px; ">
+                    <input type="submit" title="Save" value="Отправить"></div>
+            </div>
+        </div>
+    </form>
+</div>
