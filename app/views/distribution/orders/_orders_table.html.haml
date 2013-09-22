@@ -1,9 +1,28 @@
-%table#orders
-  %tr
-    %th Пользователь
-    %th Закупка
-    %th Штрихкод
-    %th Состояние
+%table
+  %thead
+    %th=text_field_tag :user_search, nil, placeholder: 'Получатель', class: 'col_8'
+    %th.center Штрихкод
     %th
-  - @paginated_orders.each do |order|
-    = render 'order_row', order: order
+      - options = [['Все состояния', 'all'], 'Не сдан']
+      - Distribution::PackageItem.state_machine.states.map{|state| options << t('distribution.item.states.' + state.name.to_s)}
+      = select_tag :state_search, options_for_select(options)
+  %tbody
+    - @orders.each do |order|
+      = render 'order_row', order: order
+    - @package_items.each do |item|
+      %tr.manually_added
+        %td.user
+          = User.find(item.user_id).display_name
+        %td.center
+          = item.barcode.barcode_string(true)
+        %td.state
+          = t('distribution.item.states.' + item.state.to_s) unless item.state.nil?
+    %tr
+      %td= hidden_field_tag :custom_user_id
+      %td
+        = hidden_field_tag 'user[]'
+        = hidden_field_tag 'distributor[]', @orders.first()['tid'] unless @orders.blank?
+        = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
+      %td
+        = button_tag(type: :button, id: :add_custom) do
+          Добавить

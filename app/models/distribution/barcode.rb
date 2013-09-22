@@ -52,4 +52,11 @@ module Distribution
     end
 
   end
+
+  class BarcodeAlreadyBelongsToPackageError < StandardError
+    def initialize(barcode)
+      message = "Barcode #{barcode.id} belongs to package #{barcode.package.try(:id)}"
+      super(message)
+    end
+  end
 end

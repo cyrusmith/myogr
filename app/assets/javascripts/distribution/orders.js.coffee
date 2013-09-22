@@ -3,52 +3,147 @@ fullurl = arr[0] + "//" + arr[2]
 usedBarcodes = new Array()
 
 @initNewPage = ->
-  assignedOrders = $('#send-orders tr')
-  $('#orders .barcode_select').each(->
-    inputCell = $(this).parent()
-    userId = inputCell.find('input[name*=user]').val()
-    distributorId = inputCell.find('input[name*=distributor]').val()
-    isInitNeeded = true
-    for order in assignedOrders
-      orderUserId = $(order).find('input[name*=user]').val()
-      orderDistributorId = $(order).find('input[name*=distributor]').val()
-      if (orderDistributorId == distributorId && orderUserId == userId)
-        isInitNeeded = false
-        break
-
-    if (isInitNeeded)
-      $(this).select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
-  )
+  $('#orders .barcode_select').select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
+  $('#custom_user_id').select2
+    placeholder: "Выберите пользователя"
+    width: '200px'
+    minimumInputLength: 1
+    ajax:
+      url: fullurl + '/user/find_by_name'
+      data: (term, page) ->
+        {
+        term: term,
+        page_limit: 10,
+        page: page,
+        }
+      results: (data, page) ->
+        {results: data}
+    formatResult: (data) ->
+      data.text
+    formatSelection: (data) ->
+      '<div>' + data.text + '</div>'
 
 jQuery ->
-  initSelectFields()
+  $('input#distributor_search').keyup((event)->
+    return event.preventDefault() if (event.keyCode == $.ui.keyCode.ENTER)
+    substring = $(this).val().toLowerCase()
+    $(this).parent().siblings('li.distributor').each(->
+      string = $(this).children('a').attr('data-search').toLowerCase()
+      if (string.indexOf(substring) + 1) || ($(this).hasClass('current'))
+        $(this).removeClass('no-display')
+      else
+        $(this).addClass('no-display')
+    )
+  )
+
+  $(".distributor>a").on 'click', (event)->
+    saveNeeded = false
+    $('#orders .barcode_select').each ->
+      saveNeeded = true if ($(this).val() != '')
+    if (saveNeeded)
+      link = this
+      $('#dialog-confirm').dialog
+        resizable: false
+        height: 220
+        width: 500
+        modal: true
+        buttons:
+          "Да": ->
+            $('.distributor').removeClass('current')
+            $(link).parent().addClass('current')
+            $('#create_items_form input[type=submit]').submit()
+            $(this).dialog('close')
+          "Нет": ->
+            $('#orders .barcode_select').each ->
+              if ($(this).val() != '')
+                currentSelectData = $(this).select2('data')
+                deleteIndexes = []
+                for usedBarcode in usedBarcodes
+                  if (usedBarcode == currentSelectData)
+                    unusedBarcodes.push(usedBarcode)
+                    deleteIndexes.push(_i)
+                for index in deleteIndexes
+                  usedBarcodes.splice(index, 1)
+                sortBarcodes()
+            $(this).dialog('close')
+            getOrders(link)
+      event.preventDefault()
+    else
+      getOrders(this)
+      event.preventDefault()
+
+  $('form').on "ajax:success", (event, data, status, xhr)->
+    if (xhr.status == 201)
+      getOrders($('.distributor.current a'))
+
+  $('body').delegate '#add_custom', 'click', ->
+    customUser = $('#custom_user_id').select2('data')
+    $('#custom_user_id').select2('data', '')
+    row = $(this).parents('tr')
+    barcode = row.find('.barcode_select').select2('data')
+    row.find('.barcode_select').select2('data', '')
+    newRow = row.clone()
+    newRow.children().first().text(customUser.text)
+    newRow.children().last().text('Не сдан в цр')
+    newRow.find('div.barcode_select').remove()
+    newRow.find('.barcode_select').select2('destroy').select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}}).select2('data',
+      barcode)
+    newRow.find('input[type=hidden][name*=user]').val(customUser.id)
+    row.before(newRow)
+
+  $('body').delegate 'input#user_search', 'keyup', (event)->
+    return event.preventDefault() if (event.keyCode == $.ui.keyCode.ENTER)
+    substring = $(this).val().toLowerCase()
+    $('td.user').each(->
+      string = $(this).text().toLowerCase()
+      if (string.indexOf(substring) + 1)
+        $(this).parent().removeClass('no-display')
+      else
+        $(this).parent().addClass('no-display')
+    )
+
+  $('body').delegate 'select#state_search', 'change', (event)->
+    value = $(this).val().toLowerCase()
+    $('td.state').each(->
+      if ($(this).text().toLowerCase().indexOf(value) + 1) || (value == 'all')
+        $(this).parent().removeClass('no-display')
+      else
+        $(this).parent().addClass('no-display')
+    )
+
   attachAddToBasketAction()
-
-initSelectFields = ->
-  $('#distributors').select2
-    placeholder: "Выберите закупки для фильтрации"
-    width: '500px'
-
-  $('#users').select2
-    placeholder: "Поиск по пользователям"
-    width: '300px'
-
-  $('#orders .barcode_select.active').select2
-    placeholder: "Выберите штрих-код"
-    width: '200px'
-    data: { results: unusedBarcodes}
 
 addToForm = (row) ->
   copiedRow = row.clone()
-  toggleRemoveAction(copiedRow)
   copiedRow.find('input.barcode_select').select2('destroy')
   $('table#send-orders').append(copiedRow)
 
 attachAddToBasketAction = ->
-  $(document).on 'click', '#orders .barcode_select', (event) ->
+  $(document).on 'change', '#orders .barcode_select', (event) ->
+    $('#submit-bar').show('slow')
+    if (event.removed?)
+      deleteIndexes = []
+      for usedBarcode in usedBarcodes
+        if (usedBarcode == event.removed)
+          unusedBarcodes.push(usedBarcode)
+          deleteIndexes.push(_i)
+      for index in deleteIndexes
+        usedBarcodes.splice(index, 1)
     clickedRow = $(this).parent().parent()
     addToForm(clickedRow)
     disableTableRow(clickedRow)
+
+sortBarcodes = ->
+  unusedBarcodes.sort((a, b) ->
+    a = parseInt(a.text.substr(7))
+    b = parseInt(b.text.substr(7))
+    if (a > b)
+      1
+    else if (a < b)
+      -1
+    else
+      0
+  )
 
 disableTableRow = (row) ->
   barcodeSelect = row.find('input.barcode_select')
@@ -59,33 +154,22 @@ disableTableRow = (row) ->
       deleteIndexes.push _i
   for index in deleteIndexes
     unusedBarcodes.splice(index, 1)
-  $('#orders .barcode_select').select2('destroy')
-  initSelectFields()
-  barcodeSelect.removeClass('active').val('').select2('destroy')
+  sortBarcodes()
 
-toggleRemoveAction = (row) ->
-  actionBar = row.find('td.order_actions')
-  if (actionBar.children('.remove-from-basket').length == 0)
-    actionBar.append('<a href="javascript:void(0);" class="remove-from-basket"><i class="icon-minus"></i></a>')
-    actionBar.children('.remove-from-basket').click(->
-      orderId = row.attr('id')
-      barcodeId = row.find('input.barcode_select').val()
-      deleteIndexes = []
-      for codeHash in usedBarcodes
-        if (codeHash['id'].toString() == barcodeId)
-          unusedBarcodes.push(codeHash)
-          deleteIndexes.push(_i)
-      for index in deleteIndexes
-        usedBarcodes.splice(index, 1)
-      unusedBarcodes.sort((a,b)->
-        a.text > b.text
-      )
-      $('#orders tr#' + orderId).find('input.barcode_select').addClass('active').select2(
-        placeholder: "Выберите штрих-код"
-        width: '200px'
-        data: { results: unusedBarcodes}
-      )
-      row.remove()
-    )
-  else
-    actionBar.children('.remove-from-basket').remove()
+getOrders = (link) ->
+  $.ajax(
+    url: $(link).attr('href')
+    dataType: 'script'
+    beforeSend: ->
+      $('.distributor.current').removeClass('current')
+      $(link).parent().addClass('current')
+      $('#orders').html('<p id="krutilka" style="text-align: center"></p>')
+      $('#krutilka').krutilka
+        size: 64
+        petals: 15
+        petalWidth: 4
+        petalLength: 16
+        time: 2500
+    success: ->
+      $('#submit-bar').hide()
+  )

@@ -15,7 +15,11 @@
                   %h6= package_key == :later ? 'Отложенные' : 'Новые'
               - else
                 - package = Distribution::Package.find(package_key)
-                %h6 Запись №#{package.code} от #{Russian::strftime package.package_list.date, '%d.%m.%y'}
+                %h6
+                  - if (package.package_list)
+                    Запись №#{package.code} от #{Russian::strftime package.package_list.date, '%d.%m.%y'}
+                  - else
+                    Запись без даты! Идентификатор записи #{package.id}, сообщите об этой записи администратору!
             %ul.icons
               - items.each do |item|
                 %li

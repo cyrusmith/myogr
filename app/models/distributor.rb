@@ -5,7 +5,11 @@ class Distributor < ForumModels
 
   has_many :product_order_items, foreign_key: 'tid'
 
-  scope :owned_by, ->(owner_id) { where { (starter_id.eq owner_id) & (color.not_in [1, 6]) } }
+  scope :owned_by, ->(owner_id) { where { (starter_id.eq owner_id) & (color > 1) & (color < 6) } }
+
+  def title
+    CGI.unescapeHTML(read_attribute :title)
+  end
 
   def self.in_distribution_for_user(user_id)
     self.joins(:product_order_items)

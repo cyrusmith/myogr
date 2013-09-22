@@ -54,11 +54,7 @@ Ogromno::Application.routes.draw do
   get 'distributor/remove/:tid' => 'distributors#remove', :as => :remove_from_cabinet
 
   namespace :distribution do
-    resources :orders do
-      get 'page/:page', :action => :index, :as => 'paged', :on => :collection
-      match 'send' => 'orders#send_to_distrbution', :on => :collection
-    end
-    #get 'orders/page/:page' => 'orders#index', :as => 'orders'
+    resources :orders, only: [:show, :index]
     resources :packages do
       get 'find' => 'packages#find', defaults: {format: :json}
       get 'find_by_doc' => 'packages#find_by_doc', defaults: {format: :json}, :on => :collection
@@ -85,6 +81,7 @@ Ogromno::Application.routes.draw do
       get 'package_list' => 'package_lists#show'
       get 'package_list/find_package' => 'package_lists#find_package', :as => :find_package
     end
+    resources :package_items, only: [:create, :update]
   end
 
   namespace :admin do

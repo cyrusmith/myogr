@@ -1,3 +1,2 @@
-$('#product').html("#{escape_javascript(render 'orders_table')}");
-$('#paginator').html("#{escape_javascript(paginate(@orders, :remote => true)) }");
+$('#orders').html("#{escape_javascript(render 'orders_table')}");
 initNewPage();

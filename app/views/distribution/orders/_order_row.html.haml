@@ -2,20 +2,17 @@
 - package_item = package_items.find{|item| item.barcode}
 
 %tr{id: "order-#{order['zid']}"}
-  %td
+  %td.user
     = order['members_display_name']
-  %td
-    = link_to CGI.unescapeHTML(order['title']), "#{::Settings.forum_url}/index.php?showtopic=#{order['tid']}"
   %td.center
-    = hidden_field_tag 'user[]', order['member_id']
-    = hidden_field_tag 'distributor[]', order['tid']
     - if package_item.nil? || package_item.barcode.nil?
-      = hidden_field_tag 'barcode[]', '', class: 'barcode_select active'
+      = hidden_field_tag 'user[]', order['member_id']
+      = hidden_field_tag 'distributor[]', order['tid']
+      = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
     - else
       = package_item.barcode.barcode_string(true)
-  %td
+  %td.state
     - if package_item.nil?
-      Не сдан в цр
+      Не сдан
     - else
       = t('distribution.item.states.' + package_item.state.to_s) unless package_item.state.nil?
-  %td.order_actions
