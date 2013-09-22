@@ -4,7 +4,7 @@ module Distribution
 
     before_create :get_info
 
-    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :location, :user_id
+    attr_accessible :item_id, :title, :organizer, :organizer_id, :is_next_time_pickup, :state_on_creation, :is_user_participate, :location, :user_id, :barcode
 
     validates_presence_of :item_id
 
@@ -14,7 +14,7 @@ module Distribution
 
     scope :current_pickup, where(is_next_time_pickup: false)
     scope :next_time_pickup, where(is_next_time_pickup: true)
-    scope :in_distribution, where{state.in ['accepted', 'issued']}
+    scope :in_distribution, where{state.in %w(accepted issued)}
 
     state_machine :state, :initial => :pending do
       store_audit_trail
@@ -35,6 +35,17 @@ module Distribution
 
     def collected
       self.is_collected=true
+    end
+
+
+    def self.create_batch!(array_of_params)
+      self.transaction do
+        array_of_params.each do |params|
+          raise BarcodeAlreadyBelongsToPackageError.new(params[:barcode]) if params.has_key? :barcode && params[:barcode].package_item.blank?
+          PackageItem.create!(params)
+        end
+      end
+      true
     end
 
     private

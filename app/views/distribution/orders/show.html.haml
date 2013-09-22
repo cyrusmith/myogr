@@ -1,0 +1,26 @@
+= javascript_tag do
+  unusedBarcodes = #{raw @unused_barcodes.map{|code| {id:code.id, text:code.barcode_string(true)}}.to_json}
+= javascript 'distribution/orders'
+
+= form_tag distribution_package_items_path, remote:true, id:'create_items_form' do
+  #submit-bar{style: 'text-align:right; margin-top:10px; display:none'}
+    = submit_tag 'Сохранить', class: 'green'
+  .grid.flex
+    .col_3
+      %ul.menu.vertical#distributors
+        %li= text_field_tag :distributor_search, nil ,placeholder: 'Название или айди', class: 'col_12'
+        - @distributors.each do |distributor|
+          %li{class: :distributor, data: {id: distributor.id}}
+            - distributor_title = "#{distributor.id}/#{distributor.title}"
+            =link_to truncate(distributor_title, length: 50, separator: ' ', omission: '...'),
+                     distribution_orders_path(distributor: distributor.id),
+                     data: {search: distributor_title}
+    .col_9#orders
+      %span
+        %i.icon-arrow-left.icon-large
+        Выберите закупку в колонке слева
+
+%div{id: 'dialog-confirm', title:'Найдены несохраненных изменения', style:'display:none'}
+  %p
+    %span{class:'icon-warning-sign icon-2x', style:'float: left; margin: 0 7px 20px 0; color:#DEAE00'}
+    Сохранить изменения?

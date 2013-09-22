@@ -413,9 +413,9 @@ ru:
         delivery: Доставка
     item:
       states:
-        pending: ЦР ожидает товар для приемки
-        accepted: Принят в ЦР
-        issued: Выдан получателю
+        pending: Ожидает сдачи
+        accepted: Принят
+        issued: Выдан
   mail:
     subject:
       password_recovery: "Восстановление вашего пароля на сервисе Огромно"
