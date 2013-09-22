@@ -106,8 +106,8 @@ module Distribution
       @distribution_package = Package.find(params[:id])
       distribution_point = Point.find(params[:distribution_point])
       unless params[:package_date].blank?
-        is_point_changed = !(@distribution_package.package_list.point == distribution_point)
-        is_date_changed = !(@distribution_package.package_list.date == Date.parse(params[:package_date]))
+        is_point_changed = !(@distribution_package.package_list.try(:point) == distribution_point)
+        is_date_changed = !(@distribution_package.package_list.try(:date) == Date.parse(params[:package_date]))
         if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
           @distribution_package.set_order
