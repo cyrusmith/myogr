@@ -54,7 +54,8 @@ Ogromno::Application.routes.draw do
   get 'distributor/remove/:tid' => 'distributors#remove', :as => :remove_from_cabinet
 
   namespace :distribution do
-    resources :orders, only: [:show, :index]
+    get 'orders/show' => 'orders#show', :as => :show_orders
+    resources :orders, only: :index
     resources :packages do
       get 'find' => 'packages#find', defaults: {format: :json}
       get 'find_by_doc' => 'packages#find_by_doc', defaults: {format: :json}, :on => :collection
