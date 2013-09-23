@@ -28,7 +28,7 @@ class Distributor < Forum::Models
   end
 
   def remove_from_cabinet(user_id)
-    self.product_orders.showing.for_user(user_id).each do |order|
+    self.product_order_items.showing.for_user(user_id).each do |order|
       order.show_buyer = 0
       order.save!
     end
