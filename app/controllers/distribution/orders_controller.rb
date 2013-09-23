@@ -1,6 +1,8 @@
 # coding: utf-8
 module Distribution
   class OrdersController < ApplicationController
+    authorize_resource :class => false
+
     def index
       @package_items = []
 
@@ -9,7 +11,7 @@ module Distribution
                       LEFT JOIN ibf_topics topics ON topics.`tid`=zak.`tid`
                       LEFT JOIN ibf_members users ON users.`id`=zak.`member_id`
                       WHERE zak.`status` NOT IN (-2, 2) AND topics.`color` != 6
-                            AND topics.`starter_id`=#{1273}"
+                            AND topics.`starter_id`=#{current_user.id}"
       unless params[:distributor].nil?
         query_string << " AND zak.tid=#{params[:distributor]}"
         @package_items = PackageItem.joins(:barcode).where(item_id:params[:distributor])
@@ -27,7 +29,7 @@ module Distribution
     end
 
     def show
-      @distributors = Distributor.owned_by 1273
+      @distributors = Distributor.owned_by current_user.id
       @unused_barcodes = Barcode.unused(current_user).order('value ASC')
     end
 
