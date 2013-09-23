@@ -136,7 +136,7 @@ class UsersController < ApplicationController
   end
 
   def find_by_name
-    @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "#{params[:term]}%")
+    @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "#{Forum::Utils.escape params[:term]}%")
     render json: @users.map{|user| {id:user.id, text: user.members_l_display_name}}
   end
 end

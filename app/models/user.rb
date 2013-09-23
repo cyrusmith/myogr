@@ -1,4 +1,4 @@
-class User < ForumModels
+class User < Forum::Models
   include Tenacity
   include StElsewhere
   self.table_name = 'ibf_members'
