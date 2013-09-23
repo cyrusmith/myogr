@@ -24,7 +24,7 @@ module Distribution
           end
         end
         # reset_next_time_pickup
-        users_ids.each { |id| PackageItem.where(user_id: id).next_time_pickup.each { |item| item.update_attributes!(is_next_time_pickup: 0) } }
+        users_ids.each { |id| PackageItem.where(user_id: id).next_time_pickup.each { |item| item.update_attributes!(is_next_time_pickup: false) } }
       end
     end
   end
