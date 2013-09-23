@@ -95,6 +95,8 @@ module Distribution
             package_item.location = @point.id
             package_item.recieved_from = recieved_from
             package_item.accept
+            barcode_price = Distribution::Settings.barcode_price || 0
+            Forum::Bankroll.withdraw(barcode_price, package_item.organizer_id, 1, "Активация штрихкода #{package_item.barcode.barcode_string}")
             accepted_items << package_item
           else
             raise StandardError, 'Item reception failed'

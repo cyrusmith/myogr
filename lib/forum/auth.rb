@@ -2,7 +2,7 @@ module Forum
   class Auth < Warden::Strategies::Base
     def authenticate!
       login = params[:login]
-      user = ::User.where('lower(members_display_name) = :value OR lower(email) = :value', value: Utils.escape login.downcase).first
+      user = ::User.where('lower(members_display_name) = :value OR lower(email) = :value', value: Utils.escape(login.downcase)).first
       if user.present? and user.valid_password? params[:password]
         success!(user)
       else
