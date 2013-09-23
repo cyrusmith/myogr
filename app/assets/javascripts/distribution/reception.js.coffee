@@ -24,6 +24,8 @@ getPackage = (barcodeInput) ->
                         <td>#{data.package_item.organizer}</td>
                         <td>#{data.package_item.title} </td>
                       </tr>")
+        countItems = parseInt($('#count-items').text()) + 1
+        $('#count-items').text(countItems)
     complete: ->
       barcodeInput.prop('disabled', false).focus()
   )
