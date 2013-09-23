@@ -9,24 +9,21 @@ getPackage = (barcodeInput) ->
     success: (data) =>
       unless (data)
         return alert('Данные по штрих-коду не найдены. Возможно товар уже был принят или не был отмечен организатором как направленный в центра раздач')
-      list = $('ul#reception_list')
-      distributorInList = list.children("li[distributor=#{data.package_item.item_id}]")
-      if (distributorInList[0])
-        item = distributorInList.parent().find("li[item=#{data.package_item.id}]")
-        if (item[0])
-          alert('Такая посылка уже находится в списке!')
-        else
-          distributorInList.next('ul').append("<li item='#{data.package_item.id}'>
-                                                    <input type='hidden' name='package_item_id[]' value='#{data.package_item.id}'/>
-                                                      Код: #{data.barcode_string} - #{data.package_item.username}</li>")
+      list = $('table#reception_list>tbody')
+      isExist = list.children("tr[item=#{data.package_item.id}]").length > 0
+      if (isExist)
+        alert('Такая посылка уже находится в списке!')
       else
-        list.append("<li distributor='#{data.package_item.item_id}'>Отправитель:#{data.package_item.organizer} - #{data.package_item.title}</li>
-                                     <ul>
-                                       <li item='#{data.package_item.id}'>
-                                          <input type='hidden' name='package_item_id[]' value='#{data.package_item.id}'/>
-                                                  Код: #{data.barcode_string} - #{data.package_item.username}
-                                       </li>
-                                     </ul>")
+        list.find('.last_scan').removeClass('last_scan')
+        list.prepend("<tr item='#{data.package_item.id}' class='last_scan'>
+                        <td>
+                          <input type='hidden' name='package_item_id[]' value='#{data.package_item.id}'/>
+                          #{data.package_item.username}
+                        </td>
+                        <td>#{data.barcode_string} </td>
+                        <td>#{data.package_item.organizer}</td>
+                        <td>#{data.package_item.title} </td>
+                      </tr>")
     complete: ->
       barcodeInput.prop('disabled', false).focus()
   )

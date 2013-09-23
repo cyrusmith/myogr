@@ -1,0 +1,70 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require _colors
+ *= require normalize-rails
+ *= require_tree ../../../../vendor/assets/stylesheets
+ *= require_self
+ *= require_tree .
+ *= require jquery.ui.all
+ *= require dataTables/src/demo_table_jui
+ *= require chosen
+ *= require select2
+ */
+
+@import "colors"
+
+html, body, #menu, .grid
+  height: 100%
+  min-height: 100%
+  background-color: hsl(50, 37%, 93%)
+
+body>.grid
+  padding: 0 !important
+
+.column
+  height: 100%
+  min-height: 100%
+
+#menu
+  font: 12px/23px Lucida Grande, MetaPro, sans-serif
+  margin: 0
+  background-color: #34A530
+  color: #ffffff
+#menu h5
+  margin: 20px 10px 20px 20px
+
+#menu .menu_group_title
+  padding-left: 10px
+
+#menu .menu_group_title:before
+  content: "▾ "
+
+#menu .menu_group_title.closed:before
+  content: "▸ "
+
+#menu .menu_group .menu_item,
+#menu .menu_group .menu_group
+  padding-left: 35px
+
+#menu .menu_item
+  padding-left: 20px
+
+#menu .menu_item:hover,
+#menu .menu_group_title:hover,
+#menu .current
+  background-color: #ffffff
+  color: #34A530
+  cursor: pointer
+
+.last_scan
+  background: lightgoldenrodyellow
+  font-size: 25px
+  font-weight: bold
