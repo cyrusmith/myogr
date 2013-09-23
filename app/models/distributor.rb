@@ -1,4 +1,4 @@
-class Distributor < ForumModels
+class Distributor < Forum::Models
   include Tenacity
   self.table_name = 'ibf_topics'
   self.primary_key = 'tid'

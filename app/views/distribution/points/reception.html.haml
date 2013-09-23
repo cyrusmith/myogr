@@ -8,8 +8,18 @@
   = form_tag distribution_point_reception_path do
     = label_tag :barcode, 'Введите штрихкод'
     = text_field_tag :barcode, nil,  autofocus: true
+    %hr
+    %h5{style:'padding:8px'}
+      Количество позиций в списке:
+      %span#count-items 0
 
-    %ul#reception_list
+    %table#reception_list
+      %thead
+        %th Получатель
+        %th Штрихкод
+        %th Организатор
+        %th Закупка
+      %tbody
 
     %hr
     .field

@@ -1,4 +1,4 @@
-class ProductOrderItem < ForumModels
+class ProductOrderItem < Forum::Models
   self.table_name = 'ibf_zakup'
   self.primary_key = 'zid'
   paginates_per 50

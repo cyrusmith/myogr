@@ -1,4 +1,4 @@
-class Extra < ForumModels
+class Extra < Forum::Models
   self.table_name = 'ibf_member_extra'
 
   attr_accessible :id

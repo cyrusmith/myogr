@@ -78,9 +78,11 @@ jQuery ->
 
   $('body').delegate '#add_custom', 'click', ->
     customUser = $('#custom_user_id').select2('data')
-    $('#custom_user_id').select2('data', '')
     row = $(this).parents('tr')
     barcode = row.find('.barcode_select').select2('data')
+
+    return alert('Выберите пользователя и штрихкод') unless barcode? && customUser
+    $('#custom_user_id').select2('data', '')
     row.find('.barcode_select').select2('data', '')
     newRow = row.clone()
     newRow.children().first().text(customUser.text)

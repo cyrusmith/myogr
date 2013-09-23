@@ -1,4 +1,4 @@
-class ProductOrder < ForumModels
+class ProductOrder < Forum::Models
   self.table_name = 'ibf_zakup'
   self.primary_key = 'zid'
 

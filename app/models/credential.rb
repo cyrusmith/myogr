@@ -1,4 +1,4 @@
-class Credential < ForumModels
+class Credential < Forum::Models
   self.table_name = 'ibf_members_converge'
   self.primary_key = 'converge_id'
 
