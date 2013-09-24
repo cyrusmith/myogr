@@ -39,7 +39,14 @@ jQuery ->
   $(".distributor>a").on 'click', (event)->
     saveNeeded = false
     $('#orders .barcode_select').each ->
-      saveNeeded = true if ($(this).val() != '')
+      if ($(this).val() != '')
+        isCustomUser = $(this).parents('#add_custom_user').length > 0
+        if (isCustomUser)
+          unless ($('#custom_user_id').val() == '')
+            $('#add_custom').click()
+            saveNeeded = true
+        else
+          saveNeeded = true
     if (saveNeeded)
       link = this
       $('#dialog-confirm').dialog
@@ -72,7 +79,7 @@ jQuery ->
       getOrders(this)
       event.preventDefault()
 
-  $('form').on "ajax:success", (event, data, status, xhr)->
+  $('form').on "ajax:complete", (event, xhr, status)->
     if (xhr.status == 201)
       getOrders($('.distributor.current a'))
 
@@ -85,12 +92,12 @@ jQuery ->
     $('#custom_user_id').select2('data', '')
     row.find('.barcode_select').select2('data', '')
     newRow = row.clone()
-    newRow.children().first().text(customUser.text)
+    newRow.children().first().text(customUser.text).append("<input id='user_' name='user[]' type='hidden' value='#{customUser.id}'>")
     newRow.children().last().text('Не сдан в цр')
+    newRow.find('input[type=hidden][name*=custom_user]').attr('name')
     newRow.find('div.barcode_select').remove()
     newRow.find('.barcode_select').select2('destroy').select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}}).select2('data',
       barcode)
-    newRow.find('input[type=hidden][name*=user]').val(customUser.id)
     row.before(newRow)
 
   $('body').delegate 'input#user_search', 'keyup', (event)->

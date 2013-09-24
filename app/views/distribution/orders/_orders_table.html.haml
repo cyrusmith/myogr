@@ -17,10 +17,9 @@
           = item.barcode.barcode_string(true)
         %td.state
           = t('distribution.item.states.' + item.state.to_s) unless item.state.nil?
-    %tr
+    %tr#add_custom_user
       %td= hidden_field_tag :custom_user_id
       %td
-        = hidden_field_tag 'user[]'
         = hidden_field_tag 'distributor[]', @orders.first()['tid'] unless @orders.blank?
         = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
       %td

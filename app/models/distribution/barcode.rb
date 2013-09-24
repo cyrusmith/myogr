@@ -55,7 +55,7 @@ module Distribution
 
   class BarcodeAlreadyBelongsToPackageError < StandardError
     def initialize(barcode)
-      message = "Barcode #{barcode.id} belongs to package #{barcode.package.try(:id)}"
+      message = "Barcode #{barcode.id} belongs to package #{barcode.package_item.try(:id)}"
       super(message)
     end
   end

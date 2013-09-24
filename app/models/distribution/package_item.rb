@@ -41,7 +41,7 @@ module Distribution
     def self.create_batch!(array_of_params)
       self.transaction do
         array_of_params.each do |params|
-          raise BarcodeAlreadyBelongsToPackageError.new(params[:barcode]) if params.has_key? :barcode && params[:barcode].package_item.blank?
+          raise BarcodeAlreadyBelongsToPackageError.new(params[:barcode]) if (params.has_key? :barcode) && (params[:barcode].package_item.present?)
           PackageItem.create!(params)
         end
       end
