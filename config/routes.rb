@@ -82,7 +82,7 @@ Ogromno::Application.routes.draw do
       get 'package_list' => 'package_lists#show'
       get 'package_list/find_package' => 'package_lists#find_package', :as => :find_package
     end
-    resources :package_items, only: [:create, :update]
+    resources :package_items, only: [:create, :update], defaults: {format: :json}
   end
 
   namespace :admin do
