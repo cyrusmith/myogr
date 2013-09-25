@@ -3,7 +3,13 @@ module Distribution
 
     def create
       if (params[:user] && params[:distributor] && params[:barcode])
-        PackageItem.create_batch!(get_batched_params(params)) ? head(:created) : head(:unprocessable_entity)
+        respond_to do |format|
+          if PackageItem.create_batch!(get_batched_params(params)) then
+            format.json { head :created }
+          else
+            format.json { head :unprocessable_entity }
+          end
+        end
       end
     end
 
