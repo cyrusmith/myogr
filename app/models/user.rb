@@ -38,7 +38,7 @@ class User < Forum::Models
   end
 
   def display_name
-    self.members_display_name
+    CGI::unescapeHTML(self.members_display_name)
   end
 
   def self.verify(verification_code, options={})
