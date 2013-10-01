@@ -19,11 +19,17 @@
                 </td>
                 <td width='75%'><input type='text' maxlength='120' name='First Name'/></td>
             </tr>
-            <tr>
+            <tr style="display: none">
                 <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
-                    Фамилия &nbsp;&nbsp;:
+                    Last Name &nbsp;&nbsp;:
                 </td>
                 <td width='75%'><input type='text' maxlength='120' name='Contact Name'/></td>
+            </tr>
+            <tr>
+                <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>Ник
+                    &nbsp;&nbsp;:
+                </td>
+                <td width='75%'><input type='text' maxlength='120' name='Ник'/></td>
             </tr>
             <tr>
                 <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
@@ -32,7 +38,7 @@
                 <td width='75%'><input type='text' maxlength='120' name='Email'/></td>
             </tr>
             <tr>
-                <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>Тема
+                <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>Заголовок
                     &nbsp;&nbsp;:
                 </td>
                 <td width='75%'><input type='text' maxlength='120' name='Subject'/></td>
@@ -41,13 +47,13 @@
                 <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
                     Описание &nbsp;&nbsp;:
                 </td>
-                <td width='75%'><textarea name='Description' maxlength='30000' width='250' height='250'></textarea></td>
+                <td width='75%'><textarea name='Description' maxlength='30000' width='350' height='500'></textarea></td>
             </tr>
-            <tr>
+            <tr style="display:none">
                 <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
                     Статус &nbsp;&nbsp;:
                 </td>
-                <td width='75%' style="display:none"><select name='Status'>
+                <td width='75%'><select name='Status'>
                     <option value='Открыта' selected='selected'>Открыта</option>
                     <option value='Приостановлена'>Приостановлена</option>
                     <option value='На контроле'>На контроле</option>
@@ -70,12 +76,6 @@
                     <option value='Технические вопросы'>Технические вопросы</option>
                     <option value='Пожелания'>Пожелания</option>
                 </select></td>
-            </tr>
-            <tr>
-                <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>Ник
-                    &nbsp;&nbsp;:
-                </td>
-                <td width='75%'><input type='text' maxlength='120' name='Ник'/></td>
             </tr>
             <tr>
                 <td colspan=2 align=center style='background-color:#eaeaea'><input type='submit' name='save'
