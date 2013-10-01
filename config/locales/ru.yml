@@ -431,3 +431,4 @@ ru:
     filemnames:
       packing_lists: Упаковочные листы для ведомости %{date}.pdf
       package_lists: Ведомости %{date}.pdf
+      collection_tags: Упаковочные ярлыки для ведомости %{date}.pdf

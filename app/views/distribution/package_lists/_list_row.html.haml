@@ -37,5 +37,6 @@
   %td
     = select_tag 'action_on_' + list.id.to_s, options_for_select([ ['(Выберите действие)', ''],
                                                               ['Распечатать ведомости', 1, {class: 'pdf', source: distribution_point_package_list_package_list_path(point, list)}],
-                                                              ['Распечатать упаковочные листы', 2, {class: 'pdf', source: distribution_point_package_list_packing_lists_path(point, list)}]]), class: 'actions'
+                                                              ['Распечатать упаковочные листы', 2, {class: 'pdf', source: distribution_point_package_list_packing_lists_path(point, list)}],
+                                                              ['Распечатать упаковочные метки', 3, {class: 'pdf', source: distribution_point_package_list_collection_tags_path(point, list)}]]), class: 'actions'
 

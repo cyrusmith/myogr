@@ -14,10 +14,10 @@ class PackingLists < Prawn::Document
   end
 
   def to_pdf
-    first_page = true
+    is_first_page = true
     Distribution::Package::METHODS.each do |method_name|
       @package_list.packages.distribution_method(method_name).sort { |a, b| a.order.to_i <=> b.order.to_i }.each do |package|
-        first_page ? first_page = false : start_new_page
+        is_first_page ? is_first_page = false : start_new_page
         pa package
       end
     end

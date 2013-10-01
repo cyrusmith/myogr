@@ -66,13 +66,13 @@ Ogromno::Application.routes.draw do
     resources :points do
       match 'reception' => 'points#reception', :via => [:get, :post]
       match 'issuance' => 'points#issuance', :via => [:get, :post]
-      match 'revision' => 'points#revision', :via => [:get, :post]
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]
       match 'accept_items' => 'points#accept_items', :via => [:get, :post]
       resources :package_lists do
         get 'packing_lists' => 'package_lists#packing_lists'
         get 'package_list' => 'package_lists#package_list_report'
+        get 'collection_tags' => 'package_lists#print_collection_tags'
         get 'packages/(:state)' => 'package_lists#packages'
       end
       put 'package_list/:id/fire_event/:event'=> 'package_lists#fire_event', :as => :fire_package_list_event

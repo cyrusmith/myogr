@@ -192,5 +192,13 @@ module Distribution
                 :type => :pdf, :disposition => 'inline'
     end
 
+    def print_collection_tags
+      @package_list = PackageList.find(params[:package_list_id])
+      output = CollectionTags.new(@package_list, view_context).to_pdf
+      filename = t('pdf.filemnames.collection_tags', date: Russian::strftime(@package_list.date, '%d.%m.%Y'))
+      send_data output, :filename => filename,
+                :type => :pdf, :disposition => 'inline'
+    end
+
   end
 end
