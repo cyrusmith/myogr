@@ -39,10 +39,16 @@
             </tr>
             <tr>
                 <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
+                    Описание &nbsp;&nbsp;:
+                </td>
+                <td width='75%'><textarea name='Description' maxlength='30000' width='250' height='250'></textarea></td>
+            </tr>
+            <tr>
+                <td nowrap style='font-family:sans-serif;font-size:12px;font-weight:bold' align='right' width='25%'>
                     Статус &nbsp;&nbsp;:
                 </td>
-                <td width='75%'><select name='Status'>
-                    <option value='Открыта'>Открыта</option>
+                <td width='75%' style="display:none"><select name='Status'>
+                    <option value='Открыта' selected='selected'>Открыта</option>
                     <option value='Приостановлена'>Приостановлена</option>
                     <option value='На контроле'>На контроле</option>
                     <option value='Закрыта'>Закрыта</option>
@@ -73,8 +79,8 @@
             </tr>
             <tr>
                 <td colspan=2 align=center style='background-color:#eaeaea'><input type='submit' name='save'
-                                                                                   value=Сохранить/> &nbsp; &nbsp;
-                    <input type='reset' name='reset' value=Сброс/></td>
+                                                                                   value='Сохранить'> &nbsp; &nbsp;
+                    <input type='reset' name='reset' value='Сброс'></td>
             </tr>
         </table>
     </form>
