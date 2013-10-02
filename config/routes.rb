@@ -64,7 +64,8 @@ Ogromno::Application.routes.draw do
       get 'print' => 'barcodes#print'
     end
     resources :points do
-      match 'reception' => 'points#reception', :via => [:get, :post]
+      get 'reception' => 'points#reception'
+      post 'process_reception' => 'points#process_reception'
       match 'issuance' => 'points#issuance', :via => [:get, :post]
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]
@@ -75,14 +76,20 @@ Ogromno::Application.routes.draw do
         get 'collection_tags' => 'package_lists#print_collection_tags'
         get 'packages/(:state)' => 'package_lists#packages'
       end
-      put 'package_list/:id/fire_event/:event'=> 'package_lists#fire_event', :as => :fire_package_list_event
-      get 'package_list/days_info'=> 'package_lists#days_info'
+      put 'package_list/:id/fire_event/:event' => 'package_lists#fire_event', :as => :fire_package_list_event
+      get 'package_list/days_info' => 'package_lists#days_info'
       get 'package_list/switch_day_off' => 'package_lists#switch_day_off', :as => :switch_day_off
       get 'package_list/change_limit' => 'package_lists#change_limit'
       get 'package_list' => 'package_lists#show'
       get 'package_list/find_package' => 'package_lists#find_package', :as => :find_package
     end
     resources :package_items, only: [:create, :update], defaults: {format: :json}
+
+    #reports
+    get 'reports/reception_summary/:point_id/:group_num' => 'reports#reception_summary', :as => :reception_summary,
+        :constraints => {point_id: /[0-9]+/, group_num: /[0-9]+/}, :format => false
+    get 'reports/reception_lists/:group_num' => 'reports#reception_lists', :as => :reception_lists,
+        :constraints => {group_num: /[0-9]+/}, :format => false
   end
 
   namespace :admin do
