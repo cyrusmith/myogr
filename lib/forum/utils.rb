@@ -8,10 +8,11 @@ module Forum
         '♥' => '&#9829;',
         '\\' => '&#092;',
         '|' => '&#124;',
+        '&' => '&amp;',
     }
 
     def self.escape(value)
-      value.to_s.gsub(/[!'$♥\|]/) { |s| SPECIAL_CHARACTERS_MAP[s] }
+      value.to_s.gsub(/[!'$♥\|&]/) { |s| SPECIAL_CHARACTERS_MAP[s] }
     end
   end
 end
