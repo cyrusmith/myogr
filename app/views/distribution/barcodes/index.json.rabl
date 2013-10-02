@@ -6,4 +6,7 @@ child :package_item do
   glue(:user) do
     attributes :display_name => :username
   end
+  node(:localized_state) do |item|
+    I18n.t('distribution.item.states.' + item.state)
+  end
 end

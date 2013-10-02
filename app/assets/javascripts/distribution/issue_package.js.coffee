@@ -18,6 +18,6 @@ jQuery ->
           alert('Неправильный штрих-код введен')
       barcodeField.prev().removeClass('icon-remove').addClass('icon-ok').parent().addClass('green')
       barcodeField.appendTo('#issued_items')
-      input.val('')
+      input.val('').focus()
       event.preventDefault()
   )
