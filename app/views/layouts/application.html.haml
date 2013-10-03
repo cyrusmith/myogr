@@ -40,7 +40,6 @@
             -#%li= link_to t('record.my_records'), records_path
             %li= link_to t('user.my_distribution_records'), get_package_path
             %li= link_to t('user.send_to_distribution'), distribution_show_orders_path
-            %li= link_to 'Сообщить об ошибке', bug_report_path
       .clear
     <script type='text/javascript'>
     var googletag = googletag || {};
@@ -71,4 +70,18 @@
     googletag.cmd.push(function() { googletag.display('div-gpt-ad-1371211430929-0'); });
     </script>
     </div>
+    <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
+    <style type="text/css" media="screen, projection">@import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);</style>
+    <script type="text/javascript">
+    if (typeof(Zenbox) !== "undefined") {
+    Zenbox.init({
+    dropboxID:   "20234113",
+    url:         "https://ogromno.zendesk.com",
+    tabTooltip:  "Поддержка",
+    tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_ru_support_right.png",
+    tabColor:    "#90B724",
+    tabPosition: "Right"
+    });
+    }
+    </script>
     = render 'shared/footer'

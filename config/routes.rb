@@ -37,7 +37,6 @@ Ogromno::Application.routes.draw do
   get 'rules', :to => 'home#rules'
   get 'agreement', :to => 'home#agreement'
   get 'offer', :to => 'home#offer'
-  get 'bug_report', :to => 'home#bug_report'
 
   resources :sessions
 
