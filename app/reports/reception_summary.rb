@@ -48,6 +48,8 @@ class ReceptionSummary < CommonDocument
     table([*(data.map { |d| [d] })], :header => true)
     move_down 8
 
+    text "Принято #{@package_items.count} #{Russian.p(@package_items.count, 'позиция', 'позиции', 'позиций')} для #{@package_items.uniq{|i| i.user_id}.count} пользоватей"
+    move_down 8
     if first_item.not_conform_rules.present?
       special_marks =  first_item.not_conform_rules.split(/,/).map { |subject| I18n::t('distribution.item.not_conform_rules.' + Distribution::PackageItem::NOT_CONFORM_HASH.index(subject.to_i).to_s) }.join('. ')
       text "Прочие отметки: #{special_marks}"
