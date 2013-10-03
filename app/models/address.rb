@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Address < ActiveRecord::Base
 
   before_save :set_location
@@ -7,11 +8,11 @@ class Address < ActiveRecord::Base
   belongs_to :addressable, polymorphic: true
 
   def short_address
-    "#{self.street}"
+    "ул.#{self.street}"
   end
 
   def full_address
-    "#{self.city}, #{self.street}"
+    "г.#{self.city}, ул.#{self.street}"
   end
 
   def set_location

@@ -86,14 +86,24 @@ module Distribution
     # Прием товара
     def reception
       @point = Point.find(params[:point_id])
-      if params[:commit]
+    end
+
+    def process_reception
+      point = Point.find(params[:point_id])
+      message = {alert: 'Проверьте правильность заполнения полей'}
+      if params[:commit] && params[:package_item_id]
         recieved_from = params[:recieved_from]
+        receiver = params[:receiver]
         accepted_items = []
+        recieve_group_number = PackageItem.get_next_group_number
         params[:package_item_id].each do |package_item_id|
           package_item = PackageItem.find package_item_id
           if package_item.can_accept?
-            package_item.location = @point.id
+            package_item.location = point.id
             package_item.recieved_from = recieved_from
+            package_item.receiver = receiver
+            package_item.receiving_group_number = recieve_group_number
+            package_item.not_conform_rules = params[:no_conform].join(',') if params[:no_conform].present?
             package_item.accept
             barcode_price = Distribution::Settings.barcode_price || 0
             Forum::Bankroll.withdraw(barcode_price, package_item.organizer_id, 1, "Активация штрихкода #{package_item.barcode.barcode_string}")
@@ -102,11 +112,9 @@ module Distribution
             raise StandardError, 'Item reception failed'
           end
         end
-        output = ReceptionSummary.new(@point, accepted_items, view_context).to_pdf
-        send_data output, :type => :pdf, :disposition => 'inline'
-      else
-        render
+        message = {flash: {success: "Товар успешно принят. #{view_context.link_to 'Распечатать ведомость', distribution_reception_summary_path(point.id, recieve_group_number), target: '_blank'}. #{view_context.link_to 'Распечатать маркировочные листы', distribution_reception_lists_path(recieve_group_number), target: '_blank'}".html_safe}}
       end
+      redirect_to distribution_point_reception_path(point), message
     end
 
     # Выбытие товара

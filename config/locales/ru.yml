@@ -412,6 +412,9 @@ ru:
         case: Кейс
         delivery: Доставка
     item:
+      not_conform_rules:
+        packaging: Упаковка не соотв.правилам
+        marking: Маркировка не соотв.правилам
       states:
         pending: Ожидает сдачи
         accepted: Принят

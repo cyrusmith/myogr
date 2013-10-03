@@ -1,43 +1,62 @@
 # encoding: utf-8
+# Ведомость приемки товара
 class ReceptionSummary < CommonDocument
 
-  def initialize(point, package_items, view, options={})
-    super(view, options)
+  def initialize(point, group_number, view, options={})
     @point = point
-    @package_items = package_items
+    @group_number = group_number
+    @package_items = Distribution::PackageItem.where(receiving_group_number: group_number)
+    options[:numerate_pages] = true
+    super(view, options)
   end
 
   def output
-    text "Приходная ведомость от #{Date.today}", :size => 12, :style => :bold
+    first_item = @package_items.first
+    acceptance_date = first_item.audits.where(to: 'accepted').order('created_at DESC').first.created_at.to_date
+    text "Приходная ведомость №#{@group_number} от #{I18n.l acceptance_date}", :size => 12, :style => :bold
     move_down 5
-    text "Центр раздач: #{@point.address.full_address}"
-    horizontal_rule
-    text "Принято от: #{@package_items.first.recieved_from}"
+    text @point.address.full_address, size: 8
     move_down 5
-    text "Отправления:"
-    headers = ['Отправитель', 'Наименование', 'Код', 'Получатель', 'Упак. не соотв. правилам', 'Маркировка не соотв. правилам', 'Служебные отметки']
-    head = make_table([headers], :column_widths => [90, 140, 100, 90, 40, 40, 40]) do |t|
-      t.row(0).align = :center
-      t.row(0).valign = :center
-      t.row(0).font_style = :bold
-    end
+    stroke_horizontal_rule
+    move_down 5
+    y_position = cursor
+    block_width = bounds.width/2
+    text_box "Приемщик: #{first_item.receiver}", at:[0, y_position], width: block_width
+    text_box "Принято от: #{first_item.recieved_from}", at:[block_width, y_position], width: block_width
+    move_down 20
+    text "Отправления от #{first_item.organizer_id}/#{first_item.organizer} :"
+    headers = ['Получатель', 'Наименование', 'Код', 'Служебные отметки']
+    column_widths = [150, 180, 110, 100]
     data = []
+    data << make_table([headers], column_widths: column_widths) do |t|
+      t.row(0).style align: :center,
+                     valign: :center,
+                     font_style: :bold,
+                     background_color: 'cccccc'
+    end
+
     @package_items.each do |item|
       username = item.user.nil? ? '' : "#{item.user.id}/#{item.user.display_name}"
-      sender = "#{item.organizer_id}/#{item.organizer}"
-      data << make_table([[sender, CGI.unescapeHTML(item.title), item.barcode.barcode_string(true), username, '', '', set_marks(item)]]) do |t|
-        t.column_widths = [90, 140, 100, 90, 40, 40, 40]
+      title = "#{item.item_id}/#{CGI.unescapeHTML(item.title)}"
+      data << make_table([[username, title, item.barcode.barcode_string(true), set_marks(item)]], column_widths: column_widths) do |t|
+        t.cells.style :borders => [:left, :right], :padding => [2, 5], single_line: true
         t.columns(2).align = :right
-        t.cells.style :borders => [:left, :right], :padding => [2, 5]
+        t.columns(3).single_line = false
       end
     end
-    table([[head], *(data.map { |d| [d] })], :header => true, :row_colors => %w[ffffff]) do
-      row(0).style :background_color => 'cccccc'
-    end
+
+    table([*(data.map { |d| [d] })], :header => true)
     move_down 8
-    data = [['Приемщик', '', '', 'Подпись отправителя', '']]
-    table(data, :column_widths => [100, 150, 40, 140, 100]) do
+
+    if first_item.not_conform_rules.present?
+      special_marks =  first_item.not_conform_rules.split(/,/).map { |subject| I18n::t('distribution.item.not_conform_rules.' + Distribution::PackageItem::NOT_CONFORM_HASH.index(subject.to_i).to_s) }.join('. ')
+      text "Прочие отметки: #{special_marks}"
+      move_down 8
+    end
+
+    table([['Подпись приемщика', '', '', 'Подпись отправителя', '']], :column_widths => [120, 130, 40, 140, 100]) do
       cells.borders = []
+      cells.padding = 0
       row(0).columns([1, 4]).borders = [:bottom]
     end
   end
@@ -46,10 +65,10 @@ class ReceptionSummary < CommonDocument
 
   def set_marks(item)
     result = []
-    result << 'Кейс' if item.user.case?
-    result << 'Запись сегодня' if (!item.package.nil? && item.package.package_list.date.eql?(Date.today) && !item.package.completed?)
-    result << 'Запись завтра' if (!item.package.nil? && item.package.package_list.date.eql?(Date.tomorrow))
-    result.join ','
+    result << 'кейс' if item.user.case?
+    result << 'сегодня' if (!item.package.nil? && item.package.package_list.date.eql?(Date.today) && !item.package.completed?)
+    result << 'завтра' if (!item.package.nil? && item.package.package_list.date.eql?(Date.tomorrow))
+    result.join ', '
   end
 
 end
