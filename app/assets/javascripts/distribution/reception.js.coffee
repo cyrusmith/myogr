@@ -17,7 +17,9 @@ getPackage = (barcodeInput) ->
       unless (data)
         barcodeInput.prop('disabled', false).focus()
         return alert('Данные по введенному штрих-коду не найдены!')
-
+      if data.package_item != null
+        barcodeInput.prop('disabled', false).focus()
+        return alert('Введенный штрихкод не привязан к отправлению!')
       if (data.package_item.state == 'pending')
         list = $('table#reception_list>tbody')
         isExist = list.children("tr[item=#{data.package_item.id}]").length > 0
