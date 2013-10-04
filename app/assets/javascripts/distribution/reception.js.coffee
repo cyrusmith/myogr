@@ -17,7 +17,7 @@ getPackage = (barcodeInput) ->
       unless (data)
         barcodeInput.prop('disabled', false).focus()
         return alert('Данные по введенному штрих-коду не найдены!')
-      if data.package_item != null
+      if data.package_item_id == null
         barcodeInput.prop('disabled', false).focus()
         return alert('Введенный штрихкод не привязан к отправлению!')
       if (data.package_item.state == 'pending')
