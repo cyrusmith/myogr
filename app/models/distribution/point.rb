@@ -9,7 +9,7 @@ module Distribution
     before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
     after_create :initialize_package_lists
 
-    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :address, :address_fields
+    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :phone, :address, :address_fields
 
     validates :head_user, presence: true
 
