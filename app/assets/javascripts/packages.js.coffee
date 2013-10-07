@@ -53,6 +53,10 @@ getDefaultDate = ->
   return date
 
 jQuery ->
+  $('a.pick_next_time').bind("ajax:success", (data, status, xhr)->
+    $(this).parents('tr').fadeOut()
+  )
+
   point_element = $('#distribution_point')[0]
   if point_element? and point_element.type == 'hidden'
     $('#calendar').show()
@@ -91,27 +95,3 @@ jQuery ->
     petalLength: 16
     time: 2500
   $('#krutilka').trigger('hide')
-
-  $('form').on 'click', '.remove_fields', (event) ->
-    $(this).prev('input[type=hidden]').val('1')
-    $(this).closest('fieldset').hide()
-    event.preventDefault()
-
-  $('form').on 'click', '.add_fields', (event) ->
-    time = new Date().getTime()
-    regexp = new RegExp($(this).data('id'), 'g')
-    $(this).before($(this).data('fields').replace(regexp, time))
-    event.preventDefault()
-
-  $('#add-custom-topic').click (event) ->
-    tid = $(this).prev('input').val().match(/\d{1,10}/gi)[0]
-    $.ajax({
-      url: $(this).attr('data-source') + '/' + tid
-      dataType: "script"
-    })
-    $('#topic_link').val('')
-    event.preventDefault()
-
-  $('.remove_custom_tid').click (event) ->
-    $(this).parents('tr').remove()
-    event.preventDefault()

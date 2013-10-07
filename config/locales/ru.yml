@@ -391,8 +391,8 @@ ru:
         document_number: Серия и номер документа получателя
     package:
       errors:
-        wrong_date_selected: Выберите корректную дату записи
-        distribution_point_not_selected: "Выберите центр раздач для записи"
+        wrong_date_selected: Выберите дату записи
+        distribution_point_not_selected: Выберите центр раздач
       states:
         accepted: Принята
         collecting: Собирается

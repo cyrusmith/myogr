@@ -58,36 +58,18 @@ module Distribution
     # POST /distribution/packages
     # POST /distribution/packages.json
     def create
+      params[:distribution_package][:document_number] =
       @distribution_package = Package.new(params[:distribution_package])
-      @distribution_package.user_id = current_user.id
+      @distribution_package.user = current_user
       @distribution_package.distribution_method = :case if current_user.case?
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
         @package_list = @distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
         @package_list.packages << @distribution_package
-        if params[:tid] and !params[:tid].empty?
-          current_pickup_ids = params[:tid].uniq.map(&:to_i)
-          items_in_cabinet = Distributor.in_distribution_for_user current_user
-          items_in_cabinet.each do |item|
-            if item.tid.in?(current_pickup_ids)
-              is_next_time_pickup = false
-              current_pickup_ids.delete(item.tid)
-            else
-              is_next_time_pickup = true
-            end
-            @distribution_package.items.new(create_item_hash(item, is_next_time_pickup))
-          end
-          current_pickup_ids.each { |id| @distribution_package.items.new(create_item_hash(id)) }
-        end
       else
         chosen_point = Point.find(params[:distribution_point]) unless params[:distribution_point].blank?
-        found_items = if params[:tid] and !params[:tid].empty?
-                        Distributor.where(tid: params[:tid].uniq)
-                      else
-                        Distributor.in_distribution_for_user current_user
-                      end
-        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point, items: found_items
+        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point
       end
       respond_to do |format|
         if no_errors? and @distribution_package.save
