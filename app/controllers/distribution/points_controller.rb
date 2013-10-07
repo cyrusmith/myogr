@@ -179,7 +179,7 @@ module Distribution
           end
           @items_hash.each_key do |user_id|
             @items_hash[user_id][:later] = PackageItem.where(user_id: user_id, is_next_time_pickup: true).accepted.all
-            @items_hash[user_id][:new] = PackageItem.where(user_id: user_id, package_id: nil).accepted.all
+            @items_hash[user_id][:new] = PackageItem.where(user_id: user_id, package_id: nil, is_next_time_pickup: false).accepted.all
           end
         else
           render 'distribution/points/choose_recipient_form'

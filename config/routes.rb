@@ -82,7 +82,9 @@ Ogromno::Application.routes.draw do
       get 'package_list' => 'package_lists#show'
       get 'package_list/find_package' => 'package_lists#find_package', :as => :find_package
     end
-    resources :package_items, only: [:create, :update], defaults: {format: :json}
+    resources :package_items, only: [:create, :update], defaults: {format: :json} do
+      put 'pick_next_time' => 'package_items#pick_next_time', on: :member
+    end
 
     #reports
     get 'reports/reception_summary/:point_id/:group_num' => 'reports#reception_summary', :as => :reception_summary,

@@ -58,36 +58,18 @@ module Distribution
     # POST /distribution/packages
     # POST /distribution/packages.json
     def create
+      params[:distribution_package][:document_number] =
       @distribution_package = Package.new(params[:distribution_package])
-      @distribution_package.user_id = current_user.id
+      @distribution_package.user = current_user
       @distribution_package.distribution_method = :case if current_user.case?
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
         @package_list = @distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
         @package_list.packages << @distribution_package
-        if params[:tid] and !params[:tid].empty?
-          current_pickup_ids = params[:tid].uniq.map(&:to_i)
-          items_in_cabinet = Distributor.in_distribution_for_user current_user
-          items_in_cabinet.each do |item|
-            if item.tid.in?(current_pickup_ids)
-              is_next_time_pickup = false
-              current_pickup_ids.delete(item.tid)
-            else
-              is_next_time_pickup = true
-            end
-            @distribution_package.items.new(create_item_hash(item, is_next_time_pickup))
-          end
-          current_pickup_ids.each { |id| @distribution_package.items.new(create_item_hash(id)) }
-        end
       else
         chosen_point = Point.find(params[:distribution_point]) unless params[:distribution_point].blank?
-        found_items = if params[:tid] and !params[:tid].empty?
-                        Distributor.where(tid: params[:tid].uniq)
-                      else
-                        Distributor.in_distribution_for_user current_user
-                      end
-        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point, items: found_items
+        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point
       end
       respond_to do |format|
         if no_errors? and @distribution_package.save
@@ -111,31 +93,12 @@ module Distribution
         if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
           @distribution_package.set_order
+          message = "Запись успешно перенесена на #{I18n::l @distribution_package.date, format: :long} в центр раздач на #{@distribution_package.package_list.point.address.short_address}"
         end
       end
-      existing_item_ids = {}
-      @distribution_package.items.map { |item| existing_item_ids[item.item_id] = item.is_next_time_pickup }
-      if params[:tid]
-        params[:tid].uniq.each do |tid|
-          tid = tid.to_i
-          if tid.in? existing_item_ids.keys
-            #TODO оптимально не искать каждый раз объекты в таблице. Уменьшить количество запросов
-            if existing_item_ids[tid]
-              @distribution_package.items.where(item_id: tid).each do |item|
-                item.is_next_time_pickup = false
-                item.save
-              end
-            end
-            existing_item_ids.delete(tid)
-          else
-            @distribution_package.items.new(create_item_hash(tid))
-          end
-        end
-      end
-      existing_item_ids.keys.each { |id| @distribution_package.items.where(item_id: id).each { |item| item.update_attribute(:is_next_time_pickup, true) } }
       respond_to do |format|
         if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
-          format.html { redirect_to root_path, flash: {success: "Данные по заявке #{Russian::strftime(@distribution_package.package_list.date, '%d%m%Y')}/#{@distribution_package.code} успешно обновлены"} }
+          format.html { redirect_to root_path, flash: {success: (message if message.present?)} }
           format.json { head :no_content }
         else
           format.html { render action: 'edit' }

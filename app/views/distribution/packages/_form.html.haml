@@ -33,49 +33,40 @@
       %span#krutilka
     = hidden_field_tag :package_date, package_list.nil? ? '' : package_list.date.to_date.iso8601
 
-  %fieldset#package-items
-    %legend
-      Заказы
-      = help_icon 'Список заказов которые Вы хотите получить в Центре раздач. Если заказа нет в списке, Вы можете его добавить, указав ссылку на тему или id темы. Если в списке присутствуют заказы, которые Вы получили, можете его удалить.', :top
-    %table.tight
-      %thead
-        %tr
-          %td Id закупки
-          %td Название закупки
-          %td Организатор
+  %h5 Ваши заказы в центре раздач:
+  %table.tight
+    %thead
+      %tr
+        %th Закупка
+        %th Организатор
+        %th{class: :tooltip, title: 'Товар ожидает в центре раздач с этой даты'} Сдано
+        %th
+    %tbody
+      - @package_form.shown_items.each do |item|
+        - item_id = item.item_id
+        %tr{id:item_id}
           %td
-      %tbody
-        - @package_form.shown_items.each do |item|
-          - item_id = item.is_a?(Distributor) ? item.id : item.item_id
-          %tr{id:item_id}
-            %td= item_id
-            %td= raw item.title
-            %td= item.organizer
-            %td{nowrap: 'nowrap'}
-              = hidden_field_tag 'tid[]', item_id
-              %ul.button-bar
-                %li
-                  = link_to remove_from_cabinet_path(item_id),
-                            title: 'Уже получено(удалить из личного кабинета)', remote:true, confirm: 'Внимание! Все товары из удаляемой закупки будут безвозвратно удалены из вашего личного кабинета!' do
-                    %i.icon-trash.icon-large
-                %li
-                  = link_to '#', class: 'remove_custom_tid', title: 'Отложить(забрать в следующий раз)' do
-                    %i.icon-inbox.icon-large
-
-    %p
-      = label_tag :topic_link, 'Ссылка или id темы:'
-      = text_field_tag :topic_link
-      = link_to '#', id: 'add-custom-topic', title: 'Добавить', data: {source: distributors_path} do
-        %i.icon-plus.icon-large
+            - days_since_reception = (Date.today - item.reception_date).to_i
+            - show_icon_since = 7
+            - if days_since_reception >= show_icon_since
+              - green_color_part = 210 - (days_since_reception - show_icon_since)*30
+              %span.icon-large.icon-warning-sign.pull-left.tooltip{style: "color: rgb(255, #{green_color_part < 0 ? 0 : green_color_part }, 0)",
+              title: "Пожалуйста, заберите товар из центра раздач! Cо времени сдачи заказа прошло #{days_since_reception} дней. При хранении заказа более 14 дней будет активирована услуга \"Кейс\""}
+            =raw item.title
+          %td= item.organizer
+          %td= l item.reception_date, format: :short_num
+          %td{nowrap: 'nowrap'}
+            = hidden_field_tag 'tid[]', item_id
+            %ul.button-bar
+              %li
+                = link_to 'Отложить', pick_next_time_distribution_package_item_path(item), class: 'pick_next_time', title: 'Отложить(забрать в следующий раз)', remote: true, disable_with: 'Откладываю...' , method: :put
 
   .field
     = f.label :document_number, t('.document_number')
-    = f.text_field :document_number, required: true
+    = f.text_field :document_number, required: true, placeholder: 'Например, 6503 023761', class: 'col_3'
     = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
   .actions.box
     = f.submit disabled: (true if @package_form.new?)
-    -#%span#errors
-    -#  %i.icon-remove-sign
     - unless @package_form.new?
       или
       = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
