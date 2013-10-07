@@ -15,7 +15,6 @@
     %h5
       Вы записаны в ЦР на #{@package_form.chosen_point.address.short_address}. Дата получения #{ package_list.present? ? (Russian::strftime package_list.date, '%e %B(%A)') : 'не установлена. Установите дату записи'}.
       Номер записи - #{@package_form.code}.
-  #TODO должен меняться с выбором другого ЦР
   = raw @package_form.chosen_point.try(:work_schedule)
   - if @package_form.errors.any?
     - errors = @package_form.errors
