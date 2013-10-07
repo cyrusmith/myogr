@@ -1,20 +1,24 @@
 - package_list = @distribution_package.package_list
 - point = package_list.point
-%h4 Запись №#{ Russian::strftime package_list.date, '%d%m%Y'}/#{@distribution_package.code} на #{ Russian::strftime package_list.date, '%e %B'} в ЦР на #{point.address.to_s}
-%h5
-  %strong Статус записи: #{t('distribution.package.states.' + @distribution_package.state)}
-%h6  Время работы Центра раздач:
-%p
-  = raw point.work_schedule
-%p
-  %strong Закупки к выдаче:
+%h4 Запись №#{@distribution_package.code} на #{ l package_list.date, format: :day_month} в ЦР на #{point.address.short_address} #{t('distribution.package.states.' + @distribution_package.state)}
+%h6  Время работы центра раздач:
+= raw point.work_schedule
+
+%h6 Закупки:
 %table.tight
   %thead
     %tr
-      %td Название закупки
-      %td Организатор
+      %th Название закупки
+      %th Организатор
+      %th Сдано
   %tbody
     - @distribution_package.items.current_pickup.each do |item|
       %tr
         %td= t item.title
         %td= item.organizer
+        %td= l item.reception_date, format: :short_num
+
+%h6 Остались вопросы?
+%p
+  Позвоните в центр раздач по телефону
+  %nobr.phone= point.phone

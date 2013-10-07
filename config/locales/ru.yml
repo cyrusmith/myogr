@@ -48,6 +48,8 @@ ru:
       default: ! '%d.%m.%Y'
       long: ! '%d %B %Y'
       short: ! '%d %b'
+      short_num: ! '%d.%m.'
+      day_month: ! '%e %B'
     month_names:
     -
     - января
@@ -394,13 +396,14 @@ ru:
         wrong_date_selected: Выберите дату записи
         distribution_point_not_selected: Выберите центр раздач
       states:
-        accepted: Принята
-        collecting: Собирается
-        collected: Собрана
-        in_distribution_point: В центре раздач
-        in_delivery: В отделе доставки
-        issued: Выдана
-        utilized: Утилизирована
+        accepted: принята
+        collecting: собирается
+        collected: собрана
+        in_distribution: готова к выдаче
+        in_distribution_point: в центре раздач
+        in_delivery: в отделе доставки
+        issued: выдана
+        utilized: утилизирована
       events:
         start_collecting: Начать сборку
         finish_collecting: Закончить сборку

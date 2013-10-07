@@ -40,6 +40,10 @@ module Distribution
       self.is_collected=true
     end
 
+    def reception_date
+      self.audits.where(to: 'accepted').order('created_at DESC').first.created_at.to_date
+    end
+
 
     def self.create_batch!(array_of_params)
       self.transaction do

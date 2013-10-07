@@ -11,8 +11,7 @@ class ReceptionLists < CommonDocument
       text topic.organizer, size: 60, style: :bold
       stroke_horizontal_rule
       move_down 10
-      acceptance_date = topic.audits.where(to: 'accepted').order('created_at DESC').first.created_at.to_date
-      text I18n::l(acceptance_date), size: 40
+      text I18n::l(topic.reception_date), size: 40
 
       move_down 20
       text topic.title, size: 30

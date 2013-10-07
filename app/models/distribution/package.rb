@@ -32,6 +32,7 @@ module Distribution
 
     state_machine :state, :initial => :accepted do
       store_audit_trail
+      before_transition :on => :start_collecting, :do => :attach_accepted_items
       event :start_collecting do
         transition :accepted => :collecting
       end
@@ -114,6 +115,10 @@ module Distribution
       order_num = self.package_list.order_number_for(self.distribution_method)
       self.order = order_num
       self.code = order_num.to_s + METHODS_IDENTIFICATOR[self.distribution_method.to_sym]
+    end
+
+    def attach_accepted_items
+      PackageItem.where(user_id: self.user_id, is_next_time_pickup: false).accepted.each{|item| self.items << item}
     end
   end
 end

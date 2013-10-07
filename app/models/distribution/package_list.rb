@@ -22,15 +22,15 @@ module Distribution
         transition :forming => :collecting
       end
       after_transition :to => :collecting do |package_list|
-        package_list.packages_fire_event(:start_collecting)
+        package_list.fire_event_for_linked_packages(:start_collecting)
       end
 
       event :to_distribution do
         transition :collecting => :distributing
       end
       after_transition :to => :distributing do |package_list|
-        package_list.packages_fire_event(:finish_collecting)
-        package_list.packages_fire_event(:to_distribution)
+        package_list.fire_event_for_linked_packages(:finish_collecting)
+        package_list.fire_event_for_linked_packages(:to_distribution)
       end
 
       event :archive do
@@ -38,7 +38,7 @@ module Distribution
       end
       #TODO удалить. Автоматом закрывать ведомость если все заказы выданы.
       after_transition :to => :archived do |package_list|
-        package_list.packages_fire_event(:to_issued)
+        package_list.fire_event_for_linked_packages(:to_issued)
       end
 
       state :forming do
@@ -67,7 +67,7 @@ module Distribution
       max_order ? max_order + 1 : 1
     end
 
-    def packages_fire_event(event_name)
+    def fire_event_for_linked_packages(event_name)
       event_name = event_name.to_sym
       self.packages.each { |package| package.fire_state_event(event_name) } if Package.new.state_paths.events.include? event_name
     end

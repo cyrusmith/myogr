@@ -7,6 +7,8 @@ class Address < ActiveRecord::Base
 
   belongs_to :addressable, polymorphic: true
 
+  delegate :to_s, to: :full_address
+
   def short_address
     "ул.#{self.street}"
   end

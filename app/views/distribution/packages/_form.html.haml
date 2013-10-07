@@ -37,25 +37,26 @@
   %table.tight
     %thead
       %tr
-        %td Закупка
-        %td Организатор
-        %td
+        %th Закупка
+        %th Организатор
+        %th{class: :tooltip, title: 'Товар ожидает в центре раздач с этой даты'} Сдано
+        %th
     %tbody
       - @package_form.shown_items.each do |item|
-        - item_id = item.is_a?(Distributor) ? item.id : item.item_id
+        - item_id = item.item_id
         %tr{id:item_id}
           %td{class: 'tooltip', title: item_id}= raw item.title
           %td= item.organizer
+          %td= l item.reception_date, format: :short_num
           %td{nowrap: 'nowrap'}
             = hidden_field_tag 'tid[]', item_id
             %ul.button-bar
               %li
-                = link_to pick_next_time_distribution_package_item_path(item), class: 'pick_next_time', title: 'Отложить(забрать в следующий раз)', remote: true, method: :put, format: :json, content_type: 'text/json' do
-                  %i.icon-inbox.icon-large
+                = link_to 'Отложить', pick_next_time_distribution_package_item_path(item), class: 'pick_next_time', title: 'Отложить(забрать в следующий раз)', remote: true, disable_with: 'Откладываю...' , method: :put
 
   .field
     = f.label :document_number, t('.document_number')
-    = f.text_field :document_number, required: true
+    = f.text_field :document_number, required: true, placeholder: 'Например, 6503 023761', class: 'col_3'
     = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
   .actions.box
     = f.submit disabled: (true if @package_form.new?)
