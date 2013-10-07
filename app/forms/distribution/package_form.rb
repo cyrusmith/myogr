@@ -42,11 +42,6 @@ module Distribution
 
     protected
 
-    def new_db_items(recorded_items)
-      recorded_ids = recorded_items.map(&:item_id)
-      Distributor.in_distribution_for_user(@user).delete_if { |item| item.id.in? recorded_ids }
-    end
-
     def prepare_for_json
       result = yield() || {}
       result.inject Hash.new, :merge
