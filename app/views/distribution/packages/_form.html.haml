@@ -15,8 +15,8 @@
     %h5
       Вы записаны в ЦР на #{@package_form.chosen_point.address.short_address}. Дата получения #{ package_list.present? ? (Russian::strftime package_list.date, '%e %B(%A)') : 'не установлена. Установите дату записи'}.
       Номер записи - #{@package_form.code}.
-  %p.work-schedule
-    = raw @package_form.chosen_point.try(:work_schedule)
+  #TODO должен меняться с выбором другого ЦР
+  = raw @package_form.chosen_point.try(:work_schedule)
   - if @package_form.errors.any?
     - errors = @package_form.errors
     .notice.error
@@ -71,4 +71,7 @@
       или
       = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
     %p.small-font
-      Остались вопросы? Посмотрите наш #{link_to 'скринкаст', 'http://youtu.be/whtdSajP5yE'}, загляните в #{link_to 'инструкцию', 'https://docs.google.com/document/d/1XN68WLy1LR2XZlb0vHe-VQqRCYE0yNA4xe7GekyOsWo/edit?usp=sharing'} или задайте вопрос на #{link_to 'форуме', 'http://ogromno.com/index.php?s=&showtopic=50478&view=findpost&p=2600343'}
+      Остались вопросы? Посмотрите наш #{link_to 'скринкаст', 'http://youtu.be/whtdSajP5yE'},
+      загляните в #{link_to 'инструкцию', 'https://docs.google.com/document/d/1XN68WLy1LR2XZlb0vHe-VQqRCYE0yNA4xe7GekyOsWo/edit?usp=sharing'},
+      задайте вопрос на #{link_to 'форуме', 'http://ogromno.com/index.php?s=&showtopic=50478&view=findpost&p=2600343'} или
+      позвоните в центр раздач по телефону <nobr>#{@package_form.chosen_point.phone}</nobr>
