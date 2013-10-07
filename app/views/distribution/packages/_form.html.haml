@@ -45,7 +45,14 @@
       - @package_form.shown_items.each do |item|
         - item_id = item.item_id
         %tr{id:item_id}
-          %td{class: 'tooltip', title: item_id}= raw item.title
+          %td
+            - days_since_reception = (Date.today - item.reception_date).to_i
+            - show_icon_since = 7
+            - if days_since_reception >= show_icon_since
+              - green_color_part = 210 - (days_since_reception - show_icon_since)*30
+              %span.icon-large.icon-warning-sign.pull-left.tooltip{style: "color: rgb(255, #{green_color_part < 0 ? 0 : green_color_part }, 0)",
+              title: "Пожалуйста, заберите товар из центра раздач! Cо времени сдачи заказа прошло #{days_since_reception} дней. При хранении заказа более 14 дней будет активирована услуга \"Кейс\""}
+            =raw item.title
           %td= item.organizer
           %td= l item.reception_date, format: :short_num
           %td{nowrap: 'nowrap'}
