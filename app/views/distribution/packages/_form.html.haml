@@ -8,6 +8,16 @@
     = link_to 'Подключить кейс', 'http://ogromno.com/index.php?act=zak&CODE=15'
     %a.icon-remove{:href => '#close'}
 
+
+.box
+  %h4 Уважаемые пользователи!
+  %p
+    Центр раздач закончил внедрение штрихкодирования заказов и теперь мы знаем, какие ваши заказы находятся в центре раздач!
+    Все заказы, которые готовы к выдаче, находятся в списке ниже и этот список пополняется до дня закрытия ведомости на запись.
+  %p
+    Мы отключили форму ручного ввода закупок. Если вашего заказа нет в списке заказов в центре раздач, то это
+    значит, что организатор еще не передал его в центр раздач.
+
 - package_list = @package_form.package_list
 = form_for @package_form.package do |f|
   = render 'distribution/packages/form/point_control', points: @package_form.points, chosen_point: @package_form.chosen_point
