@@ -23,7 +23,7 @@ module Distribution
     end
 
     def shown_items
-      Distribution::PackageItem.select('DISTINCT distribution_package_items.*').joins(:audits).where(user_id: 6630, is_next_time_pickup: false, audits: {to: 'accepted'}).accepted.order(audits: 'created_at ASC')
+      Distribution::PackageItem.select('DISTINCT distribution_package_items.*').joins(:audits).where(user_id: @user.id, is_next_time_pickup: false, audits: {to: 'accepted'}).accepted.order(audits: 'created_at ASC')
     end
 
     def days_info
