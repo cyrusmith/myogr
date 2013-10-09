@@ -93,7 +93,7 @@ module Distribution
         if is_point_changed or is_date_changed
           @distribution_package.package_list = distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
           @distribution_package.set_order
-          message = "Запись успешно перенесена на #{I18n::l @distribution_package.date, format: :long} в центр раздач на #{@distribution_package.package_list.point.address.short_address}"
+          message = "Запись успешно перенесена на #{I18n::l @distribution_package.package_list.date, format: :long} в центр раздач на #{@distribution_package.package_list.point.address.short_address}"
         end
       end
       respond_to do |format|
