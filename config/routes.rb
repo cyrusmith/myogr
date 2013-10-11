@@ -65,7 +65,6 @@ Ogromno::Application.routes.draw do
     resources :points do
       get 'reception' => 'points#reception'
       post 'process_reception' => 'points#process_reception'
-      match 'issuance' => 'points#issuance', :via => [:get, :post]
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
       match 'issue_package' => 'points#issue_package', :via => [:get, :post]
       match 'accept_items' => 'points#accept_items', :via => [:get, :post]

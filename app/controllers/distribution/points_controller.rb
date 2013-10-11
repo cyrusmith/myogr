@@ -117,11 +117,6 @@ module Distribution
       redirect_to distribution_point_reception_path(point), message
     end
 
-    # Выбытие товара
-    def issuance
-      @point = Point.find(params[:point_id])
-    end
-
     def revision
       @point = Point.find(params[:point_id])
       @revision_barcodes = Barcode.where(owner: 0)
