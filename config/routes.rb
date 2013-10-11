@@ -83,6 +83,7 @@ Ogromno::Application.routes.draw do
     end
     resources :package_items, only: [:create, :update], defaults: {format: :json} do
       put 'pick_next_time' => 'package_items#pick_next_time', on: :member
+      put 'issue' => 'package_items#issue', on: :member
     end
 
     #reports

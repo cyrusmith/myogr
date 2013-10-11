@@ -30,6 +30,8 @@
                     %span.red.bigger-font Без штрих-кода!
                   %span.bigger-font= item.organizer + ' - '
                   %span{class: 'tooltip', title: item.title}= truncate(CGI.unescapeHTML(item.title), length: 45, omission: '...')
+                  - if current_user.has_role?(UserRole::ADMIN) or current_user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
+                    = link_to 'Выдать', issue_distribution_package_item_path(item), remote:true, method: :put, class: :issue_package
               - if items.empty? && !package_key.is_a?(Symbol)
                 %li Нет заказов со штрихкодом по этой записи
   = form_tag do
@@ -41,3 +43,5 @@
     #issued_items
     .actions
       = submit_tag t('distribution.package.events.to_issued'), id:'issue_package', confirm: 'Вы уверены, что хотите изменить статус заказа на выданный?'
+      или
+      = link_to 'Вернуться', distribution_point_issue_package_path

@@ -114,7 +114,7 @@ module Distribution
       @distribution_package.delete
 
       respond_to do |format|
-        format.html { redirect_to root_path, flash: {success: 'Ваша заявка была успешно аннулирована'} }
+        format.html { redirect_to root_path, flash: {success: 'Ваша запись была успешно аннулирована'} }
         format.json { head :no_content }
       end
     end

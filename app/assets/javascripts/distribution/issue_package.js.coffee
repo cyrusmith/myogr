@@ -21,3 +21,7 @@ jQuery ->
       input.val('').focus()
       event.preventDefault()
   )
+
+  $('a.issue_package').on("ajax:success", (data, status, xhr)->
+    $(this).parent().fadeOut("slow", -> $(this).remove())
+  )
