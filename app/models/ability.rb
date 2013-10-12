@@ -6,7 +6,7 @@ class Ability
     return if user.new_record?
     if user.has_role?(UserRole::ADMIN)
       can :manage, :all
-    elsif user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
+    elsif user.has_role?(UserRole::DISTRIB_CENTER_MANAGER) || user.has_role?(UserRole::DISTRIB_CENTER_EMPLOYEE)
       can :access, Distribution::Point, :head_user => user.id
       can :view_list, Distribution::Point
       can :read, Distribution::Point
