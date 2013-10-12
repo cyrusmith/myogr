@@ -17,6 +17,14 @@ module Distribution
       #TODO
     end
 
+    def issue
+      if PackageItem.find(params[:id]).issue
+        render json: {result: 'ok'}
+      else
+        render json: {result: 'error'}
+      end
+    end
+
     def pick_next_time
       if PackageItem.update(params[:id], {is_next_time_pickup: true}) then
         render json: {result: 'ok'}
