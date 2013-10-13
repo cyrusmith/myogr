@@ -8,11 +8,11 @@
       = select_tag :state_search, options_for_select(options)
   %tbody
     - @orders.each do |order|
-      = render 'order_row', order: order
-    - @package_items.each do |item|
+      = render 'order_row', order: order, items: @package_items.select{|item| item.item_id == order['tid'] && item.user_id == order['member_id']}
+    - @package_items.select{|item| !@orders.map{|order| order['member_id']}.include? item.user_id}.each do |item|
       %tr.manually_added
         %td.user
-          = User.find(item.user_id).display_name
+          = item.user.display_name
         %td.center
           = item.barcode.barcode_string(true)
         %td.state
