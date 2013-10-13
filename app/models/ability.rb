@@ -6,14 +6,14 @@ class Ability
     return if user.new_record?
     if user.has_role?(UserRole::ADMIN)
       can :manage, :all
-    elsif user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
-      can :access, Distribution::Point, :head_user => user.id
-      can :view_list, Distribution::Point
-      can :read, Distribution::Point
-      cannot :destroy, Distribution::Point
-      cannot :edit, Distribution::Point
+    elsif user.has_role?(UserRole::DISTRIB_CENTER_MANAGER) || user.has_role?(UserRole::DISTRIB_CENTER_EMPLOYEE)
+      can [:access,:view_list, :read, :issue_package], Distribution::Point do |point|
+        return true if point.head_user == user.id
+        point.employees.map(&:id).include? user.id
+      end
       can :manage, Distribution::PackageList
       can :manage, Distribution::Package
+      can :manage, Distribution::PackageItem
       can :manage, Distribution::Barcode
       can :manage, :order
     elsif user.has_role?(UserRole::SALON_ADMINISTRATOR)
