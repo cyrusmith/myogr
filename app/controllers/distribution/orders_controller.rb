@@ -1,7 +1,7 @@
 # coding: utf-8
 module Distribution
   class OrdersController < ApplicationController
-    authorize_resource :class => false
+    authorize_resource class: false
 
     def index
       @package_items = []
@@ -20,8 +20,6 @@ module Distribution
 
       query_string << ' GROUP BY zak.tid, zak.member_id ORDER BY users.members_display_name, zak.tid'
       @orders = Forum::Models.connection.select_all(query_string)
-      user_ids = @orders.map{|order| order['member_id']}
-      @package_items.reject! { |item| user_ids.include? item.user_id }
       respond_to do |format|
         format.json {render json: @orders}
         format.js

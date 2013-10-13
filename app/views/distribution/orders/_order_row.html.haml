@@ -1,18 +1,21 @@
-- package_items = Distribution::PackageItem.where(item_id:order['tid'], user_id:order['member_id']).all
-- package_item = package_items.find{|item| item.barcode}
-
-%tr{id: "order-#{order['zid']}"}
-  %td.user
-    = order['members_display_name']
-  %td.center
-    - if package_item.nil? || package_item.barcode.nil?
-      = hidden_field_tag 'user[]', order['member_id']
-      = hidden_field_tag 'distributor[]', order['tid']
-      = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
-    - else
-      = package_item.barcode.barcode_string(true)
-  %td.state
-    - if package_item.nil?
-      Не сдан
-    - else
-      = t('distribution.item.states.' + package_item.state.to_s) unless package_item.state.nil?
+- logger.debug "Rendering row for user #{order['members_display_name']}"
+- is_first_row = true
+- items << Distribution::PackageItem.new unless items.present?
+- items.each do |package_item|
+  %tr{id: "order-#{order['zid']}"}
+    - if is_first_row
+      %td.user{rowspan: (items.count if items.count > 1)}
+        = order['members_display_name']
+    %td.center
+      - if package_item.new_record?
+        = hidden_field_tag 'user[]', order['member_id']
+        = hidden_field_tag 'distributor[]', order['tid']
+        = hidden_field_tag 'barcode[]', '', class: 'barcode_select'
+      - else
+        = package_item.barcode.barcode_string(true)
+    %td.state
+      - if package_item.new_record?
+        Не сдан
+      - else
+        = t('distribution.item.states.' + package_item.state.to_s) unless package_item.state.nil?
+  - is_first_row = false
