@@ -7,7 +7,6 @@ module Forum
                           VALUES (0, #{self.id}, #{DateTime.now.to_i}, #{amount}, '#{description}')"
         ::User.connection.execute(add_to_log_sql)
         change_balance(amount, self.id)
-        balance
       end
     end
 
@@ -18,7 +17,6 @@ module Forum
         ::User.connection.execute(add_to_log_sql)
         change_balance(-amount, self.id)
         change_balance(amount, to)
-        balance
       end
     end
 
