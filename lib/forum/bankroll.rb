@@ -22,16 +22,10 @@ module Forum
       end
     end
 
-    def balance
-      get_balance_value_sql = "SELECT `cash` FROM `ibf_members` WHERE `id`=#{self.id}"
-      ::User.connection.select_all(get_balance_value_sql).first['cash']
-    end
-
     def change_balance(amount, user_id)
-      get_balance_value_sql = "SELECT `cash` FROM `ibf_members` WHERE `id`=#{user_id}"
-      balance_value = ::User.connection.select_all(get_balance_value_sql).first()
-      add_balance_value_sql = "UPDATE `ibf_members` SET  `cash` =  #{amount + balance_value['cash']} WHERE  `ibf_members`.`id` =#{user_id};"
-      ::User.connection.execute(add_balance_value_sql)
+      self.cash = self.cash + amount
+      self.save
+      self.cash
     end
 
   end
