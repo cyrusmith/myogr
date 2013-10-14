@@ -106,7 +106,7 @@ module Distribution
             package_item.not_conform_rules = params[:no_conform].join(',') if params[:no_conform].present?
             package_item.accept
             barcode_price = Distribution::Settings.barcode_price || 0
-            Forum::Bankroll.withdraw(barcode_price, package_item.organizer_id, 1, "Активация штрихкода #{package_item.barcode.barcode_string}")
+            package_item.org.withdraw(barcode_price, 1, "Активация штрихкода #{package_item.barcode.barcode_string}")
             accepted_items << package_item
           else
             raise StandardError, 'Item reception failed'

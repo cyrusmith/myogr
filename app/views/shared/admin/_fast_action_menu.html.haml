@@ -1,0 +1,17 @@
+%ul#fast-action-menu
+  %li
+    %i.icon-money.icon-2x{data: {window: 'fast-charge'}}
+
+#dialog
+  = form_tag do
+
+    - if @fast_action_context.present?
+      = hidden_field_tag :user_id, @fast_action_context['user'].id
+      = @fast_action_context['user'].display_name
+    - else
+      = javascript 'admin/fast_action_menu'
+      = hidden_field_tag :user_id
+
+    = label_tag :amount, 'Сумма'
+    = number_field_tag :amount
+

@@ -1,6 +1,7 @@
 class User < Forum::Models
   include Tenacity
   include StElsewhere
+  include Forum::Bankroll
   self.table_name = 'ibf_members'
 
   before_create :create_credential, :set_default_values, :generate_verification_data

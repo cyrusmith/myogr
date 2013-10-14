@@ -2,13 +2,15 @@
 %html
   %head
     %title Гипермаркет "Огромно"
-    = stylesheet_link_tag "application", :media => "all"
-    = javascript_include_tag "admin/admin"
+    = stylesheet_link_tag 'application', :media => 'all'
+    = stylesheet_link_tag 'admin', :media => 'all'
+    = javascript_include_tag 'admin/admin'
     = yield(:head)
     = csrf_meta_tags
     %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
   %body
     = render 'shared/admin/header'
+    = render 'shared/admin/fast_action_menu'
     #wrapper
       -if (flash[:success])
         %div{:class => 'notice success'}
