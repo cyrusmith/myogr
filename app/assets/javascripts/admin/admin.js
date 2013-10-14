@@ -16,6 +16,7 @@
 //= require jquery.ui.datepicker-ru
 //= require jquery.moodular
 //= require select2
+//= require admin/common_controls
 //= require krutilka
 //= require kickstart/kickstart
 //= require common
@@ -56,6 +57,6 @@ $(document).ready(function () {
         function () {
             $(this).find('ul').stop(true, true).fadeOut('slow');
             $(this).removeClass('hover');
-        });
+    });
 });
 

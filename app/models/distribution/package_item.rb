@@ -11,6 +11,7 @@ module Distribution
     has_one :barcode, :class_name => 'Distribution::Barcode', inverse_of: :package_item
     has_many :audits, :class_name => 'Distribution::PackageItemStateTransition'
     belongs_to :user
+    belongs_to :org, foreign_key: :organizer_id, class_name: 'User'
     belongs_to :package
 
     NOT_CONFORM_HASH = {packaging: 1, marking: 2}

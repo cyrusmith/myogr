@@ -80,6 +80,7 @@ Ogromno::Application.routes.draw do
       get 'package_list/change_limit' => 'package_lists#change_limit'
       get 'package_list' => 'package_lists#show'
       get 'package_list/find_package' => 'package_lists#find_package', :as => :find_package
+      post 'deposit' => 'fast_actions#deposit', :as => :deposit
     end
     resources :package_items, only: [:create, :update], defaults: {format: :json} do
       put 'pick_next_time' => 'package_items#pick_next_time', on: :member

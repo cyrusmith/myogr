@@ -1,12 +1,13 @@
 class User < Forum::Models
   include Tenacity
   include StElsewhere
+  include Forum::Bankroll
   self.table_name = 'ibf_members'
 
   before_create :create_credential, :set_default_values, :generate_verification_data
   after_create :create_extra
 
-  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent
+  attr_accessible :name, :email, :password, :member_login_key, :member_login_key_expire, :display_name, :verification_code, :verification_code_sent, :cash
   attr_accessor :password
 
   validates :password, length: {minimum: 6, maximum: 30}, on: :create
