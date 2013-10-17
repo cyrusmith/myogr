@@ -139,4 +139,13 @@ class UsersController < ApplicationController
     @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "#{Forum::Utils.escape params[:term]}%")
     render json: @users.map{|user| {id:user.id, text: user.members_l_display_name}}
   end
+
+  def balance
+    @user = User.find(params[:id])
+    authorize! :balance, @user
+    respond_to do |format|
+      format.json{ render json: @user.cash}
+      format.js
+    end
+  end
 end

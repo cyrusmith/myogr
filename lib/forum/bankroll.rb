@@ -6,7 +6,7 @@ module Forum
         add_to_log_sql = "INSERT INTO `ibf_money_log`(`from_member`, `to_member`, `date`, `sum`, `descrip`)
                           VALUES (0, #{self.id}, #{DateTime.now.to_i}, #{amount}, '#{description}')"
         ::User.connection.execute(add_to_log_sql)
-        change_balance(amount, self.id)
+        change_balance(amount)
       end
     end
 
