@@ -13,7 +13,7 @@ module Distribution
                              message_type: 'success'}}
         end
       else
-
+        render head(:bad_request)
       end
     end
   end

@@ -1,12 +1,17 @@
 - javascript 'distribution/issue_package'
+- fast_action_context_is({ :user => User.find(@items_hash.keys.first) }) if @items_hash.keys.size == 1
 %h3 Выдача записи
 = render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
 
 .tab-content
   %ul
-    - @items_hash.each do |user, packages|
+    - @items_hash.each do |user_id, packages|
+    - user = User.find(user_id)
       %li
-        %h5 Пользователь #{User.find(user).display_name}
+        %h5
+          Пользователь #{user.display_name}.
+          %div{style: 'float:right'}
+            = render 'shared/user_balance', user: user
         %ul
           - packages.each do |package_key, items|
             %li

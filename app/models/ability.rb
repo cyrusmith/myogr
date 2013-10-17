@@ -15,11 +15,12 @@ class Ability
       can :manage, Distribution::Package
       can :manage, Distribution::PackageItem
       can :manage, Distribution::Barcode
-      can :deposit, User
+      can [:deposit, :balance], User
       can :manage, :order
     elsif user.has_role?(UserRole::SALON_ADMINISTRATOR)
       can :manage, Admin::Record
     else
+      can :manage, User, id: user.id
       can :create, Banner
       can :manage, Record
       can :manage, :order

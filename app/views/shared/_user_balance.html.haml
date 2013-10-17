@@ -1,0 +1,4 @@
+#user-balance{class: ('negative-amount' if user.cash < 0)}
+  Баланс:
+  %span#balance-amount= number_to_currency user.cash, unit: 'руб.', precision: 0
+  = link_to 'Обновить', balance_user_path(user), remote:true
