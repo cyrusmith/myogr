@@ -6,7 +6,7 @@ usedBarcodes = new Array()
   $('#orders .barcode_select').select2({placeholder: "Выберите штрих-код", width: '200px', data: { results: unusedBarcodes}})
   $('#custom_user_id').select2
     placeholder: "Выберите пользователя"
-    width: '200px'
+    width: '300px'
     minimumInputLength: 1
     ajax:
       url: fullurl + '/user/find_by_name'
@@ -65,9 +65,9 @@ jQuery ->
               if ($(this).val() != '')
                 currentSelectData = $(this).select2('data')
                 deleteIndexes = []
-                for usedBarcode in usedBarcodes
-                  if (usedBarcode == currentSelectData)
-                    unusedBarcodes.push(usedBarcode)
+                for barcode in usedBarcodes
+                  if (barcode == currentSelectData)
+                    unusedBarcodes.push(barcode)
                     deleteIndexes.push(_i)
                 for index in deleteIndexes
                   usedBarcodes.splice(index, 1)

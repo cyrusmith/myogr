@@ -5,7 +5,8 @@
   %tr{id: "order-#{order['zid']}"}
     - if is_first_row
       %td.user{rowspan: (items.count if items.count > 1)}
-        = order['members_display_name']
+        - pm_url = ::Settings.private_message_url % {user_id: order['member_id']}
+        = link_to order['members_display_name'], pm_url, target: '_blank'
     %td.center
       - if package_item.new_record?
         = hidden_field_tag 'user[]', order['member_id']

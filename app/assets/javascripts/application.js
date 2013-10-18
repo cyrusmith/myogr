@@ -17,6 +17,7 @@
 //= require jquery.moodular
 //= require chosen-jquery
 //= require select2
+//= require select2_locale_ru
 //= require krutilka
 //= require kickstart/kickstart
 //= require common
