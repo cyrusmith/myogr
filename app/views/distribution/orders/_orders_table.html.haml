@@ -12,7 +12,8 @@
     - @package_items.select{|item| !@orders.map{|order| order['member_id']}.include? item.user_id}.each do |item|
       %tr.manually_added
         %td.user
-          = item.user.display_name
+          - pm_url = ::Settings.private_message_url % {user_id: user.id}
+          = link_to item.user.display_name, pm_url, target: '_blank'
         %td.center
           = item.barcode.barcode_string(true)
         %td.state

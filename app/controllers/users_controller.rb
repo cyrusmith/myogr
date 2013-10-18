@@ -137,7 +137,7 @@ class UsersController < ApplicationController
 
   def find_by_name
     @users = User.order(:members_l_display_name).where("members_l_display_name like ?", "#{Forum::Utils.escape params[:term]}%")
-    render json: @users.map{|user| {id:user.id, text: user.members_l_display_name}}
+    render json: @users.map{|user| {id:user.id, text: "#{user.members_l_display_name} (#{user.email})"}}
   end
 
   def balance

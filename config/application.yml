@@ -2,6 +2,7 @@
 defaults: &defaults
   host_url: http://localhost:3000
   forum_url: http://forum.ogromno.ru
+  private_message_url: http://ogromno.com/index.php?act=Msg&CODE=4&MID=%{user_id}
   billing:
     url: http://localhost:3001
     login: ogromno
