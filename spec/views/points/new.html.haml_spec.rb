@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "distribution_centers/new" do
   before(:each) do
-    assign(:distribution_point, stub_model(Point).as_new_record)
+    assign(:point, stub_model(Point).as_new_record)
   end
 
   it "renders new distribution_center form" do

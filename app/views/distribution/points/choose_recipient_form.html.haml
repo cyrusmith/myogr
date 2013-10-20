@@ -1,9 +1,7 @@
 - javascript 'distribution/recipient_form'
 
-%h3 Выдача записи
-= render 'distribution/shared/tab_menu', point: @point, active: 'issue_package'
-
-.tab-content
+.col_10
+  %h3 Выдача заказа
   = form_tag distribution_point_issue_package_path, method: :get, id: :recipient_form do
     = label_tag :data_type, 'Ввод:'
 

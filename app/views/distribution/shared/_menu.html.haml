@@ -1,0 +1,12 @@
+%h5 Панель управления
+.menu_group
+  = link_to_place_current_mark 'Центры раздач', distribution_points_path, class: :menu_group_title
+  - Distribution::Point.all.each do |point|
+    - if can? :read, point
+      .menu_group
+        = link_to_place_current_mark point.title, distribution_point_path(point), class: :menu_group_title
+        = link_to_place_current_mark 'Ведомости', distribution_point_package_lists_path(point), class: :menu_item
+        = link_to_place_current_mark 'Печать штрих-кодов', new_distribution_barcode_path, class: :menu_item
+        = link_to_place_current_mark 'Приход', distribution_point_reception_path(point), class: :menu_item
+        = link_to_place_current_mark 'Выдача заказа', distribution_point_issue_package_path(point), class: :menu_item
+.menu_item Пользователи

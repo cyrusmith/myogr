@@ -1,10 +1,7 @@
 = javascript 'distribution/reception'
 
-%h3 Поступление
-
-= render 'distribution/shared/tab_menu', point: @point, active: 'reception'
-
-.tab-content
+.col_10
+  %h3 Поступление
   = form_tag distribution_point_process_reception_path do
     = label_tag :barcode, 'Введите штрихкод'
     = text_field_tag :barcode, nil,  autofocus: true
@@ -41,4 +38,4 @@
 
     .actions
       = submit_tag 'Принять товар'
-  #dialog
+#dialog

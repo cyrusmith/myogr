@@ -1,20 +1,19 @@
 = javascript 'distribution/package_lists'
-%h3 Ведомости
+.col_10
+  %h3 Ведомости
 
-= render 'distribution/shared/tab_menu', point: @point, active:'package_lists'
+  .tab-content
+    %table#package_lists.sortable
+      %thead
+        %tr
+          %th Дата выдачи
+          %th Состояние
+          %th Заказано(%)
+          %th Собрано(%)
+          %th Выдано(%)
+          %th
+      %tbody
+        - @package_lists.each do |list|
+          = render_row list
 
-.tab-content
-  %table#package_lists.sortable
-    %thead
-      %tr
-        %th Дата выдачи
-        %th Состояние
-        %th Заказано(%)
-        %th Собрано(%)
-        %th Выдано(%)
-        %th
-    %tbody
-      - @package_lists.each do |list|
-        = render_row list
-
-  = paginate @package_lists
+    = paginate @package_lists

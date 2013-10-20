@@ -38,33 +38,59 @@ body>.grid
   margin: 0
   background-color: #34A530
   color: #ffffff
+
+#menu a
+  display: block
+  text-decoration: none
+  color: #ffffff
+
+#menu a:hover,
+#menu .current
+  background-color: #ffffff
+  color: #34A530
+
 #menu h5
   margin: 20px 10px 20px 20px
 
 #menu .menu_group_title
   padding-left: 10px
 
-#menu .menu_group_title:before
+#menu  a.menu_group_title:before
   content: "▾ "
 
-#menu .menu_group_title.closed:before
+#menu a.menu_group_title.closed:before
   content: "▸ "
 
 #menu .menu_group .menu_item,
 #menu .menu_group .menu_group
-  padding-left: 35px
+  padding-left: 30px
 
 #menu .menu_item
-  padding-left: 20px
-
-#menu .menu_item:hover,
-#menu .menu_group_title:hover,
-#menu .current
-  background-color: #ffffff
-  color: #34A530
-  cursor: pointer
+  padding-left: 10px
 
 .last_scan
   background: lightgoldenrodyellow
   font-size: 25px
   font-weight: bold
+
+#fast-action-menu
+  position: fixed
+  right: 0
+  top: 10%
+  z-index: 10
+
+#fast-action-menu .tab
+  cursor: pointer
+  float: right
+  border: solid 1px #739a35
+  border-radius: 10px 0 0 10px
+  padding: 5px 5px 5px 7px
+  background-color: #B4D77F
+  margin-bottom: 1px
+
+#deposit-form
+  display: none
+  float: right
+  width: 400px
+  background-color: #B4D77F
+

@@ -23,6 +23,13 @@ module ApplicationHelper
     end
   end
 
+  def link_to_place_current_mark(name, options = {}, html_options = {})
+    link_to_unless_current name, options, html_options do |name|
+      html_options[:class] = html_options[:class].to_s + ' current'
+      content_tag :div, name, html_options
+    end
+  end
+
   def get_package_path
     user_packages = current_user.packages
     active_package = user_packages.empty? ? nil : user_packages.select{|package| package.active?}.first
