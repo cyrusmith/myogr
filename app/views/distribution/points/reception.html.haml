@@ -1,6 +1,6 @@
 = javascript 'distribution/reception'
 
-.col_10
+.col_8
   %h3 Поступление
   = form_tag distribution_point_process_reception_path do
     = label_tag :barcode, 'Введите штрихкод'
@@ -38,4 +38,6 @@
 
     .actions
       = submit_tag 'Принять товар'
-#dialog
+  #dialog
+  %audio{src: audio_path('confirm.mp3'), preload:true, id: 'confirm-sound'}
+  %audio{src: audio_path('error.mp3'), preload:true, id: 'error-sound'}

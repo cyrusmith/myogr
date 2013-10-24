@@ -2,7 +2,7 @@
 = javascript_tag do
   window.days_off = #{raw @calendar_days_info.to_json}
 
-.col_10
+.col_8
   =hidden_field_tag :dc, @point.id
   #calendar
   %fieldset#day_properties

@@ -5,6 +5,25 @@ createInfoMarkup = (barcode) ->
    <p><b>Состояние:</b> #{barcode.package_item.localized_state}</p>
   "
 
+showErrorDialog = (error_message) ->
+  playSound('error')
+  $('#dialog').html(error_message)
+  $('#dialog').dialog(
+    title: 'Ошибка'
+    resizable: false
+    height: 200
+    width: 500
+    modal: true
+    dialogClass: 'alert-dialog'
+    buttons:
+      'ОК': ->
+        $(this).dialog('close')
+        $('input[name=barcode]').prop('disabled', false).focus()
+  )
+
+playSound = (name) ->
+  document.getElementById("#{name}-sound").play();
+
 getPackage = (barcodeInput) ->
   barcodeValue = $(barcodeInput).val();
   $.ajax(
@@ -15,17 +34,14 @@ getPackage = (barcodeInput) ->
       barcodeInput.prop('disabled', true)
     success: (data) =>
       unless (data)
-        barcodeInput.prop('disabled', false).focus()
-        return alert('Данные по введенному штрих-коду не найдены!')
+        showErrorDialog('Данные по введенному штрих-коду не найдены!')
       if data.package_item_id == null
-        barcodeInput.prop('disabled', false).focus()
-        return alert('Введенный штрихкод не привязан к отправлению!')
+        showErrorDialog('Введенный штрихкод не привязан к отправлению!')
       if (data.package_item.state == 'pending')
         list = $('table#reception_list>tbody')
         isExist = list.children("tr[item=#{data.package_item.id}]").length > 0
         if (isExist)
-          alert('Такая посылка уже находится в списке!')
-          barcodeInput.prop('disabled', false).focus()
+          showErrorDialog('Такая посылка уже находится в списке!')
         else
           list.find('.last_scan').removeClass('last_scan')
           list.prepend("<tr item='#{data.package_item.id}' class='last_scan'>
@@ -39,8 +55,10 @@ getPackage = (barcodeInput) ->
                         </tr>")
           countItems = parseInt($('#count-items').text()) + 1
           $('#count-items').text(countItems)
+          playSound('confirm')
           barcodeInput.prop('disabled', false).focus()
       else
+        playSound('error')
         $('#dialog').html(createInfoMarkup(data))
         $('#dialog').dialog(
           title: 'Информация о посылке'

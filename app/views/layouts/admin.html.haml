@@ -10,24 +10,20 @@
     %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
   %body
     = render 'shared/admin/fast_actions_menu' unless @point.nil? || @point.new_record?
+    -if (flash[:success])
+      %div{:class => 'notice success'}
+        = flash[:success]
+        %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+    -if (notice)
+      %div{:class => 'notice warning'}
+        = notice
+        %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
+    -if (alert)
+      %div{:class => 'notice error'}
+        = alert
+        %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
     .grid.flex
       .col_2#menu
         = render 'distribution/shared/menu', point: @point
       = yield
-      .clear
-    #wrapper
-      -if (flash[:success])
-        %div{:class => 'notice success'}
-          = flash[:success]
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
-      -if (notice)
-        %div{:class => 'notice warning'}
-          = notice
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
-      -if (alert)
-        %div{:class => 'notice error'}
-          = alert
-          %a{:href => "#close", :class => "icon-remove", :data => {:icon => "x"}, :style => "display:inline-block;"}
-      #admin-main-data
-        = yield
-      .clear
+      .col_2#sidebar
