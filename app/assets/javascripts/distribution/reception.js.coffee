@@ -34,15 +34,35 @@ getPackage = (barcodeInput) ->
       barcodeInput.prop('disabled', true)
     success: (data) =>
       unless (data)
+        $('body').trigger(
+          type:'barcode:scan'
+          success: false
+          barcode: data.barcode_string
+        )
         showErrorDialog('Данные по введенному штрих-коду не найдены!')
       if data.package_item_id == null
+        $('body').trigger(
+          type:'barcode:scan'
+          success: false
+          barcode: data.barcode_string
+        )
         showErrorDialog('Введенный штрихкод не привязан к отправлению!')
       if (data.package_item.state == 'pending')
         list = $('table#reception_list>tbody')
         isExist = list.children("tr[item=#{data.package_item.id}]").length > 0
         if (isExist)
+          $('body').trigger(
+            type:'barcode:scan'
+            success: false
+            barcode: data.barcode_string
+          )
           showErrorDialog('Такая посылка уже находится в списке!')
         else
+          $('body').trigger(
+            type:'barcode:scan'
+            success: true
+            barcode: data.barcode_string
+          )
           list.find('.last_scan').removeClass('last_scan')
           list.prepend("<tr item='#{data.package_item.id}' class='last_scan'>
                           <td>
@@ -59,6 +79,11 @@ getPackage = (barcodeInput) ->
           barcodeInput.prop('disabled', false).focus()
       else
         playSound('error')
+        $('body').trigger(
+          type:'barcode:scan'
+          success: false
+          barcode: data.barcode_string
+        )
         $('#dialog').html(createInfoMarkup(data))
         $('#dialog').dialog(
           title: 'Информация о посылке'
@@ -73,6 +98,9 @@ getPackage = (barcodeInput) ->
         )
   )
 
+loadPlugins = ->
+  $('a.plugin-link').click()
+
 jQuery ->
   barcodeInput = $('input[name=barcode]')
   barcodeInput.keypress((event)->
@@ -80,3 +108,4 @@ jQuery ->
       getPackage(barcodeInput)
       event.preventDefault()
   )
+  loadPlugins()
