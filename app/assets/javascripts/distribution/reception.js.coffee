@@ -15,14 +15,25 @@ showErrorDialog = (error_message) ->
     width: 500
     modal: true
     dialogClass: 'alert-dialog'
+    focus: ->
+      $('.ui-dialog :button').blur();
     buttons:
       'ОК': ->
         $(this).dialog('close')
-        $('input[name=barcode]').prop('disabled', false).focus()
+    close: ->
+      $('input[name=barcode]').prop('disabled', false).focus()
   )
+  $('#dialog').focus()
 
 playSound = (name) ->
   document.getElementById("#{name}-sound").play();
+
+invokeBarcodeScanEvent = (data, is_success=true) ->
+  $('body').trigger(
+    type:'barcode:scan'
+    success: is_success
+    barcode: data
+  )
 
 getPackage = (barcodeInput) ->
   barcodeValue = $(barcodeInput).val();
@@ -34,35 +45,19 @@ getPackage = (barcodeInput) ->
       barcodeInput.prop('disabled', true)
     success: (data) =>
       unless (data)
-        $('body').trigger(
-          type:'barcode:scan'
-          success: false
-          barcode: data.barcode_string
-        )
+        invokeBarcodeScanEvent(data, false)
         showErrorDialog('Данные по введенному штрих-коду не найдены!')
       if data.package_item_id == null
-        $('body').trigger(
-          type:'barcode:scan'
-          success: false
-          barcode: data.barcode_string
-        )
+        invokeBarcodeScanEvent(data, false)
         showErrorDialog('Введенный штрихкод не привязан к отправлению!')
       if (data.package_item.state == 'pending')
         list = $('table#reception_list>tbody')
         isExist = list.children("tr[item=#{data.package_item.id}]").length > 0
         if (isExist)
-          $('body').trigger(
-            type:'barcode:scan'
-            success: false
-            barcode: data.barcode_string
-          )
+          invokeBarcodeScanEvent(data, false)
           showErrorDialog('Такая посылка уже находится в списке!')
         else
-          $('body').trigger(
-            type:'barcode:scan'
-            success: true
-            barcode: data.barcode_string
-          )
+          invokeBarcodeScanEvent(data, true)
           list.find('.last_scan').removeClass('last_scan')
           list.prepend("<tr item='#{data.package_item.id}' class='last_scan'>
                           <td>
@@ -79,11 +74,7 @@ getPackage = (barcodeInput) ->
           barcodeInput.prop('disabled', false).focus()
       else
         playSound('error')
-        $('body').trigger(
-          type:'barcode:scan'
-          success: false
-          barcode: data.barcode_string
-        )
+        invokeBarcodeScanEvent(data, false)
         $('#dialog').html(createInfoMarkup(data))
         $('#dialog').dialog(
           title: 'Информация о посылке'
@@ -91,11 +82,15 @@ getPackage = (barcodeInput) ->
           height: 350
           width: 500
           modal: true
+          focus: ->
+            $('.ui-dialog :button').blur();
           buttons:
             'ОК': ->
               $(this).dialog('close')
-              barcodeInput.prop('disabled', false).focus()
+          close: ->
+            $('input[name=barcode]').prop('disabled', false).focus()
         )
+
   )
 
 loadPlugins = ->
