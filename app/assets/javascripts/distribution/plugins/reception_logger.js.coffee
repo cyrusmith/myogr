@@ -1,4 +1,4 @@
-$('body').on('barcode:scan', (event)->
+$('body').on 'barcode:scan', (event)->
   if event.barcode != null
     barcode_data = event.barcode
     username = 'Не привязан'
@@ -8,4 +8,3 @@ $('body').on('barcode:scan', (event)->
   else
     text = "<tr class='red'><td colspan='2'>Некорректный штрих-код</td></tr>"
   $('#reception-log > tbody').prepend(text)
-)

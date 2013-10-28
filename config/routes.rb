@@ -91,6 +91,7 @@ Ogromno::Application.routes.draw do
 
     #plugins
     get 'plugins/reception_logger' => 'plugins#reception_logger', :as => :reception_logger
+    get 'plugins/distributor_info/:id' => 'plugins#distributor_info', :as => :distributor_info
 
     #reports
     get 'reports/reception_summary/:point_id/:group_num' => 'reports#reception_summary', :as => :reception_summary,
