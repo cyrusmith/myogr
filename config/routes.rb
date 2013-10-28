@@ -89,6 +89,9 @@ Ogromno::Application.routes.draw do
       put 'issue' => 'package_items#issue', on: :member
     end
 
+    #plugins
+    get 'plugins/reception_logger' => 'plugins#reception_logger', :as => :reception_logger
+
     #reports
     get 'reports/reception_summary/:point_id/:group_num' => 'reports#reception_summary', :as => :reception_summary,
         :constraints => {point_id: /[0-9]+/, group_num: /[0-9]+/}, :format => false

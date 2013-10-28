@@ -15,42 +15,41 @@ module Distribution
     # GET /distribution_centers/1
     # GET /distribution_centers/1.json
     def show
-      @distribution_point = Point.find(params[:id])
-      cookies[:point_id] = params[:id]
-      @calendar_days_info = @distribution_point.get_days_info(true, admin_access: true).inject Hash.new, :merge
+      @point = Point.find(params[:id])
+      @calendar_days_info = @point.get_days_info(true, admin_access: true).inject Hash.new, :merge
       respond_to do |format|
         format.html # show.html.erb
-        format.json { render json: @distribution_point }
+        format.json { render json: @point }
       end
     end
 
     # GET /distribution_centers/new
     # GET /distribution_centers/new.json
     def new
-      @distribution_point = Point.new
-      @distribution_point.address = Address.new
+      @point = Point.new
+      @point.address = Address.new
       respond_to do |format|
         format.html # new.html.erb
-        format.json { render json: @distribution_point }
+        format.json { render json: @point }
       end
     end
 
     # GET /distribution_centers/1/edit
     def edit
-      @distribution_point = Point.find(params[:id])
+      @point = Point.find(params[:id])
     end
 
     # POST /distribution_centers
     # POST /distribution_centers.json
     def create
-      @distribution_point = Point.new(params[:distribution_point])
+      @point = Point.new(params[:point])
       respond_to do |format|
-        if @distribution_point.save
+        if @point.save
           format.html { redirect_to distribution_points_path, notice: 'Distribution center was successfully created.' }
-          format.json { render json: @distribution_point, status: :created, location: @distribution_point }
+          format.json { render json: @point, status: :created, location: @point }
         else
           format.html { render action: 'new' }
-          format.json { render json: @distribution_point.errors, status: :unprocessable_entity }
+          format.json { render json: @point.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -58,14 +57,14 @@ module Distribution
     # PUT /distribution_centers/1
     # PUT /distribution_centers/1.json
     def update
-      @distribution_point = Point.find(params[:id])
+      @point = Point.find(params[:id])
       respond_to do |format|
-        if @distribution_point.update_attributes(params[:distribution_point])
-          format.html { redirect_to @distribution_point, notice: 'Distribution center was successfully updated.' }
+        if @point.update_attributes(params[:point])
+          format.html { redirect_to @point, notice: 'Distribution center was successfully updated.' }
           format.json { head :no_content }
         else
           format.html { render action: 'edit' }
-          format.json { render json: @distribution_point.errors, status: :unprocessable_entity }
+          format.json { render json: @point.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -74,8 +73,8 @@ module Distribution
     # DELETE /distribution_centers/1.json
     #TODO нужно запретить удаление ЦР, если в нем есть товар и записи
     def destroy
-      @distribution_point = Point.find(params[:id])
-      @distribution_point.destroy
+      @point = Point.find(params[:id])
+      @point.destroy
 
       respond_to do |format|
         format.html { redirect_to distribution_points_url }

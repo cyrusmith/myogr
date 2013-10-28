@@ -46,14 +46,14 @@ describe PointsController do
     it "assigns the requested distribution_center as @distribution_center" do
       distribution_center = Point.create! valid_attributes
       get :show, {:id => distribution_center.to_param}, valid_session
-      assigns(:distribution_point).should eq(distribution_center)
+      assigns(:point).should eq(distribution_center)
     end
   end
 
   describe "GET new" do
     it "assigns a new distribution_center as @distribution_center" do
       get :new, {}, valid_session
-      assigns(:distribution_point).should be_a_new(Point)
+      assigns(:point).should be_a_new(Point)
     end
   end
 
@@ -61,7 +61,7 @@ describe PointsController do
     it "assigns the requested distribution_center as @distribution_center" do
       distribution_center = Point.create! valid_attributes
       get :edit, {:id => distribution_center.to_param}, valid_session
-      assigns(:distribution_point).should eq(distribution_center)
+      assigns(:point).should eq(distribution_center)
     end
   end
 
@@ -69,18 +69,18 @@ describe PointsController do
     describe "with valid params" do
       it "creates a new DistributionCenter" do
         expect {
-          post :create, {:distribution_point => valid_attributes}, valid_session
+          post :create, {:point => valid_attributes}, valid_session
         }.to change(Point, :count).by(1)
       end
 
       it "assigns a newly created distribution_center as @distribution_center" do
-        post :create, {:distribution_point => valid_attributes}, valid_session
-        assigns(:distribution_point).should be_a(Point)
-        assigns(:distribution_point).should be_persisted
+        post :create, {:point => valid_attributes}, valid_session
+        assigns(:point).should be_a(Point)
+        assigns(:point).should be_persisted
       end
 
       it "redirects to the created distribution_center" do
-        post :create, {:distribution_point => valid_attributes}, valid_session
+        post :create, {:point => valid_attributes}, valid_session
         response.should redirect_to(Point.last)
       end
     end
@@ -89,14 +89,14 @@ describe PointsController do
       it "assigns a newly created but unsaved distribution_center as @distribution_center" do
         # Trigger the behavior that occurs when invalid params are submitted
         Point.any_instance.stub(:save).and_return(false)
-        post :create, {:distribution_point => {  }}, valid_session
-        assigns(:distribution_point).should be_a_new(Point)
+        post :create, {:point => {  }}, valid_session
+        assigns(:point).should be_a_new(Point)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Point.any_instance.stub(:save).and_return(false)
-        post :create, {:distribution_point => {  }}, valid_session
+        post :create, {:point => {  }}, valid_session
         response.should render_template("new")
       end
     end
@@ -111,18 +111,18 @@ describe PointsController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Point.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
-        put :update, {:id => distribution_center.to_param, :distribution_point => { "these" => "params" }}, valid_session
+        put :update, {:id => distribution_center.to_param, :point => { "these" => "params" }}, valid_session
       end
 
       it "assigns the requested distribution_center as @distribution_center" do
         distribution_center = Point.create! valid_attributes
-        put :update, {:id => distribution_center.to_param, :distribution_point => valid_attributes}, valid_session
-        assigns(:distribution_point).should eq(distribution_center)
+        put :update, {:id => distribution_center.to_param, :point => valid_attributes}, valid_session
+        assigns(:point).should eq(distribution_center)
       end
 
       it "redirects to the distribution_center" do
         distribution_center = Point.create! valid_attributes
-        put :update, {:id => distribution_center.to_param, :distribution_point => valid_attributes}, valid_session
+        put :update, {:id => distribution_center.to_param, :point => valid_attributes}, valid_session
         response.should redirect_to(distribution_center)
       end
     end
@@ -132,15 +132,15 @@ describe PointsController do
         distribution_center = Point.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Point.any_instance.stub(:save).and_return(false)
-        put :update, {:id => distribution_center.to_param, :distribution_point => {  }}, valid_session
-        assigns(:distribution_point).should eq(distribution_center)
+        put :update, {:id => distribution_center.to_param, :point => {  }}, valid_session
+        assigns(:point).should eq(distribution_center)
       end
 
       it "re-renders the 'edit' template" do
         distribution_center = Point.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Point.any_instance.stub(:save).and_return(false)
-        put :update, {:id => distribution_center.to_param, :distribution_point => {  }}, valid_session
+        put :update, {:id => distribution_center.to_param, :point => {  }}, valid_session
         response.should render_template("edit")
       end
     end

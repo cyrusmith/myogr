@@ -1,9 +1,9 @@
-= form_for @distribution_point do |f|
-  - if @distribution_point.errors.any?
+= form_for @point do |f|
+  - if @point.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@distribution_point.errors.count, "error")} prohibited this distribution_center from being saved:"
+      %h2= "#{pluralize(@point.errors.count, "error")} prohibited this distribution_center from being saved:"
       %ul
-        - @distribution_point.errors.full_messages.each do |msg|
+        - @point.errors.full_messages.each do |msg|
           %li= msg
   .field
     = f.label :title, t('.title')
@@ -23,7 +23,7 @@
 
   %fieldset
     %legend Адрес
-    = f.fields_for @distribution_point.address do |builder|
+    = f.fields_for @point.address do |builder|
       = render 'addresses/fields', f: builder
 
   .field

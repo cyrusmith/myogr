@@ -1,17 +1,16 @@
 =javascript 'distribution/barcodes'
-%h3 Печать штрих-кодов
-- point = Distribution::Point.find(cookies[:point_id])
-= render 'distribution/shared/tab_menu', point: point, active: 'barcode_print'
+.col_8
+  %h3 Печать штрих-кодов
 
-.tab-content
-  =form_tag distribution_barcodes_path, target: '_blank'
-  .field
-    = label_tag :quantity, 'Количество штрих-кодов:'
-    = number_field_tag :quantity, 1, in: 1..699
-  .field
-    = label_tag :owner, 'Пользователь:'
-    = hidden_field_tag :owner
+  .tab-content
+    =form_tag distribution_barcodes_path, target: '_blank'
+    .field
+      = label_tag :quantity, 'Количество штрих-кодов:'
+      = number_field_tag :quantity, 1, in: 1..699
+    .field
+      = label_tag :owner, 'Пользователь:'
+      = hidden_field_tag :owner
 
-  .actions
-    = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
+    .actions
+      = submit_tag 'Создать штрихкоды', confirm: 'Вы уверены?'
 

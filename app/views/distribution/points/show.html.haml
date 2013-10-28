@@ -2,10 +2,8 @@
 = javascript_tag do
   window.days_off = #{raw @calendar_days_info.to_json}
 
-= render 'distribution/shared/tab_menu', point: @distribution_point, active: 'main'
-
-.tab-content
-  =hidden_field_tag :dc, @distribution_point.id
+.col_8
+  =hidden_field_tag :dc, @point.id
   #calendar
   %fieldset#day_properties
 

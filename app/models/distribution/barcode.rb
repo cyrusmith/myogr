@@ -53,10 +53,16 @@ module Distribution
 
   end
 
+  class DifferentBarcodeAndOrderOwnerError < StandardError
+    def initialize(barcode, item_org_id)
+      super "Barcode #{barcode.barcode_string} belongs to #{barcode.owner}, but order's sender is #{item_org_id}"
+    end
+  end
+
   class BarcodeAlreadyBelongsToPackageError < StandardError
     def initialize(barcode)
       message = "Barcode #{barcode.id} belongs to package #{barcode.package_item.try(:id)}"
-      super(message)
+      super message
     end
   end
 end
