@@ -34,6 +34,8 @@
                     %span.red.bigger-font Без штрих-кода!
                   %span.bigger-font= item.organizer + ' - '
                   %span{class: 'tooltip', title: item.title}= truncate(CGI.unescapeHTML(item.title), length: 45, omission: '...')
+                  - acceptance_time = item.audits.find{|a| a.event == 'accept'}.try(:created_at)
+                  (Дата приемки #{acceptance_time.present? ? Russian::strftime(acceptance_time, '%d.%m.%y') : 'неизвестна'})
                   - if current_user.has_role?(UserRole::ADMIN) or current_user.has_role?(UserRole::DISTRIB_CENTER_MANAGER)
                     = link_to 'Выдать', issue_distribution_package_item_path(item), remote:true, method: :put, class: :issue_package
               - if items.empty? && !package_key.is_a?(Symbol)
