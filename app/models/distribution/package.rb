@@ -53,13 +53,13 @@ module Distribution
         transition [:collected, :in_distribution] => :utilized
       end
 
-      state :accepted do
+      state all - [:issued, :utilized] do
         def changeable?
           true
         end
       end
 
-      state all - :accepted do
+      state :issued, :utilized do
         def changeable?
           false
         end
