@@ -101,6 +101,7 @@ module Distribution
           format.html { redirect_to root_path, flash: {success: (message if message.present?)} }
           format.json { head :no_content }
         else
+          @package_form = PackageForm.new @distribution_package, current_user
           format.html { render action: 'edit' }
           format.json { render json: @distribution_package.errors, status: :unprocessable_entity }
         end

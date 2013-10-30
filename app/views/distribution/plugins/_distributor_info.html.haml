@@ -1,0 +1,22 @@
+.tab-content.distributor-info{distributor: distributor.id}
+  %h6{class: ('negative-amount' if user.cash < 0)}
+    = distributor.display_name
+    = surround '(', ')' do
+      = number_to_currency(distributor.cash, unit: 'руб.', precision: 0)
+  %p{style: 'text-align:center;'}
+    Ожидают приемки
+    %span= @pending_items.count - 1
+    заказов
+  %div{style: 'max-height:450px; overflow-y:auto'}
+    %table#pending-items
+      %thead
+        %tr
+          %th Штрих-код
+          %th Ник
+          %th Закупка
+      %tbody
+        - @pending_items.each do |item|
+          %tr{item: item.id}
+            %td= '%08d' % item.barcode.value if item.barcode
+            %td= item.user.display_name
+            %td= truncate item.title, length: 20
