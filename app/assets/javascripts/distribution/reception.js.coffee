@@ -72,35 +72,6 @@ getPackage = (barcodeInput) ->
           countItems = parseInt($('#count-items').text()) + 1
           $('#count-items').text(countItems)
           playSound('confirm')
-          if $('div[distributor=' + data.package_item.organizer_id + ']').length == 0
-            $.ajax(
-              url: 'http://' + window.location.host + '/distribution/plugins/distributor_info/' + data.package_item.organizer_id,
-              beforeSend: ->
-                $('#sidebar').append('<div class="tab-content krutilka"><p>Загружаю данные организатора...</p></div>')
-                $('#sidebar .krutilka').krutilka(
-                  size: 32
-                  petals: 15
-                  petalWidth: 2
-                  petalLength: 8
-                  time: 2500
-                )
-              complete: ->
-                $('#sidebar .krutilka').remove();
-                unremovedCodes.push(data.package_item_id)
-            )
-          else
-            unremovedCodes.push(data.package_item_id)
-            removeIndexes = []
-            for code in unremovedCodes
-              itemRow = $(".distributor-info [item=#{code}]")
-              if itemRow
-                table = itemRow.parents('table')
-                itemRow.remove()
-                table.parents('.distributor-info').find('p>span').text(table.find('tbody>tr').size())
-                removeIndexes.push(_i)
-            for index in removeIndexes
-              unremovedCodes.splice(index, 1)
-
           barcodeInput.prop('disabled', false).focus()
       else
         playSound('error')
@@ -133,4 +104,38 @@ jQuery ->
       getPackage(barcodeInput)
       event.preventDefault()
   )
+
+  $('body').on 'barcode:scan', (event) ->
+    if (event.success && event.barcode != null)
+      data = event.barcode
+      if $('#sidebar div[distributor=' + data.package_item.organizer_id + ']').length == 0
+        $.ajax(
+          url: 'http://' + window.location.host + '/distribution/plugins/distributor_info/' + data.package_item.organizer_id,
+          beforeSend: ->
+            $('#sidebar').append('<div class="tab-content krutilka"><p>Загружаю данные организатора...</p></div>')
+            $('#sidebar .krutilka').krutilka(
+              size: 32
+              petals: 15
+              petalWidth: 2
+              petalLength: 8
+              time: 2500
+            )
+          complete: ->
+            $('#sidebar .krutilka').remove();
+            unremovedCodes.push(data.package_item_id)
+        )
+      else
+        unremovedCodes.push(data.package_item_id)
+        removeIndexes = []
+        for code in unremovedCodes
+          itemRow = $(".distributor-info [item=#{code}]")
+          if itemRow
+            table = itemRow.parents('table')
+            itemRow.remove()
+            table.parents('.distributor-info').find('p>span').text(table.find('tbody>tr').size())
+            removeIndexes.push(_i)
+        for index in removeIndexes
+          unremovedCodes.splice(index, 1)
+
+
   loadPlugins()
