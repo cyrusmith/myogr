@@ -2,6 +2,18 @@ class User < Forum::Models
   include Tenacity
   include StElsewhere
   include Forum::Bankroll
+  include Notificator
+
+  User.configure do |config|
+    config.notification_types = {
+        internal: Notificator::Method::Internal,
+        forum_message: Notificator::Method::ForumMessage,
+        email: Notificator::Method::Email,
+        sms: Notificator::Method::Sms,
+    }
+    config.default_type = :internal
+  end
+
   self.table_name = 'ibf_members'
 
   before_create :create_credential, :set_default_values, :generate_verification_data
@@ -13,8 +25,9 @@ class User < Forum::Models
   validates :password, length: {minimum: 6, maximum: 30}, on: :create
   validates :members_l_display_name, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 60}
 
-  has_one :credential, foreign_key: 'converge_id'
-  has_one :extra, foreign_key: 'id'
+  has_one :credential, foreign_key: 'converge_id', dependent: :destroy
+  has_one :extra, foreign_key: 'id', dependent: :destroy
+  t_has_many :notifications, dependent: :destroy
   t_has_many :packages, :class_name => 'Distribution::Package'
   t_has_many :banners
   t_has_many :records
