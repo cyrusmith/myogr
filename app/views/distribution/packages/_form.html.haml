@@ -68,8 +68,9 @@
   .actions.box
     = f.submit disabled: (true if @package_form.new?)
     - unless @package_form.new?
-      или
-      = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
+      - if @package_form.package.accepted?
+        или
+        = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
     %p.small-font
       Остались вопросы? Загляните в #{link_to 'инструкцию', 'https://docs.google.com/document/d/1XN68WLy1LR2XZlb0vHe-VQqRCYE0yNA4xe7GekyOsWo/edit?usp=sharing'},
       задайте вопрос на #{link_to 'форуме', 'http://ogromno.com/index.php?showtopic=53628'} или
