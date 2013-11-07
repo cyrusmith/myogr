@@ -10,7 +10,7 @@
           = hidden_field_tag :user_id, nil ,class: 'select_user_by_name'
       .field
         = label_tag :amount, 'Сумма'
-        = number_field_tag :amount, 100, min:1, step:50
+        = number_field_tag :amount, 100, in:1..5000
       .actions
         = submit_tag 'Пополнить'
   %div.tab{data: {window: 'deposit-form'}}
