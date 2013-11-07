@@ -5,7 +5,7 @@
 - list = data.package_list
 - point = data.point
 %tr{id: list.id}
-  %td=list.date
+  %td=l list.date
   %td
     = t('distribution.package_lists.states.' + list.state)
     - possible_events = list.state_events
