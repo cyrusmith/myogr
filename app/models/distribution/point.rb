@@ -5,6 +5,8 @@ module Distribution
 
     self.table_name_prefix = 'distribution_'
 
+    delegate :short_address, :full_address, to: :address
+
     before_save :check_head_permission
     before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
     after_create :initialize_package_lists

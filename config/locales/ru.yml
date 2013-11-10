@@ -431,6 +431,10 @@ ru:
     new_password_success: "Новый пароль был успешно установлен"
     state_change_error: "Ошибка перевода в состояние %{new_state}"
     state_change_complete: "Перевод в состояние %{new_state} завершен"
+    package:
+      was_canceled:
+        title: Ваша запись №%{number} на %{date} в Центр раздач на %{address} была отменена.
+        text: Центр раздач не получил заказов на ваше имя ко времени сборки вашей записи. Ваша запись №%{number} на %{date} была отменена.
   headers:
     ditribution_center_list: "Центры раздач"
   pdf:
