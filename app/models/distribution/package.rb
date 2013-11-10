@@ -8,7 +8,7 @@ module Distribution
     delegate :date, :point, to: :package_list
 
     ACTIVE_STATES = :accepted, :collecting, :collected, :in_distribution
-    FINAL_STATES = :issued, :utilized
+    FINAL_STATES = :issued, :utilized, :canceled
     METHODS = :at_point, :case, :delivery
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
@@ -55,12 +55,12 @@ module Distribution
       end
 
       event :cancel do
-        transition ACTIVE_STATES => :canceled
+        transition all - FINAL_STATES => :canceled
       end
       after_transition :on => :cancel do |package|
         date = package.date
         code = package.code
-        package.user.notify_via_all(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
+        package.user.notify_via_internal(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
                                          title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, address: package.point.short_address))
       end
 
@@ -92,13 +92,13 @@ module Distribution
         end
       end
 
-      state :issued, :utilized do
+      state :issued, :utilized, :canceled do
         def completed?
           true
         end
       end
 
-      state all - [:issued, :utilized] do
+      state all - [:issued, :utilized, :canceled] do
         def completed?
           false
         end

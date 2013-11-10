@@ -4,11 +4,15 @@ jQuery ->
     $(this).remove()
   )
 
-  $('select.actions').change(->
+  $('body').on 'change', 'select.actions', ->
     option = $(this).children('[value=' + this.value + ']')
+    url = option.attr('source')
+    method = option.attr('method') || 'get'
+    $(this).val('')
     if option.hasClass('pdf')
-      url = option.attr('source')
-      $(this).val('')
       win = window.open(url, '_blank')
       win.focus()
-  )
+    else
+      $.ajax
+        url: url
+        type: method
