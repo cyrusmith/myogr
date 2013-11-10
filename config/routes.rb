@@ -75,6 +75,7 @@ Ogromno::Application.routes.draw do
         get 'package_list' => 'package_lists#package_list_report'
         get 'collection_tags' => 'package_lists#print_collection_tags'
         get 'packages/(:state)' => 'package_lists#packages'
+        put 'cancel_empty' => 'package_lists#cancel_empty_packages', :on => :member
       end
       put 'package_list/:id/fire_event/:event' => 'package_lists#fire_event', :as => :fire_package_list_event
       get 'package_list/days_info' => 'package_lists#days_info'

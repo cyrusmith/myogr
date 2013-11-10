@@ -139,7 +139,7 @@ module Distribution
     def switch_day_off
       @point = Point.find(params[:point_id])
       date = Date.parse params[:date]
-      @package_list = @point.package_lists.includes(:schedule).where( schedule: {date: date}).first
+      @package_list = @point.package_lists.includes(:schedule).where(schedule: {date: date}).first
       if @package_list.day_off?
         @package_list.is_day_off = false
       else
@@ -198,6 +198,25 @@ module Distribution
       filename = t('pdf.filemnames.collection_tags', date: Russian::strftime(@package_list.date, '%d.%m.%Y'))
       send_data output, :filename => filename,
                 :type => :pdf, :disposition => 'inline'
+    end
+
+    #отменить все нулевые записи
+    def cancel_empty_packages
+      @package_list = PackageList.find params[:id]
+      @count = 0
+      @package_list.packages.each do |package|
+        is_empty = if @package_list.closed?
+                     package.items.blank?
+                   else
+                     PackageItem.where(user_id: package.user_id, package_id: nil).accepted.blank?
+                   end
+        if is_empty && package.cancel
+          @count = @count + 1
+        end
+      end
+      respond_to do |format|
+        format.js
+      end
     end
 
   end

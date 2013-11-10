@@ -5,8 +5,10 @@ module Distribution
 
     self.table_name_prefix = 'distribution_'
 
+    delegate :date, :point, to: :package_list
+
     ACTIVE_STATES = :accepted, :collecting, :collected, :in_distribution
-    FINAL_STATES = :issued, :utilized
+    FINAL_STATES = :issued, :utilized, :canceled
     METHODS = :at_point, :case, :delivery
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
@@ -23,11 +25,11 @@ module Distribution
 
     accepts_nested_attributes_for :items, allow_destroy: true
 
-    scope :in_states, lambda {|states_array| where{state.in states_array.map(&:to_s)} }
-    scope :not_in_states, lambda {|states_array| where{state.not_in states_array.map(&:to_s)} }
+    scope :in_states, lambda { |states_array| where { state.in states_array.map(&:to_s) } }
+    scope :not_in_states, lambda { |states_array| where { state.not_in states_array.map(&:to_s) } }
     scope :active, self.where(state: ACTIVE_STATES.map(&:to_s))
     scope :case, where(distribution_method: 'case')
-    scope :not_case, where{distribution_method.not_eq 'case'}
+    scope :not_case, where { distribution_method.not_eq 'case' }
     scope :distribution_method, ->(method_name) { where(distribution_method: method_name.to_s) }
 
     state_machine :state, :initial => :accepted do
@@ -43,12 +45,25 @@ module Distribution
       event :finish_collecting do
         transition :collecting => :collected
       end
+
       event :to_distribution do
         transition :collected => :in_distribution
       end
+
       event :to_issued do
         transition [:collected, :in_distribution] => :issued
       end
+
+      event :cancel do
+        transition all - FINAL_STATES => :canceled
+      end
+      after_transition :on => :cancel do |package|
+        date = package.date
+        code = package.code
+        package.user.notify_via_internal(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
+                                         title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, address: package.point.short_address))
+      end
+
       event :utilize do
         transition [:collected, :in_distribution] => :utilized
       end
@@ -77,13 +92,13 @@ module Distribution
         end
       end
 
-      state :issued, :utilized do
+      state :issued, :utilized, :canceled do
         def completed?
           true
         end
       end
 
-      state all - [:issued, :utilized] do
+      state all - [:issued, :utilized, :canceled] do
         def completed?
           false
         end
@@ -118,7 +133,7 @@ module Distribution
     end
 
     def attach_accepted_items
-      PackageItem.where(user_id: self.user_id, is_next_time_pickup: false).accepted.each{|item| self.items << item}
+      PackageItem.where(user_id: self.user_id, is_next_time_pickup: false).accepted.each { |item| self.items << item }
     end
   end
 end

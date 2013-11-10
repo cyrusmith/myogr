@@ -5,6 +5,7 @@ module Notificator
       type = self.class.configuration.default_type if type.nil?
       class_name = self.class.configuration.notification_types[type.to_sym]
       if class_name.present? then
+        logger.info "Sending #{type} notification for user #{self.id}"
         class_name.notify self, text, options
       else
         raise NotificationTypeError.new(type)
