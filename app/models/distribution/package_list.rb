@@ -80,20 +80,24 @@ module Distribution
       elsif limit_filled? and !is_filled_selectable
         [false, 'limit-filled', 'Лимит записей исчерпан']
       else
-        [true, '', "Записано #{self.packages.not_case.count} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
+        [true, '', "Записано #{count_limited_packages} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
       end
       info[0] = true if admin_access
       info
     end
 
     def limit_filled?
-      self.packages.not_case.count >= self.package_limit
+      count_limited_packages >= self.package_limit
     end
 
     private
 
     def set_package_limit
       self.package_limit = self.point.default_day_package_limit
+    end
+
+    def count_limited_packages
+      self.packages.not_case.where{state != 'canceled'}.count
     end
 
   end
