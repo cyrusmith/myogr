@@ -3,16 +3,25 @@
   %head
     %title Гипермаркет "Огромно"
     -#= stylesheet_link_tag "kickstart/kickstart.css", :media => "all"
-    = stylesheet_link_tag "application", :media => "all"
+    = stylesheet_link_tag 'application', :media => 'all'
     -#= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic', :media => "all"
     -#= javascript_include_tag "kickstart/kickstart.js.bak"
-    = javascript_include_tag "application"
+    = javascript_include_tag 'application'
     = yield(:head)
     -#= javascript_include_tag :defaults
     = csrf_meta_tags
     %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
   %body
     = render 'shared/header'
+    #notifications-popup
+      .triangle-up
+      .clear
+      .krutilka
+      #notification-error.center
+        %i.icon-4x.icon-remove-sign.red
+        %p.text Произошла ошибка при загрузке уведомлений. Попробовать #{link_to 'еще?', user_notifications_path(current_user, unread: true), remote: true}
+      #notification-list
+      = link_to 'Показать все уведомления', user_notifications_path(current_user), id: 'all-notifications'
     #wrapper
       %div{style: 'position:absolute;bottom:0px;width:800px;'}
         -if (flash[:success])
@@ -36,8 +45,6 @@
       #right-sidebar
         - unless current_user.nil?
           %ul
-            -#%li= link_to t('banner.my_banners'), banners_path
-            -#%li= link_to t('record.my_records'), records_path
             %li= link_to t('user.my_distribution_records'), get_package_path
             %li= link_to t('user.send_to_distribution'), distribution_show_orders_path
       .clear

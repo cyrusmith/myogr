@@ -86,18 +86,17 @@ module Distribution
       info
     end
 
+    def count_limited_packages
+      self.packages.not_case.where{state != 'canceled'}.count
+    end
+
+    private
     def limit_filled?
       count_limited_packages >= self.package_limit
     end
 
-    private
-
     def set_package_limit
       self.package_limit = self.point.default_day_package_limit
-    end
-
-    def count_limited_packages
-      self.packages.not_case.where{state != 'canceled'}.count
     end
 
   end
