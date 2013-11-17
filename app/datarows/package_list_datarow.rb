@@ -22,7 +22,7 @@ class PackageListDatarow
   end
 
   def limitable_packages
-    @packages.select{|package| not package.case? }.count
+    @package_list.count_limited_packages
   end
 
   def case_packages

@@ -4,6 +4,9 @@ Ogromno::Application.routes.draw do
 
   resources :users, :except => :destroy do
     get 'balance' => 'users#balance', on: :member
+    resources :notifications, only: [:index, :show] do
+      put 'read', :on => :member
+    end
   end
   match 'user/find' => 'users#find', :as => :find_users
   match 'user/find_by_name' => 'users#find_by_name', :as => :find_users_by_name

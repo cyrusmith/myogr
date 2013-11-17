@@ -1,0 +1,7 @@
+.notification{class: ('unread' unless notification.read?)}
+  - unless notification.read?
+    = link_to '', read_user_notification_path(notification.user.id, notification.id), class: 'icon-remove', remote:true, method: :put
+  %i.icon-2x{class: "icon-#{notification.icon || 'globe'}"}
+  %p.text= notification.text
+  %p.time.grey.tooltip{title: Russian::strftime(notification.created_at, :short)}
+    = "#{time_ago_in_words notification.created_at} назад"

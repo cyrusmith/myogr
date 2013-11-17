@@ -244,7 +244,7 @@ ol ol ol ol li:before
 .closed a
   color: blue !important
 
-ul.ui-autocomplete 
+ul.ui-autocomplete
   position: absolute
   list-style: none
   margin: 0
@@ -260,8 +260,8 @@ ul.ui-autocomplete
       color: #000
       display: block
       padding: 3px
-    
-    a.ui-state-hover, a.ui-state-active 
+
+    a.ui-state-hover, a.ui-state-active
       background-color: #FFFCB2
 
 #calendar-loading
@@ -328,19 +328,19 @@ ul.ui-autocomplete
   padding: 0 !important
 
 .menu li.current>a, .menu li.current>a:hover, .menu li.current.hover>a
-  background: -webkit-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: -moz-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: -o-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
+  background: -webkit-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: -moz-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: -o-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
 
 .grid
   padding: 0 !important
 
 .menu li.current>a, .menu li.current>a:hover, .menu li.current.hover>a
-  background: -webkit-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: -moz-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: -o-linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
-  background: linear-gradient(top, rgba(172, 240, 134, 1) 0%,rgba(141, 199, 87, 1) 44%,rgba(78, 184, 82, 1) 100%) !important
+  background: -webkit-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: -moz-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: -o-linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
+  background: linear-gradient(top, rgba(172, 240, 134, 1) 0%, rgba(141, 199, 87, 1) 44%, rgba(78, 184, 82, 1) 100%) !important
 
 .manually_added
   background-color: lightgoldenrodyellow
@@ -351,6 +351,82 @@ ul.ui-autocomplete
 .negative-amount
   @extend .red
 
-div.krutilka
+div.krutilka, .center
   text-align: center
   vertical-align: middle
+
+#notification-icon
+  padding-top: 5px
+
+#notification-icon a
+  text-decoration: none
+
+#notification-icon span
+  border: solid thin red
+  background: red
+  border-radius: 5px
+  padding: 5px 10px
+  position: relative
+  right: 20px
+  top: 5px
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25)
+  color: white
+
+#notifications-popup
+  position: absolute
+  width: 400px
+  left: 800px
+  border: 2px solid darkgray
+  border-radius: 10px
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25)
+  background: white
+  padding: 10px
+  display: none
+  z-index: 3
+
+#notification-error
+  display: none
+
+#notification-list
+  position: relative
+  top: -10px
+
+.notification
+  background: #ffffff
+  border: thin solid lightgray
+  color: darkgrey
+  padding: 10px
+  margin-bottom: 7px
+
+.notification>a.icon-remove
+  float: right
+
+.notification i
+  float: left
+  position: relative
+  vertical-align: sub
+  margin: 3px 10px 0 5px
+
+.notification.unread
+  color: #000000
+
+.notification>p.text
+  margin-left: 47px
+
+.notification p.time
+  position: relative
+  float: right
+  font-style: italic
+  bottom: 13px
+  margin: 0
+
+.triangle-up
+  width: 0
+  height: 0
+  border-left: 10px solid transparent
+  border-right: 10px solid transparent
+  border-bottom: 15px solid darkgrey
+  position: relative
+  top: -25px
+  float: right
+  right: 48px
