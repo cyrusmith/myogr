@@ -58,7 +58,7 @@ module Distribution
         transition all - FINAL_STATES => :canceled
       end
       after_transition :on => :cancel do |package|
-        date = package.date
+        date = Russian::strftime(package.date, :day_month)
         code = package.code
         package.user.notify_via_internal(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
                                          title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, address: package.point.short_address))
