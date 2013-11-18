@@ -13,15 +13,16 @@
     %style{:type => 'text/css'} * {box-sizing: border-box; -moz-box-sizing: border-box;-webkit-box-sizing: border-box}
   %body
     = render 'shared/header'
-    #notifications-popup
-      .triangle-up
-      .clear
-      .krutilka
-      #notification-error.center
-        %i.icon-4x.icon-remove-sign.red
-        %p.text Произошла ошибка при загрузке уведомлений. Попробовать #{link_to 'еще?', user_notifications_path(current_user, unread: true), remote: true}
-      #notification-list
-      = link_to 'Показать все уведомления', user_notifications_path(current_user), id: 'all-notifications'
+    - if current_user.present?
+      #notifications-popup
+        .triangle-up
+        .clear
+        .krutilka
+        #notification-error.center
+          %i.icon-4x.icon-remove-sign.red
+          %p.text Произошла ошибка при загрузке уведомлений. Попробовать #{link_to 'еще?', user_notifications_path(current_user, unread: true), remote: true}
+        #notification-list
+        = link_to 'Показать все уведомления', user_notifications_path(current_user), id: 'all-notifications'
     #wrapper
       %div{style: 'position:absolute;bottom:0px;width:800px;'}
         -if (flash[:success])

@@ -25,9 +25,10 @@
           = link_to('Войти', login_path) + ' или '
           %br
           = link_to('зарегистрироваться', signup_path)
-      #notification-icon
-        - new_notifications_counter = current_user.notifications.count{|n| not(n.read?)}
-        = link_to user_notifications_path(current_user, unread: true), title: "Уведомления(#{new_notifications_counter} #{Russian::pluralize new_notifications_counter, 'новое', 'новых', 'новых'})", remote: true do
-          %i.icon-3x{class: (new_notifications_counter > 0 ? 'icon-bell-alt' : 'icon-bell' )}
-          - if new_notifications_counter > 0
-            %span= new_notifications_counter
+      - if current_user.present?
+        #notification-icon
+          - new_notifications_counter = current_user.notifications.count{|n| not(n.read?)}
+          = link_to user_notifications_path(current_user, unread: true), title: "Уведомления(#{new_notifications_counter} #{Russian::pluralize new_notifications_counter, 'новое', 'новых', 'новых'})", remote: true do
+            %i.icon-3x{class: (new_notifications_counter > 0 ? 'icon-bell-alt' : 'icon-bell' )}
+            - if new_notifications_counter > 0
+              %span= new_notifications_counter

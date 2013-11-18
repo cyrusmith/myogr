@@ -26,7 +26,7 @@ class Ability
       can :manage, :order
       can :manage, Distribution::Package, :user_id => user.id
       can :manage, Distribution::Barcode, :owner => user.id
-      can :manage, Distribution::Notification, :user_id => user.id
+      can :manage, Notification, :user_id => user.id
       can :create, Distribution::PackageItem
       can :read, Distribution::Point
     end
