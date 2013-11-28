@@ -462,6 +462,7 @@ ru:
       groups:
         topics: Темы
         cases: Кейсы
+        barcode: Штрихкоды
         other: Прочие
         total: Итого
   pdf:
