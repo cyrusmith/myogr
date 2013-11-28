@@ -6,7 +6,7 @@ module Distribution
       if params[:user_id] && params[:amount] && params[:point_id]
         user = User.find(params[:user_id])
         description = "Пополнение счета пользователя #{user.id}/#{user.display_name} из Центра раздач №#{params[:point_id]}"
-        new_balance = user.deposit(params[:amount].to_i, description)
+        new_balance = user.deposit(params[:amount].to_i, description, :cash_deposit)
         respond_to do |format|
           format.js {render 'js_messages/message',
                     locals: {message: "Баланс успешно пополнен. Текущий баланс пользователя - #{new_balance} руб.",

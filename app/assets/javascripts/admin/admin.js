@@ -23,6 +23,7 @@
 //= require dataTables/jquery.dataTables
 //= require date.format
 //= require chosen-jquery
+//= require chartkick
 
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {

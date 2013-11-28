@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
     t.datetime "created_at"
   end
 
-  add_index "distribution_package_list_state_transitions", ["package_list_id"], :name => "package_list_state_transition_index"
+  add_index "distribution_package_list_state_transitions", ["package_list_id"], :name => "package_list_state_tr"
 
   create_table "distribution_package_lists", :force => true do |t|
     t.string  "state"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
     t.datetime "created_at"
   end
 
-  add_index "distribution_package_state_transitions", ["package_id"], :name => "index_distribution_package_state_transitions_on_package_id"
+  add_index "distribution_package_state_transitions", ["package_id"], :name => "package_state_tr"
 
   create_table "distribution_packages", :force => true do |t|
     t.integer  "order"
