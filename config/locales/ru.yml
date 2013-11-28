@@ -454,7 +454,7 @@ ru:
   finances:
     incomes:
       groups:
-        cash_deposiе: Наличные
+        cash_deposit: Наличные
         qiwi: QIWI
         other: Прочие
         total: Итого
