@@ -1,5 +1,5 @@
+# encoding: utf-8
 module ApplicationHelper
-  # encoding: utf-8
 
   def javascript(*files)
     content_for (:head) {javascript_include_tag(*files)}
@@ -21,6 +21,10 @@ module ApplicationHelper
     else
       return t(:hi).capitalize + link_to(t(:sign_in).capitalize, new_user_session_path) + t(:or) + link_to(t(:register).capitalize, new_user_session_path)
     end
+  end
+
+  def rubles(number, is_need_unit = true)
+    number_to_currency number, unit: (is_need_unit ? 'руб.' : ''), precision: 0
   end
 
   def link_to_place_current_mark(name, options = {}, html_options = {})

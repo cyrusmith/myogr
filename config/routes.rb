@@ -106,6 +106,7 @@ Ogromno::Application.routes.draw do
 
   namespace :admin do
     resources :promo_place
+    resources :finances, :only => :index
     namespace :salon do
       resources :records
       resources :employees

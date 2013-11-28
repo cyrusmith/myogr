@@ -64,6 +64,20 @@ ru:
     - октября
     - ноября
     - декабря
+    inf_month_names:
+    -
+    - янв.
+    - февр.
+    - март
+    - апр.
+    - май
+    - июнь
+    - июль
+    - авг.
+    - сент.
+    - окт.
+    - нояб.
+    - дек.
     order:
     - :day
     - :month
@@ -437,6 +451,19 @@ ru:
         text: Центр раздач не получил заказов на ваше имя ко времени сборки вашей записи. Ваша запись №%{number} на %{date} была отменена.
   headers:
     ditribution_center_list: "Центры раздач"
+  finances:
+    incomes:
+      groups:
+        cash_deposiе: Наличные
+        qiwi: QIWI
+        other: Прочие
+        total: Итого
+    earnings:
+      groups:
+        topics: Темы
+        cases: Кейсы
+        other: Прочие
+        total: Итого
   pdf:
     filemnames:
       packing_lists: Упаковочные листы для ведомости %{date}.pdf
