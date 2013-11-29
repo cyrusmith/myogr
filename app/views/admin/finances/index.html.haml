@@ -1,37 +1,13 @@
+- year = @incomes.keys.first
 .col_8
-  %h1 Фин.статистика
-  - year = @incomes.keys.first
-  - income_groups = t('finances.incomes.groups')
-  - groups = income_groups.keys
+  %h1
+    =link_to '←', admin_finances_path(year: "#{year-1}-01-01")
+    Фин.статистика за #{year}г.
+    = link_to '→', admin_finances_path(year: "#{year+1}-01-01") if year < Date.today.year
+
   = column_chart [{name: 'Пополнения', data:@incomes[year].map{|k,v| [t('date.inf_month_names')[k], v[:total].round(0)]}},
                   {name: 'Доходы', data:@earnings[year].map{|k,v| [t('date.inf_month_names')[k], v[:total].round(0)]}}]
-  %table
-    %caption Пополнения за #{year}г.
-    %thead
-      %tr
-        %th{width: '9%'}
-        - @incomes[year].keys.each do |month|
-          %th.right{width: '7%'}= t('date.inf_month_names')[month]
-    %tbody
-      - groups.each do |group|
-        %tr
-          %th{width: '9%'}= income_groups[group]
-          - @incomes[year].keys.each do |month|
-            %td.right{width: '7%'}= rubles(@incomes[year][month][group], false) unless @incomes[year][month][group] == 0
 
-    - year = @earnings.keys.first
-    - earnings_groups = t('finances.earnings.groups')
-    - groups = earnings_groups.keys
-    %table
-      %caption Доход за #{year}г.
-      %thead
-        %tr
-          %th{width: '9%'}
-          - @earnings[year].keys.each do |month|
-            %th.right{width: '7%'}= t('date.inf_month_names')[month]
-      %tbody
-        - groups.each do |group|
-          %tr
-            %th{width: '9%'}= earnings_groups[group]
-            - @earnings[year].keys.each do |month|
-              %td.right{width: '7%'}= rubles(@earnings[year][month][group], false) unless @earnings[year][month][group] == 0
+  = render 'table', data: @incomes, type: :incomes, caption: 'Пополнения'
+
+  = render 'table', data: @earnings, type: :earnings, caption: 'Доход'

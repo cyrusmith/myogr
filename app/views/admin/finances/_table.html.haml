@@ -1,0 +1,16 @@
+- year = data.keys.first
+- data_groups = t("finances.#{type}.groups")
+- groups = data_groups.keys
+%table.finances
+  %caption= caption
+  %thead
+    %tr
+      %th{width: '9%'}
+      - data[year].keys.each do |month|
+        %th.right{width: '7%'}= t('date.inf_month_names')[month]
+  %tbody
+    - groups.each do |group|
+      %tr
+        %th{width: '9%'}= data_groups[group]
+        - data[year].keys.each do |month|
+          %td.right{width: '7%'}= rubles(data[year][month][group], false) unless data[year][month][group] == 0
