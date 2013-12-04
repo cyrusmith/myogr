@@ -104,7 +104,7 @@ module Distribution
             package_item.recieved_from = recieved_from
             package_item.receiver = receiver
             package_item.receiving_group_number = recieve_group_number
-            package_item.not_conform_rules = params[:no_conform].join(',') if params[:no_conform].present?
+            package_item.not_conform_rules = params[:no_conform] if params[:no_conform].present?
             package_item.accept
             accepted_items << package_item
           else
@@ -112,7 +112,7 @@ module Distribution
           end
         end
         barcode_price = Distribution::Settings.barcode_price || 0
-        org.withdraw(barcode_price * accepted_items.count, 1, "Активация штрихкодов организатора #{org.id}", :barcode)
+        org.withdraw(barcode_price * accepted_items.count, 1, "Активация #{accepted_items.count} штрихкодов", :barcode)
         message = {flash: {success: "Товар успешно принят. #{view_context.link_to 'Распечатать ведомость', distribution_reception_summary_path(point.id, recieve_group_number), target: '_blank'}. #{view_context.link_to 'Распечатать маркировочные листы', distribution_reception_lists_path(recieve_group_number), target: '_blank'}".html_safe}}
       end
       redirect_to distribution_point_reception_path(point), message

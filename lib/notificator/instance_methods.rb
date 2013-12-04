@@ -16,11 +16,11 @@ module Notificator
       if sym.to_s =~ /^notify_via_(\w+)$/
         if $1.to_sym.eql? :all
           exisiting_types = self.class.configuration.notification_types
-          exisiting_types.each_key { |type| notify type, args[0], args[1] }
+          exisiting_types.each_key { |type| delay.notify type, args[0], args[1] }
         else
           notification_types = $1.split '_and_'
           notification_types.each do |type|
-            notify type, args[0], args[1]
+            delay.notify type, args[0], args[1]
           end
         end
       else

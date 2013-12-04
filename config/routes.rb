@@ -114,4 +114,5 @@ Ogromno::Application.routes.draw do
     end
   end
 
+  match '/delayed_job' => DelayedJobWeb, :anchor => false
 end

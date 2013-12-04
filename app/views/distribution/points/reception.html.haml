@@ -29,13 +29,13 @@
       = text_field_tag :receiver, nil, required: true
 
     %fieldset
-      %legend Не соответствует правилам:
-      .field
-        = check_box_tag 'no_conform[]', Distribution::PackageItem::NOT_CONFORM_HASH[:packaging]
-        = label_tag :no_conform_1, 'Упаковка'
-      .field
-        = check_box_tag 'no_conform[]', Distribution::PackageItem::NOT_CONFORM_HASH[:marking]
-        = label_tag :no_conform_2, 'Маркировка'
+      %legend Отметки:
+      - i = 1
+      - Distribution::PackageItem::NOT_CONFORM_HASH.each do |rule|
+        .field
+          = check_box_tag 'no_conform[]', rule
+          = label_tag "no_conform_#{i}", t("distribution.item.not_conform_rules.#{rule}")
+        - i = i + 1
 
     .actions
       = submit_tag 'Принять товар'

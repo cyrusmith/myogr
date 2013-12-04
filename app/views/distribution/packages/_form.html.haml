@@ -2,7 +2,7 @@
 = javascript_tag do
   window.days_off = #{raw @package_form.days_info.to_json}
 
-- if @package_form.new? and not current_user.case?
+- if @package_form.new? and not current_user.case_active?
   #sticky-notification.notice
     С услугой "Кейс" вы сможете забирать товары без очереди даже в те дни, когда лимит записи уже исчерпан!
     = link_to 'Подключить кейс', 'http://ogromno.com/index.php?act=zak&CODE=15'

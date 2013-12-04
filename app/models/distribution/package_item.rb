@@ -14,16 +14,28 @@ module Distribution
     belongs_to :org, foreign_key: :organizer_id, class_name: 'User'
     belongs_to :package
 
-    NOT_CONFORM_HASH = {packaging: 1, marking: 2}
+    NOT_CONFORM_HASH = [:packaging, :marking, :huge, :perishable]
 
     scope :current_pickup, where(is_next_time_pickup: false)
     scope :next_time_pickup, where(is_next_time_pickup: true)
-    scope :in_distribution, where{state.in %w(accepted issued)}
+    scope :in_distribution, where { state.in %w(accepted issued) }
 
     state_machine :state, :initial => :pending do
       store_audit_trail
       event :accept do
         transition :pending => :accepted
+      end
+      after_transition :on => :accept do |item|
+        is_message_queued = false
+        item.not_conform_rules.each do |rule|
+          notification_path = "notifications.package_item.#{rule}."
+          if rule == :huge || rule == :perishable
+            item.user.notify_via_all(I18n.t(notification_path + 'text'), title: I18n.t(notification_path + 'title'))
+            is_message_queued = true
+          end
+        end
+        item.user.notify_via_all(I18n.t('notifications.package_item.order_received.text', date: I18n.localize(Date.today, format: :day_month), title: item.title, sender: item.organizer),
+                                        title: I18n.t('notifications.package_item.order_received.title')) unless is_message_queued
       end
       event :issue do
         transition :accepted => :issued
@@ -43,6 +55,18 @@ module Distribution
 
     def reception_date
       self.audits.where(to: 'accepted').order('created_at DESC').first.created_at.to_date
+    end
+
+    def not_conform_rules=(value)
+      array = value.to_a.map! { |rule| rule.to_sym }
+      if array.all? { |rule| NOT_CONFORM_HASH.include? rule }
+        write_attribute(:not_conform_rules, array.join(','))
+      end
+    end
+
+    def not_conform_rules
+      rules_string = read_attribute :not_conform_rules
+      rules_string ? rules_string.split(',').map { |rule| rule.to_sym } : Array.new
     end
 
 

@@ -128,7 +128,7 @@ module Distribution
 
     def days_info
       @point = Point.find(params[:point_id])
-      marked_days = @point.get_days_info(current_user.case?, params)
+      marked_days = @point.get_days_info(current_user.case_active?, params)
       active_record = current_user.packages.select(&:active?).first
       if !active_record.nil? and active_record.package_list.point == @point
         marked_days << {active_record.package_list.date => 'active-record'}

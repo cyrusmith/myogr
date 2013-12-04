@@ -14,6 +14,12 @@ module Distribution
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
     before_create :set_order
+    after_create unless: Proc.new{|package| package.user.case_active? } do |package|
+      date = I18n.l(package.date, format: :day_month)
+      code = package.code
+      package.user.notify_via_all(I18n.t('notifications.package.created.text', code: code, date: date, address: package.point.short_address),
+                                  title: I18n.t('notifications.package.created.title', date: date, address: package.point.short_address))
+    end
 
     attr_accessible :user_id, :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
 
@@ -58,9 +64,9 @@ module Distribution
         transition all - FINAL_STATES => :canceled
       end
       after_transition :on => :cancel do |package|
-        date = Russian::strftime(package.date, :day_month)
+        date = I18n.l(package.date, format: :day_month)
         code = package.code
-        package.user.notify_via_internal(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
+        package.user.notify_via_all(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
                                          title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, address: package.point.short_address))
       end
 

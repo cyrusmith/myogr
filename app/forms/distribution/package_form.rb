@@ -29,9 +29,9 @@ module Distribution
     def days_info
       prepare_for_json do
         if @point.nil?
-          points.first.get_days_info(@user.case?) if points.count == 1
+          points.first.get_days_info(@user.case_active?) if points.count == 1
         else
-          @point.get_days_info(@user.case?)
+          @point.get_days_info(@user.case_active?)
         end
       end
     end

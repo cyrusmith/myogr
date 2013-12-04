@@ -33,6 +33,9 @@ gem 'has_barcode'
 gem 'select2-rails'
 gem 'rabl'
 gem 'chartkick'
+gem 'daemons'
+gem 'delayed_job_active_record'
+gem 'delayed_job_web'
 
 group :development do
   gem 'better_errors'

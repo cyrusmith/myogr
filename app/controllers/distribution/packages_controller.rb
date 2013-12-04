@@ -61,7 +61,7 @@ module Distribution
       params[:distribution_package][:document_number] =
       @distribution_package = Package.new(params[:distribution_package])
       @distribution_package.user = current_user
-      @distribution_package.distribution_method = :case if current_user.case?
+      @distribution_package.distribution_method = :case if current_user.case_active?
       validate_form
       if no_errors?
         @distribution_point = Point.find(params[:distribution_point])
