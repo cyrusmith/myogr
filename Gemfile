@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.15'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -14,7 +14,6 @@ gem 'settingslogic'
 gem 'bson_ext', '>= 1.3.0'
 gem 'tenacity'
 gem 'mongoid'
-#gem 'devise', '>= 1.3.3'
 gem 'rails_warden'
 gem 'cancan'
 gem 'debugger-linecache'
@@ -65,7 +64,6 @@ gem 'normalize-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 #gem 'client_side_validations'
-#gem 'client_side_validations-mongoid'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 
 # To use ActiveModel has_secure_password

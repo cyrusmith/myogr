@@ -49,47 +49,4 @@
             %li= link_to t('user.my_distribution_records'), get_package_path
             %li= link_to t('user.send_to_distribution'), distribution_show_orders_path
       .clear
-    <script type='text/javascript'>
-    var googletag = googletag || {};
-    googletag.cmd = googletag.cmd || [];
-    (function() {
-    var gads = document.createElement('script');
-    gads.async = true;
-    gads.type = 'text/javascript';
-    var useSSL = 'https:' == document.location.protocol;
-    gads.src = (useSSL ? 'https:' : 'http:') +
-    '//www.googletagservices.com/tag/js/gpt.js';
-    var node = document.getElementsByTagName('script')[0];
-    node.parentNode.insertBefore(gads, node);
-    })();
-    </script>
-
-    <script type='text/javascript'>
-    googletag.cmd.push(function() {
-    googletag.defineSlot('/54884489/pod_chatom_728x90', [728, 90], 'div-gpt-ad-1371211430929-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-    });
-    </script>
-
-    <!-- pod_chatom_728x90 -->
-    <div id='div-gpt-ad-1371211430929-0' style='width:728px; height:90px;'>
-    <script type='text/javascript'>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1371211430929-0'); });
-    </script>
-    </div>
-    <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
-    <style type="text/css" media="screen, projection">@import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);</style>
-    <script type="text/javascript">
-    if (typeof(Zenbox) !== "undefined") {
-    Zenbox.init({
-    dropboxID:   "20234113",
-    url:         "https://ogromno.zendesk.com",
-    tabTooltip:  "Поддержка",
-    tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_ru_support_right.png",
-    tabColor:    "#90B724",
-    tabPosition: "Right"
-    });
-    }
-    </script>
     = render 'shared/footer'

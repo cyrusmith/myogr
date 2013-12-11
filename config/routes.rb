@@ -105,13 +105,7 @@ Ogromno::Application.routes.draw do
   end
 
   namespace :admin do
-    resources :promo_place
     resources :finances, :only => :index
-    namespace :salon do
-      resources :records
-      resources :employees
-      resources :procedures
-    end
   end
 
   match '/delayed_job' => DelayedJobWeb, :anchor => false
