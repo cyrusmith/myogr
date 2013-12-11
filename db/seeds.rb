@@ -7,6 +7,5 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Role.create! name: 'admin'
-Role.create! name: 'salon_admin'
 Role.create! name: 'distrib_manager'
 Role.create! name: 'distrib_employee'

@@ -1,5 +1,6 @@
-class Admin::FinancesController < Admin::AdminController
-  skip_load_and_authorize_resource
+class FinancesController < ApplicationController
+  layout 'admin'
+
   authorize_resource class: false
 
   def index

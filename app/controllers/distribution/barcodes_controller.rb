@@ -1,6 +1,6 @@
 # coding: utf-8
 module Distribution
-  class BarcodesController < Admin::AdminController
+  class BarcodesController < AdminController
 
     def index
       @barcode = if params[:barcode_string]

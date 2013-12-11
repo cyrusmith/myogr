@@ -17,12 +17,8 @@ class Ability
       can :manage, Distribution::Barcode
       can [:deposit, :balance], User
       can :manage, :order
-    elsif user.has_role?(UserRole::SALON_ADMINISTRATOR)
-      can :manage, Admin::Record
     else
       can :manage, User, id: user.id
-      can :create, Banner
-      can :manage, Record
       can :manage, :order
       can :manage, Distribution::Package, :user_id => user.id
       can :manage, Distribution::Barcode, :owner => user.id

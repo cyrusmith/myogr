@@ -1,5 +1,5 @@
 module Distribution
-  class PackageItemsController < Admin::AdminController
+  class PackageItemsController < AdminController
 
     def create
       if (params[:user] && params[:distributor] && params[:barcode])

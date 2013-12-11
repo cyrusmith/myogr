@@ -1,6 +1,6 @@
 # coding: utf-8
 module Distribution
-  class PointsController < Admin::AdminController
+  class PointsController < AdminController
     # GET /distribution_centers
     # GET /distribution_centers.json
     def index
