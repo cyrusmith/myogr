@@ -7,7 +7,7 @@ module Notificator
       # 2.Создать запись в таблице ibf_message_topics со ссылкой на 1
       # 3.Обновить данные у members_extra и members
       def self.notify(recipient, text, options={})
-        title = options[:title] || 'Уведомление'
+        title = (options[:title] || 'Уведомление').encode('cp1251')
         self.transaction do
           creation_time = Time.now.to_i
           epoch_mirco = Time.now.to_f
@@ -15,7 +15,7 @@ module Notificator
           epoch_fraction = epoch_mirco - epoch_full
           microtime = epoch_fraction.to_s + ' ' + epoch_full.to_s
           message_text_sql = "INSERT INTO `ibf_message_text`(`msg_date`,	`msg_post`,	`msg_sent_to_count`, `msg_post_key`, `msg_author_id`,	`msg_ip_address`)
-                                                            VALUES (#{creation_time}, '#{text}', 1, '#{::Digest::MD5.hexdigest(microtime)}', 1, '#{recipient.ip_address}')"
+                                                            VALUES (#{creation_time}, '#{text.encode('cp1251')}', 1, '#{::Digest::MD5.hexdigest(microtime)}', 1, '#{recipient.ip_address}')"
           message_id = self.connection.insert message_text_sql
           puts "message_text inserted. new id is #{message_id}"
           insert_message_topics = "INSERT INTO `ibf_message_topics`(`mt_msg_id`, `mt_date`,	`mt_title`,	`mt_from_id`,	`mt_to_id`,	`mt_vid_folder`,`mt_owner_id`)
