@@ -104,15 +104,7 @@ Ogromno::Application.routes.draw do
         :constraints => {group_num: /[0-9]+/}, :format => false
   end
 
-  namespace :admin do
-    resources :promo_place
-    resources :finances, :only => :index
-    namespace :salon do
-      resources :records
-      resources :employees
-      resources :procedures
-    end
-  end
+  resources :finances, :only => :index
 
   match '/delayed_job' => DelayedJobWeb, :anchor => false
 end

@@ -26,7 +26,7 @@ class PackageListDatarow
   end
 
   def case_packages
-    @packages.select{|package| package.case_active? }.count
+    @packages.select{|package| package.case? }.count
   end
 
   def collected_packages

@@ -1,5 +1,5 @@
 module Distribution
-  class PackageListsController < Admin::AdminController
+  class PackageListsController < AdminController
 
     skip_authorize_resource :only => [:find_package, :days_info]
 
