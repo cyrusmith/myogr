@@ -4,7 +4,7 @@ module Distribution
     self.table_name_prefix = 'distribution_'
 
     acts_as_schedule_extension
-    paginates_per 50
+    paginates_per 25
     delegate :day_off?, to: :schedule
 
     before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
