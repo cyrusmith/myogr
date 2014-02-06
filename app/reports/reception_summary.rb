@@ -15,7 +15,7 @@ class ReceptionSummary < CommonDocument
     acceptance_date = first_item.audits.where(to: 'accepted').order('created_at DESC').first.created_at.to_date
     text "Приходная ведомость №#{@group_number} от #{I18n.l acceptance_date}", :size => 12, :style => :bold
     move_down 5
-    text @point.location.full_address, size: 8
+    text @point.address.full_address, size: 8
     move_down 5
     stroke_horizontal_rule
     move_down 5
