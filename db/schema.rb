@@ -11,19 +11,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131114170758) do
+ActiveRecord::Schema.define(:version => 20140202184907) do
 
-  create_table "addresses", :force => true do |t|
-    t.string  "city"
-    t.string  "district"
-    t.string  "street"
-    t.float   "geo_x"
-    t.float   "geo_y"
-    t.integer "addressable_id"
-    t.string  "addressable_type"
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0, :null => false
+    t.integer  "attempts",   :default => 0, :null => false
+    t.text     "handler",                   :null => false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
-  add_index "addresses", ["addressable_id", "addressable_type"], :name => "index_addresses_on_addressable_id_and_addressable_type"
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
+
+  create_table "distribution_appointments", :force => true do |t|
+    t.integer "meeting_place_id"
+    t.integer "package_list_id"
+    t.time    "from"
+    t.time    "till"
+  end
 
   create_table "distribution_barcodes", :force => true do |t|
     t.integer  "owner"
@@ -36,6 +47,10 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
   end
 
   add_index "distribution_barcodes", ["barcode_string"], :name => "index_distribution_barcodes_on_barcode_string"
+
+  create_table "distribution_meeting_places", :force => true do |t|
+    t.string "description"
+  end
 
   create_table "distribution_package_item_state_transitions", :force => true do |t|
     t.integer  "package_item_id"
@@ -54,18 +69,18 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
     t.integer  "organizer_id"
     t.string   "organizer"
     t.string   "state_on_creation"
-    t.boolean  "is_collected",           :default => false
-    t.boolean  "is_user_participate",    :default => true
-    t.boolean  "is_next_time_pickup",    :default => false
+    t.boolean  "is_collected",                         :default => false
+    t.boolean  "is_user_participate",                  :default => true
+    t.boolean  "is_next_time_pickup",                  :default => false
     t.integer  "package_id"
-    t.string   "state"
+    t.string   "state",                                :default => "pending"
     t.integer  "location"
     t.string   "recieved_from"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "receiving_group_number"
     t.string   "receiver"
-    t.string   "not_conform_rules"
+    t.string   "not_conform_rules",      :limit => 50
   end
 
   add_index "distribution_package_items", ["item_id"], :name => "index_distribution_package_items_on_item_id"
@@ -112,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
     t.integer  "package_list_id"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
+    t.integer  "appointment_id"
   end
 
   add_index "distribution_packages", ["package_list_id"], :name => "index_distribution_packages_on_package_list_id"
@@ -123,7 +139,22 @@ ActiveRecord::Schema.define(:version => 20131114170758) do
     t.integer "default_day_package_limit", :default => 100
     t.text    "work_schedule"
     t.string  "phone"
+    t.string  "type",                                       :null => false
+    t.integer "autoaccept_point_id"
+    t.integer "repeat_schedule",           :default => 0
   end
+
+  create_table "locations", :force => true do |t|
+    t.string  "city"
+    t.string  "district"
+    t.string  "street"
+    t.integer "addressable_id"
+    t.string  "addressable_type"
+    t.float   "latitude"
+    t.float   "longitude"
+  end
+
+  add_index "locations", ["addressable_id", "addressable_type"], :name => "index_addresses_on_addressable_id_and_addressable_type"
 
   create_table "notifications", :force => true do |t|
     t.string   "text"

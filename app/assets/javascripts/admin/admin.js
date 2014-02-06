@@ -19,7 +19,6 @@
 //= require admin/common_controls
 //= require krutilka
 //= require kickstart/kickstart
-//= require common
 //= require dataTables/jquery.dataTables
 //= require date.format
 //= require chosen-jquery

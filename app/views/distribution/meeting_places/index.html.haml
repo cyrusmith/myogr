@@ -1,0 +1,19 @@
+.col_8
+  %h1 Список мест выдачи
+
+  %table
+    %tr
+      %th
+      %th
+      %th
+      %th
+
+    - @meeting_places.each do |place|
+      %tr
+        %td= place.location
+        %td= link_to 'Редактировать', [:edit, place]
+        %td= link_to 'Удалить', place, :method => :delete, :data => { :confirm => 'Вы уверены, что хотите удалить?' }
+
+  %br
+
+  = link_to 'Новое место выдачи', new_distribution_meeting_place_path

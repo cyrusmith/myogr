@@ -94,11 +94,12 @@ var dateFormat = function () {
 // Some common format strings
 dateFormat.masks = {
 	"default":      "ddd mmm dd yyyy HH:MM:ss",
+	dayAndMonth:    "dd mmmm",
 	shortDate:      "m/d/yy",
 	mediumDate:     "mmm d, yyyy",
 	longDate:       "mmmm d, yyyy",
 	fullDate:       "dddd, mmmm d, yyyy",
-	shortTime:      "h:MM TT",
+	shortTime:      "HH:MM",
 	mediumTime:     "h:MM:ss TT",
 	longTime:       "h:MM:ss TT Z",
 	isoDate:        "yyyy-mm-dd",
@@ -114,8 +115,8 @@ dateFormat.i18n = {
 		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 	],
 	monthNames: [
-		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+		"Янв.", "Фев.", "Марта", "Апр.", "Мая", "Июня", "Июля", "Авг.", "Сент.", "Окт.", "Нояб.", "Дек.",
+		"января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"
 	]
 };
 

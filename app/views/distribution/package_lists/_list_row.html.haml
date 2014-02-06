@@ -5,7 +5,9 @@
 - list = data.package_list
 - point = data.point
 %tr{id: list.id}
-  %td=l list.date
+  %td
+    =l list.date, format: :short_num
+    = "(с #{l list.from, format: :hours_only} до #{l list.till, format: :hours_only})" if list.from && list.till
   %td
     = t('distribution.package_lists.states.' + list.state)
     - possible_events = list.state_events
@@ -19,22 +21,26 @@
                 remote: true,
                 method: :put
   %td
-    = progressbar package_limit, limitable_packages,
-                  size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: limitable_packages, whole: package_limit) + '. ' + t('common.hints.case_tooltip', cases: cases)
+    = "#{limitable_packages}/#{package_limit}"
+    = " + #{cases}" if cases > 0
   %td
     - collected_packages = data.collected_packages
-    = progressbar total_packages, collected_packages,
-                  size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: collected_packages, whole:total_packages),
-                  color: 'blue'
+    = "#{collected_packages}/#{total_packages}"
   %td
     - issued_packages = data.issued_packages
-    = progressbar total_packages, issued_packages,
-                  size: 100,
-                  hint: t('common.hints.percentage_tooltip', part: issued_packages, whole:total_packages),
-                  color: 'green'
+    = "#{issued_packages}/#{total_packages}"
+  - if current_user.has_role?(UserRole::ADMIN)
+    %td
+      = check_box_tag :is_day_off, 1, data.package_list.day_off?, disabled: true
+    %td
+      = data.package_list.package_limit
+    %td
+      - data.package_list.appointments.each do |app|
+        = "#{l app.from, format: :hours_and_minutes}-#{l app.till, format: :hours_and_minutes}" if app.from && app.till
+        = app.meeting_place.location.short_address
+        %br
   %td
+    = link_to 'Редактировать', edit_distribution_point_package_list_path(point, data.package_list)
     = select_tag 'action_on_' + list.id.to_s, options_for_select([ ['(Выберите действие)', ''],
                                                               ['Отменить пустые записи', 4, {source: cancel_empty_distribution_point_package_list_path(point, list), method: :put}],
                                                               ['Распечатать ведомости', 1, {class: 'pdf', source: distribution_point_package_list_package_list_path(point, list)}],

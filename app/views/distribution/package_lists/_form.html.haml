@@ -1,10 +1,25 @@
-= form_for @package_list do |f|
-  - if @package_list.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@package_list.errors.count, "error")} prohibited this package_list from being saved:"
-      %ul
-        - @package_list.errors.full_messages.each do |msg|
-          %li= msg
+= javascript 'distribution/package_lists'
+= form_for [@point, @package_list], as: :package_list,  url: url do |f|
+
+  .field
+    = f.label :date, 'Дата'
+    = f.text_field :date
+
+  .field
+    = f.label :from, 'С'
+    = select_hour 9 , field_name: :from
+
+    = f.label :till, 'до'
+    = select_hour 14, field_name: :till
+
+  .field
+    = f.label :package_limit, 'Количество записей:'
+    = f.number_field :package_limit, value: @package_list.package_limit || @point.default_day_package_limit
+
+  = f.fields_for :appointments do |builder|
+    = render 'appointment_fields', f: builder
+
+  = link_to_add_fields 'Добавить место выдачи', f, :appointments
 
   .actions
     = f.submit 'Save'

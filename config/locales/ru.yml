@@ -2,10 +2,6 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 ru:
-  mongoid:
-    attributes:
-      distribution/package:
-        document_number: Номер документа
   views:
       pagination:
         first: "Первая"
@@ -291,12 +287,18 @@ ru:
       default: ! '%a, %d %b %Y, %H:%M:%S %z'
       long: ! '%d %B %Y, %H:%M'
       short: ! '%d %b, %H:%M'
+      hours_and_minutes: '%H:%M'
+      hours_only: '%H'
     pm: вечера
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
     errors:
       <<: *errors
   activerecord:
+    models:
+      distribution/package:
+        one: запись
+        other: запись
     errors:
       <<: *errors
 
@@ -382,11 +384,14 @@ ru:
         enter: "Войти в панель управления"
       form:
         title: Название
+        phone: Телефон
         head_user: Начальник ЦР
         comment: Примечание
         work_schedule: Расписание работы
         employees: Сотрудники
-        default_package_limit: "Кол-во заказов к обработке в день"
+        default_package_limit: Заказов в день
+        repeat_schedule: Повторять расписание каждые
+        week: недели
     package_lists:
       form:
         package_limit: Лимит

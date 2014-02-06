@@ -3,17 +3,38 @@
   %h3 Ведомости
 
   .tab-content
+    %div
+      = form_for @search_data, as: :search, url: distribution_point_package_lists_path(@point), method: :get do |search|
+
+        = search.label :date, 'Дата:'
+        = search.text_field :date, size:10
+
+        = search.label :states, 'Состояния'
+        = search.select :states, @search_data.class::POSSIBLE_STATES, include_blank:true
+
+        = search.check_box :show_day_off
+        = search.label :show_day_off, 'Показывать выходные?'
+
+        = search.submit 'Искать'
+
+      = link_to 'Создать ведомость', new_distribution_point_package_list_path(@point)
+
     %table#package_lists.sortable
       %thead
         %tr
-          %th Дата выдачи
+          %th Дата
           %th Состояние
-          %th Заказано(%)
-          %th Собрано(%)
-          %th Выдано(%)
+          %th Заказано
+          %th Собрано
+          %th Выдано
+          %th
+          %th
+          %th
           %th
       %tbody
         - @package_lists.each do |list|
           = render_row list
 
     = paginate @package_lists
+
+    #list-popup

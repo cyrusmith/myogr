@@ -1,6 +1,6 @@
 - package_list = @distribution_package.package_list
 - point = package_list.point
-%h4 Запись №#{@distribution_package.code} на #{ l package_list.date, format: :day_month} в ЦР на #{point.address.short_address} #{t('distribution.package.states.' + @distribution_package.state)}
+%h4 Запись №#{@distribution_package.code} на #{ l package_list.date, format: :day_month} в ЦР на #{point.location.short_address} #{t('distribution.package.states.' + @distribution_package.state)}
 %h6  Время работы центра раздач:
 = raw point.work_schedule
 

@@ -1,0 +1,71 @@
+- javascript 'mobile_point'
+= javascript_tag do
+  - if @package_form.package.accepted?
+    window.appointments = #{ raw @appointments.to_json(include: [{package_list: {include: :schedule}}, {meeting_place: {include: :location}}])}
+  window.current_appointment = #{raw @package_form.package.appointment.to_json(include: [{package_list: {include: :schedule}}, {meeting_place: {include: :location}}])}
+- package_list = @package_form.package_list
+= form_for @package_form.package, as: :package do |f|
+  - unless @package_form.new?
+    %h5
+      Вы записаны на получение заказа в мобильном пункте выдачи по адресу #{@package_form.package.appointment.short_address}.
+      Дата получения #{ package_list.present? ? (Russian::strftime package_list.date, '%e %B(%A)') : 'не установлена. Установите дату записи'}
+      с #{l @package_form.package.appointment.from, format: :hours_and_minutes}
+      по #{l @package_form.package.appointment.till, format: :hours_and_minutes}.
+      Номер записи - #{@package_form.code}.
+      - #TODO данные курьера
+  - if @package_form.errors.any?
+    - errors = @package_form.errors
+    .notice.error
+      %i.icon-remove-sign.icon-large
+      - if errors.size == 1
+        = errors.full_messages.first
+      -else
+        %ul.no-margin
+          - @package_form.errors.full_messages.each do |msg|
+            %li= msg
+  - if @package_form.package.accepted?
+    #map{style: 'width: 600px; height: 400px; margin:20px;'}
+
+  %h5 Ваши заказы в центре раздач:
+  %table.tight
+    %thead
+      %tr
+        %th Закупка
+        %th Организатор
+        %th{class: :tooltip, title: 'Товар ожидает в центре раздач с этой даты'} Сдано
+        %th
+    %tbody
+      - @package_form.shown_items.each do |item|
+        - item_id = item.item_id
+        %tr{id:item_id}
+          %td
+            - days_since_reception = (Date.today - item.reception_date).to_i
+            - show_icon_since = 7
+            - if days_since_reception >= show_icon_since
+              - green_color_part = 210 - (days_since_reception - show_icon_since)*30
+              %span.icon-large.icon-warning-sign.pull-left.tooltip{style: "color: rgb(255, #{green_color_part < 0 ? 0 : green_color_part }, 0)",
+              title: "Пожалуйста, заберите товар из центра раздач! Cо времени сдачи заказа прошло #{days_since_reception} дней. При хранении заказа более 14 дней будет активирована услуга \"Кейс\""}
+            =raw item.title
+          %td= item.organizer
+          %td= l item.reception_date, format: :short_num
+          %td{nowrap: 'nowrap'}
+            = hidden_field_tag 'tid[]', item_id
+            %ul.button-bar
+              %li
+                - if @package_form.package.accepted?
+                  = link_to 'Отложить', pick_next_time_distribution_package_item_path(item), class: 'pick_next_time', title: 'Отложить(забрать в следующий раз)', remote: true, disable_with: 'Откладываю...' , method: :put
+
+  .field
+    = f.label :document_number, t('.document_number')
+    = f.text_field :document_number, required: true, placeholder: 'Например, 6503 023761', class: 'col_3'
+    = help_icon('Введите серию и номер документа (паспорт или права), который будет предъявлен при получении заказа')
+  .actions.box
+    = f.submit
+    - unless @package_form.new?
+      - if @package_form.package.accepted?
+        или
+        = link_to 'Отменить запись', distribution_package_path(@package_form.package), :method => :delete, :confirm => 'Вы уверены, что хотите отменить запись?'
+    %p.small-font
+      Остались вопросы? Загляните в #{link_to 'инструкцию', 'https://docs.google.com/document/d/1XN68WLy1LR2XZlb0vHe-VQqRCYE0yNA4xe7GekyOsWo/edit?usp=sharing'},
+      задайте вопрос на #{link_to 'форуме', 'http://ogromno.com/index.php?showtopic=53628'} или
+      позвоните в центр раздач по телефону <nobr>#{@package_form.chosen_point.present? ? @package_form.chosen_point.phone : ''}</nobr>

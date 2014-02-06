@@ -1,3 +1,5 @@
-%p= @package_list.date
-%p= @package_list.is_day_off
-%p= @package_list.package_limit
+- @package_lists.each do |list|
+  %div
+    %p= list.date
+    %p= list.is_day_off
+    %p= list.package_limit

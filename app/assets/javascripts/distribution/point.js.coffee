@@ -18,39 +18,32 @@ fetchDaysOff = (year, month) ->
   )
 
 jQuery ->
-  $('#distribution_point_head_name').autocomplete
-    minLength: 3
-    source: $('#distribution_point_head_name').data('autocomplete-source')
+  $('input[name*=head_user]').select2
+    placeholder: 'Введите имя руководителя'
+    width: '300px'
+    minimumInputLength: 3
+    ajax:
+      url: $('input[name*=head_user]').data('autocomplete-source')
+      data: (term, page) ->
+        term: term,
+        page_limit: 10,
+        page: page,
+      results: (data, page) ->
+        results: data
 
-  split = (val) ->
-    val.split(/,\s*/)
-
-  extractLast = (term) ->
-    split(term).pop()
-
-  $("#distribution_point_employees_names").bind("keydown",(event) =>
-    if ( event.keyCode == $.ui.keyCode.TAB && $(this).data("ui-autocomplete").menu.active )
-      event.preventDefault
-  ).autocomplete
-#    source: $('#distribution_center_distribution_center_employees_names').data('autocomplete-source')
-    source: (request, response) =>
-      url = $('#distribution_point_employees_names').data('autocomplete-source')
-      $.getJSON(url, {
-        term: extractLast(request.term)
-      }, response);
-    search: ->
-      term = extractLast(this.value);
-      if ( term.length < 3 )
-        false
-    focus: =>
-      false
-    select: (event, ui) ->
-      terms = split(this.value)
-      terms.pop()
-      terms.push(ui.item.value)
-      terms.push("")
-      this.value = terms.join(", ")
-      false
+  $("[name*=employee_ids]").select2
+    multiple: true
+    placeholder: 'Введите имена сотрудников'
+    width: '300px'
+    minimumInputLength: 3
+    ajax:
+      url: $('input[name*=employee_ids]').data('autocomplete-source')
+      data: (term, page) ->
+        term: term,
+        page_limit: 10,
+        page: page,
+      results: (data, page) ->
+        results: data
 
   $('#calendar').datepicker(
     inline:true

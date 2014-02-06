@@ -23,7 +23,7 @@ namespace :mongoid_to_ar_migration do
                                              VALUES ( '#{point.title}', #{point.head_user}, #{point.default_day_package_limit}, '#{point.work_schedule}')"
         ActiveRecord::Base.connection.execute point_sql
         point_id = get_last_insert_id
-        point_address = point.address
+        point_address = point.location
         address_sql = "INSERT INTO addresses(city, district, street, addressable_id, addressable_type)
                                       VALUES('#{point_address.city}', '#{point_address.district}', '#{point_address.street}', #{point_id}, 'Distribution::Point')"
         ActiveRecord::Base.connection.execute address_sql

@@ -11,7 +11,7 @@ module Distribution
     end
 
     def points
-      Point.all
+      IssuePoint.all
     end
 
     def chosen_point

@@ -1,0 +1,4 @@
+%fieldset
+  %legend Адрес
+  = form.fields_for :address_attributes do |builder|
+    = render 'locations/fields', form: builder, point: @point

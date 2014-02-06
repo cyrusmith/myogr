@@ -2,42 +2,41 @@ module Distribution
   class Point < ActiveRecord::Base
     include Tenacity
     include StElsewhere
+    include Obtain
+    include Transfer
 
     self.table_name_prefix = 'distribution_'
 
     delegate :short_address, :full_address, to: :address
 
     before_save :check_head_permission
-    before_save :check_employees_permissions, unless: Proc.new { |point| point.employees.nil? }
+    before_save :check_employees_permissions, unless: Proc.new { |point| point.points_users.nil? }
     after_create :initialize_package_lists
 
-    attr_accessible :title, :head_user, :employees, :head_name, :employees_names, :default_day_package_limit, :work_schedule, :phone, :address, :address_fields
+    attr_accessible :title, :head_user, :employee_ids,
+                    :default_day_package_limit, :repeat_schedule, :autoaccept_point_id,
+                    :phone, :address_attributes
 
     validates :head_user, presence: true
 
-    has_one :address, as: :addressable, dependent: :destroy
+    has_one :address, class_name: 'Location', as: :addressable, dependent: :destroy
     has_many :package_lists, :class_name => 'Distribution::PackageList', dependent: :destroy
-    has_many :points_users
-    has_many_elsewhere :employees, class_name: 'User', :through => :points_users
+    has_many :points_users, dependent: :destroy
 
     accepts_nested_attributes_for :address,
                                   reject_if: lambda { |a| a[:title].blank? and a[:head_user].blank? }
 
-    def head_name
-      User.find(self.head_user).try :display_name if self.head_user.present?
+    def employee_ids=(values)
+      if values.is_a? String
+        values = values.split(/,/).map(&:to_i).reject{|v| v == 0}
+      end
+      values.each do |value|
+        self.points_users.new(employee_id: value) unless self.points_users.find_by_employee_id(value)
+      end
     end
 
-    def head_name=(name)
-      self.head_user=User.find_by_members_display_name(name).id if name.present?
-    end
-
-    def employees_names
-      self.employees.map { |employee| User.find(employee).try :display_name }.to_sentence(two_words_connector: ', ', last_word_connector: ', ') if self.employees.present?
-    end
-
-    def employees_names=(names)
-      array = names.split(/,/).delete_if { |c| c.blank? }.uniq
-      self.employees = array.map { |name| User.find_by_members_display_name(name.strip).try(:id) }.delete_if { |x| x.nil? }
+    def employee_ids
+      self.points_users.map(&:employee_id)
     end
 
     def get_days_info(exclude_filled_dates = false, options ={})
@@ -53,6 +52,10 @@ module Distribution
       info
     end
 
+    def default_package_list_amount
+      1
+    end
+
     private
 
     def check_head_permission
@@ -61,8 +64,8 @@ module Distribution
     end
 
     def check_employees_permissions
-      self.employees.each do |employee|
-        user = User.find employee
+      self.points_users.each do |pu|
+        user = User.find pu.employee_id
         user.add_role UserRole::DISTRIB_CENTER_EMPLOYEE unless user.has_role?(UserRole::DISTRIB_CENTER_EMPLOYEE)
       end
     end

@@ -1,0 +1,21 @@
+%h1 Точки выдачи
+
+%table
+  %tr
+    %th
+    %th
+    %th
+    %th
+    %th
+
+  - @locations.each do |location|
+    %tr
+      %td= location
+      %td= 'Адрес ЦР' if location.addressable.is_a? Distribution::Point
+      %td= link_to 'Show', location
+      %td= link_to 'Edit', [:edit, location]
+      %td= link_to 'Destroy', location, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Address', new_location_path

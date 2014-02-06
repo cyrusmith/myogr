@@ -12,22 +12,10 @@ module Distribution
       end
     end
 
-    # GET /distribution_centers/1
-    # GET /distribution_centers/1.json
-    def show
-      @point = Point.find(params[:id])
-      @calendar_days_info = @point.get_days_info(true, admin_access: true).inject Hash.new, :merge
-      respond_to do |format|
-        format.html # show.html.erb
-        format.json { render json: @point }
-      end
-    end
-
     # GET /distribution_centers/new
     # GET /distribution_centers/new.json
     def new
-      @point = Point.new
-      @point.address = Address.new
+      @point = get_point_type.new(work_schedule: 1)
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @point }
@@ -36,13 +24,13 @@ module Distribution
 
     # GET /distribution_centers/1/edit
     def edit
-      @point = Point.find(params[:id])
+      @point = get_point_type.find(params[:id])
     end
 
     # POST /distribution_centers
     # POST /distribution_centers.json
     def create
-      @point = Point.new(params[:point])
+      @point = get_point_type.new(params[:point])
       respond_to do |format|
         if @point.save
           format.html { redirect_to distribution_points_path, notice: 'Distribution center was successfully created.' }
@@ -57,7 +45,7 @@ module Distribution
     # PUT /distribution_centers/1
     # PUT /distribution_centers/1.json
     def update
-      @point = Point.find(params[:id])
+      @point = get_point_type.find(params[:id])
       respond_to do |format|
         if @point.update_attributes(params[:point])
           format.html { redirect_to @point, notice: 'Distribution center was successfully updated.' }
@@ -193,6 +181,10 @@ module Distribution
       else
         render 'distribution/points/choose_recipient_form'
       end
+    end
+
+    def get_point_type
+      Point
     end
 
   end

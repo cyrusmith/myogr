@@ -29,7 +29,7 @@ class PackingList < Prawn::Document
     move_down 4
     text "Дата получения: #{formatted_package_date} - #{Russian::strftime @package.package_list.date + 2.days, '%d.%m.%y'}"
     move_down 4
-    text "Место получения: #{@package.package_list.point.address.full_address}"
+    text "Место получения: #{@package.package_list.point.location.full_address}"
     move_down 4
     text "Паспорт получателя: #{@package.document_number}"
     move_down 10

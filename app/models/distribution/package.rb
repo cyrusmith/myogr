@@ -13,20 +13,24 @@ module Distribution
     #TODO в настройки
     METHODS_IDENTIFICATOR = {at_point: '', case: 'К', delivery: 'Д'}
 
-    before_create :set_order
+    #Срабатывает только с new, затем save. Не отработает в случае create
+    before_save :set_order, if: Proc.new { |package| package.package_list_id_changed? }
     after_create unless: Proc.new{|package| package.user.case_active? } do |package|
       date = I18n.l(package.date, format: :day_month)
       code = package.code
-      package.user.notify_via_all(I18n.t('notifications.package.created.text', code: code, date: date, address: package.point.short_address),
-                                  title: I18n.t('notifications.package.created.title', date: date, address: package.point.short_address))
+      package.user.notify_via_all(I18n.t('notifications.package.created.text', code: code, date: date, location: package.point.short_address),
+                                  title: I18n.t('notifications.package.created.title', date: date, location: package.point.short_address))
     end
 
-    attr_accessible :user_id, :items_attributes, :collector_id, :collection_date, :distribution_method, :document_number
+    attr_accessible :user_id, :items_attributes, :collector_id, :collection_date,
+                    :distribution_method, :document_number, :package_list_id, :appointment_id
 
     validates :document_number, presence: true, length: {minimum: 5, maximum: 12}
+    validates :package_list_id, presence: true
 
     t_belongs_to :user
     belongs_to :package_list, class_name: 'Distribution::PackageList'
+    belongs_to :appointment
     has_many :items, class_name: 'Distribution::PackageItem'
 
     accepts_nested_attributes_for :items, allow_destroy: true
@@ -67,7 +71,7 @@ module Distribution
         date = I18n.l(package.date, format: :day_month)
         code = package.code
         package.user.notify_via_all(I18n.t('notifications.package.was_canceled.text', number: code, date: date),
-                                         title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, address: package.point.short_address))
+                                         title: I18n.t('notifications.package.was_canceled.title', number: code, date: date, location: package.point.short_address))
       end
 
       state all - [:issued, :cancel] do

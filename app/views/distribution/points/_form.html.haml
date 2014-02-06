@@ -1,38 +1,36 @@
-= form_for @point do |f|
-  - if @point.errors.any?
+= form_for(:point, url: @point) do |form|
+  - if point.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@point.errors.count, "error")} prohibited this distribution_center from being saved:"
+      %h2= "#{pluralize(point.errors.count, "error")} prohibited this distribution_center from being saved:"
       %ul
-        - @point.errors.full_messages.each do |msg|
+        - point.errors.full_messages.each do |msg|
           %li= msg
   .field
-    = f.label :title, t('.title')
-    = f.text_field :title
+    = form.label :title, t('.title')
+    = form.text_field :title
 
   .field
-    = f.label :head_name, t('.head_user')
-    = f.text_field :head_name, data: {autocomplete_source: find_users_path}
+    = form.label :phone, t('.phone')
+    = form.phone_field :phone
 
   .field
-    = f.label :employees_names, t('.employees')
-    = f.text_field :employees_names, data: {autocomplete_source: find_users_path}
+    = form.label :head_user, t('.head_user')
+    = form.text_field :head_user, data: {autocomplete_source: find_users_by_name_path}
 
   .field
-    = f.label :default_day_package_limit, t('.default_package_limit')
-    = f.text_field :default_day_package_limit, size: 1
-
-  %fieldset
-    %legend Адрес
-    = f.fields_for @point.address do |builder|
-      = render 'addresses/fields', f: builder
+    = form.label :employee_ids, t('.employees')
+    = form.hidden_field :employee_ids, data: {autocomplete_source: find_users_by_name_path}
 
   .field
-    = f.label :work_schedule, t('.work_schedule')
-    = f.text_area :work_schedule, cols: 20, rows:7
+    = form.label :default_day_package_limit, t('.default_package_limit')
+    = form.text_field :default_day_package_limit, size: 2
 
   .field
-    = f.label :phone, t('.comment')
-    = f.phone_field :phone
+    = form.label :repeat_schedule, t('.work_schedule')
+    = form.number_field :repeat_schedule, in: 0..4, step:1
+    = form.label :repeat_schedule, t('.week')
+
+  = render @point, form: form rescue nil #TODO сделать нормально через проверку существования шаблона(сходу не получилось)
 
   .actions
-    = f.submit 'Создать ЦР'
+    = form.submit 'Создать ЦР'

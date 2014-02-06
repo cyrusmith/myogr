@@ -29,13 +29,8 @@ Ogromno::Application.routes.draw do
 
   get 'search', :to => 'searches#index'
 
-  resources :records
-  match 'record/step1' => 'records#create_step1', :as => :create_record_step1
-  match 'record/step2/:group' => 'records#create_step2', :as => :create_record_step2
-  match 'remote/get_avaliable_time' => 'records#get_avaliable_time_remote'
-
-  resources :schedules
-  resources :addresses
+  resources :schedules, except: :index
+  resources :locations
 
   get 'contacts', :to => 'home#contacts'
   get 'advertisment', :to => 'home#advertisment'
@@ -60,14 +55,19 @@ Ogromno::Application.routes.draw do
   namespace :distribution do
     get 'orders/show' => 'orders#show', :as => :show_orders
     resources :orders, only: :index
+    resources :issue_points, except: :index
+    resources :mobile_issue_points, except: :index do
+      resources :location_schedule, path: :schedule, except: [:index, :show]
+    end
     resources :packages do
+      get '/:point_type' => 'packages#new_by_type', :on => :new, :constraints => Constraints::AvailablePointTypes, :as => :typed
       get 'find' => 'packages#find', defaults: {format: :json}
       get 'find_by_doc' => 'packages#find_by_doc', defaults: {format: :json}, :on => :collection
     end
     resources :barcodes, only: [:index, :show, :new, :create] do
       get 'print' => 'barcodes#print'
     end
-    resources :points do
+    resources :points, except: :show  do
       get 'reception' => 'points#reception'
       post 'process_reception' => 'points#process_reception'
       match 'collect_package' => 'points#collect_package', :via => [:get, :post]
@@ -92,6 +92,8 @@ Ogromno::Application.routes.draw do
       put 'pick_next_time' => 'package_items#pick_next_time', on: :member
       put 'issue' => 'package_items#issue', on: :member
     end
+
+    resources :meeting_places
 
     #plugins
     get 'plugins/reception_logger' => 'plugins#reception_logger', :as => :reception_logger

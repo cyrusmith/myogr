@@ -1,0 +1,17 @@
+= javascript 'locations'
+= form_for @location do |form|
+  - if @location.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@location.errors.count, "error")} prohibited this address from being saved:"
+      %ul
+        - @location.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = form.text_field :latitude
+
+    = form.text_field :longitude
+
+    = form.submit 'Save'
+
+  #map{style: 'width: 600px; height: 400px'}
+

@@ -10,10 +10,10 @@
   - @distribution_packages.each do |package|
     %tr
       %td= Russian::strftime package.package_list.date, '%d %B'
-      %td= t ('status.' + package.state)
-      %td= t (package.items.map(&:title).join('<br>'))
-      %td= link_to 'Редактировать', edit_distribution_package_path(package)
-      %td= link_to 'Отказаться от записи', package, :method => :delete, :data => { :confirm => 'Вы уверены, что хотите отменить запись?' }
+      %td= t ('states.' + package.state)
+      - if package.accepted?
+        %td= link_to 'Редактировать', edit_distribution_package_path(package) if can? :edit, package
+        %td= link_to 'Отказаться от записи', package, :method => :delete, :data => { :confirm => 'Вы уверены, что хотите отменить запись?' } if can? :delete, package
 
 %br
 

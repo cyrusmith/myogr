@@ -4,6 +4,22 @@ jQuery ->
     $(this).remove()
   )
 
+  $('[id*=date]').datepicker(
+    dateFormat: 'dd-mm-yy'
+    defaultDate: 0
+  );
+
+  $(document).on 'click', 'form .remove_fields', (event) ->
+    $(this).prev('input[type=hidden]').val('1')
+    $(this).closest('fieldset').hide()
+    event.preventDefault()
+
+  $(document).on 'click', 'form .add_fields', (event) ->
+    time = new Date().getTime()
+    regexp = new RegExp($(this).data('id'), 'g')
+    $(this).before($(this).data('fields').replace(regexp, time))
+    event.preventDefault()
+
   $('body').on 'change', 'select.actions', ->
     option = $(this).children('[value=' + this.value + ']')
     url = option.attr('source')

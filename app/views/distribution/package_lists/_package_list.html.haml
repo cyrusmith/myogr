@@ -1,13 +1,11 @@
-- packages = @package_list.packages.count
-%legend= Russian::strftime @package_list.date, '%d %B %Y'
+%div.package
+- packages = package_list.packages.count
 = "Записано #{packages} из "
-= text_field_tag(:package_limit, @package_list.package_limit)
-= hidden_field_tag(:packages_already, packages)
-= hidden_field_tag(:date, @package_list.date)
+= text_field_tag("package_limit_#{package_list.id}", package_list.package_limit)
+= hidden_field_tag("packages_already_#{package_list.id}", packages)
+= hidden_field_tag("date_#{package_list.id}", package_list.date)
 - if packages > 0
   %span.underline.grey.pointer.tooltip{title: 'Нельзя объявить выходным день, на который уже есть запись'}
-    = t(@package_list.day_off? ? '.set_working_day' : '.set_day_off')
+    = t(package_list.day_off? ? '.set_working_day' : '.set_day_off')
 -else
-  = link_to t(@package_list.day_off? ? '.set_working_day' : '.set_day_off'), distribution_point_switch_day_off_path(@point, date: @package_list.date), remote:true
-.actions
-  = button_tag 'Распечатать ведомость'
+  = link_to t(package_list.day_off? ? '.set_working_day' : '.set_day_off'), distribution_point_switch_day_off_path(@point, date: package_list.date), remote:true

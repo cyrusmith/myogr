@@ -1,0 +1,9 @@
+.field
+  = form.label :street, 'Адрес'
+  = form.text_field :street
+
+  = form.label :latitude, 'Координаты'
+  = form.text_field :latitude
+  = form.text_field :longitude
+
+%div#map{style: 'width: 600px; height: 400px'}

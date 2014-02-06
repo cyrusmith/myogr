@@ -1,7 +1,5 @@
-%h1 Editing package_list
+%h1 Редактирование ведомости
 
-= render 'form'
+= render 'form', url: distribution_point_package_list_path(@point, @package_list)
 
-= link_to 'Show', @package_list
-\|
-= link_to 'Back', package_lists_path
+= link_to 'Back', distribution_point_package_lists_path(@point)

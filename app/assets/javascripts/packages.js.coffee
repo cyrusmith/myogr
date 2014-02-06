@@ -84,7 +84,8 @@ jQuery ->
           return [true, '', '']
       else
         return [true, '', '']
-    onSelect: (date) =>
+    onSelect: (date) ->
+      $('input[type=hidden][id=package_package_list_id]').val(window.days_off[date][3])
       $('input:submit').removeAttr('disabled').removeClass('disabled')
   )
 

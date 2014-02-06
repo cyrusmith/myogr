@@ -6,7 +6,7 @@ module Distribution
     before_filter :check_changeability, only: [:edit, :update]
 
     def index
-      @distribution_packages = current_user.packages
+      @distribution_packages = Package.all
 
       respond_to do |format|
         format.html # index.html.erb
@@ -52,32 +52,37 @@ module Distribution
 
     # GET /distribution/packages/1/edit
     def edit
-      @package_form = PackageForm.new Package.find(params[:id]), current_user
+      @package = Package.find(params[:id])
+      @package_form = PackageForm.new @package, current_user
+      point_type = @package.package_list.point.type.demodulize.underscore.to_sym
+      if point_type == :mobile_issue_point
+        current_date = Date.parse('01-02-2014')
+        end_date = current_date + MobileIssuePoint.record_time_duration
+        # TODO добавить проверку на лимит записи, если у юзера нет кейса
+        @appointments = Appointment.joins{package_list}.joins{package_list.schedule}.joins{package_list.point}.where{(package_list.schedules.date >= current_date) & (package_list.schedules.date <= end_date) & (package_list.state == 'forming') & (package_list.point.type == 'Distribution::MobileIssuePoint')}
+        @appointments.all.reject! { |app| app.package_list.limit_filled? } unless current_user.case_active?
+      end
+      render point_type
     end
 
     # POST /distribution/packages
     # POST /distribution/packages.json
     def create
-      params[:distribution_package][:document_number] =
-      @distribution_package = Package.new(params[:distribution_package])
-      @distribution_package.user = current_user
-      @distribution_package.distribution_method = :case if current_user.case_active?
-      validate_form
-      if no_errors?
-        @distribution_point = Point.find(params[:distribution_point])
-        @package_list = @distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
-        @package_list.packages << @distribution_package
-      else
-        chosen_point = Point.find(params[:distribution_point]) unless params[:distribution_point].blank?
-        @package_form = PackageForm.new @distribution_package, current_user, point: chosen_point
+      @package = Package.new(params[:package])
+      @package.user = current_user
+      @package.distribution_method = :case if current_user.case_active?
+      if (params[:package][:appointment_id])
+        @package.package_list = Appointment.find(params[:package][:appointment_id]).package_list
       end
       respond_to do |format|
-        if no_errors? and @distribution_package.save
-          format.html { redirect_to root_path, flash: {success: "Вы успешно записались на #{Russian::strftime(@distribution_package.package_list.date, '%e %B')}"} }
-          format.json { render json: @distribution_package, status: :created, location: @distribution_package }
+        if @package.save
+          format.html { redirect_to root_path, flash: {success: "Вы успешно записались на #{Russian::strftime(@package.package_list.date, '%e %B')}"} }
+          format.json { render json: @package, status: :created, location: @package }
         else
+          #TODO
+          @package_form = PackageForm.new @package, current_user, point: Point.new
           format.html { render action: 'new' }
-          format.json { render json: @distribution_package.errors << @error_hash, status: :unprocessable_entity }
+          format.json { render json: @package.errors << @error_hash, status: :unprocessable_entity }
         end
       end
     end
@@ -86,19 +91,20 @@ module Distribution
     # PUT /distribution/packages/1.json
     def update
       @distribution_package = Package.find(params[:id])
-      distribution_point = Point.find(params[:distribution_point])
-      unless params[:package_date].blank?
-        is_point_changed = !(@distribution_package.package_list.try(:point) == distribution_point)
-        is_date_changed = !(@distribution_package.package_list.try(:date) == Date.parse(params[:package_date]))
-        if is_point_changed or is_date_changed
-          @distribution_package.package_list = distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
-          @distribution_package.set_order
-          message = "Запись успешно перенесена на #{I18n::l @distribution_package.package_list.date, format: :long} в центр раздач на #{@distribution_package.package_list.point.address.short_address}"
-        end
-      end
+
+      #distribution_point = Point.find(params[:distribution_point])
+      #unless params[:package_date].blank?
+      #  is_point_changed = !(@distribution_package.package_list.try(:point) == distribution_point)
+      #  is_date_changed = !(@distribution_package.package_list.try(:date) == Date.parse(params[:package_date]))
+      #  if is_point_changed or is_date_changed
+      #    @distribution_package.package_list = distribution_point.package_lists.includes(:schedule).where(schedule: {date: params[:package_date]}).first
+      #    @distribution_package.set_order
+      #    message = "Запись успешно перенесена на #{I18n::l @distribution_package.package_list.date, format: :long} в центр раздач на #{@distribution_package.package_list.point.location.short_address}"
+      #  end
+      #end
       respond_to do |format|
-        if @distribution_package.errors.empty? and @distribution_package.update_attributes(params[:distribution_package])
-          format.html { redirect_to root_path, flash: {success: (message if message.present?)} }
+        if @distribution_package.update_attributes(params[:package])
+          format.html { redirect_to root_path, flash: {success: 'Запись сохранена успешно'} }
           format.json { head :no_content }
         else
           @package_form = PackageForm.new @distribution_package, current_user
@@ -118,6 +124,18 @@ module Distribution
         format.html { redirect_to root_path, flash: {success: 'Ваша запись была успешно аннулирована'} }
         format.json { head :no_content }
       end
+    end
+
+    def new_by_type
+      @package_form = PackageForm.new Package.new, current_user
+      if params[:point_type].to_sym == :mobile_issue_point
+        current_date = Date.tomorrow
+        end_date = current_date + MobileIssuePoint.record_time_duration
+        # TODO добавить проверку на лимит записи, если у юзера нет кейса
+        @appointments = Appointment.joins{package_list}.joins{package_list.schedule}.joins{package_list.point}.where{(package_list.schedules.date >= current_date) & (package_list.schedules.date <= end_date) & (package_list.state == 'forming') & (package_list.point.type == 'Distribution::MobileIssuePoint')}
+        @appointments.all.reject! { |app| app.package_list.limit_filled? } unless current_user.case_active?
+      end
+      render params[:point_type]
     end
 
     private

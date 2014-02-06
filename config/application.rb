@@ -57,7 +57,7 @@ module Ogromno
     # Enable the asset pipeline
     config.assets.enabled = true
 
-    # Version of your assets, change this if you want to expire all your assets
+    # Version of your assets, change this if you want to egxpire all your assets
     config.assets.version = '1.0'
 
     config.verification_code_valid_time = 24.hours

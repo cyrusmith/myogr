@@ -1,1 +1,5 @@
-= render 'form'
+%h2 Где хотите забрать ваши заказы?
+
+%ul
+  %li= link_to 'Центр раздач', typed_new_distribution_package_path(:issue_point)
+  %li= link_to 'Мобильный центр раздач', typed_new_distribution_package_path(:mobile_issue_point)

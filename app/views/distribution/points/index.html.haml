@@ -12,11 +12,13 @@
         %td= distribution_center.title
         %td= User.find(distribution_center.head_user).display_name
         %td
-          = link_to t('.enter'), distribution_point_path(distribution_center) if can? :access, distribution_center
-          = link_to t('actions.update'), edit_distribution_point_path(distribution_center) if can? :edit, distribution_center
+          - common_path_name = "distribution_#{distribution_center.class.name.demodulize.underscore}_path"
+          = link_to t('.enter'), distribution_center if can? :access, distribution_center
+          = link_to t('actions.update'), [:edit, distribution_center] if can? :edit, distribution_center
           = link_to t('actions.delete'), distribution_center, method: :delete, data: { confirm: 'Вы уверены, что хотите удалить ЦР?' } if can? :destroy, distribution_center
 
   %br
 
-  = link_to 'Новый центр раздач', new_distribution_point_path if can? :create, @distribution_points
+  = link_to 'Новый центр раздач', new_distribution_issue_point_path if can? :create, @distribution_points
+  = link_to 'Новый мобильный центр раздач', new_distribution_mobile_issue_point_path if can? :create, @distribution_points
 

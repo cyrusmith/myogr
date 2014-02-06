@@ -9,11 +9,14 @@ module Distribution
 
     before_save :set_package_limit, if: Proc.new { |list| list.package_limit.nil? }
 
-    attr_accessible :date, :is_day_off, :from, :till, :package_limit, :is_closed, :closed_by
+    attr_accessible :date, :is_day_off, :from, :till, :package_limit, :is_closed, :closed_by, :appointments_attributes
 
     has_many :packages, class_name: 'Distribution::Package'
+    has_many :appointments, dependent: :destroy
+    #has_many :meeting_places, through: :appointments
     belongs_to :point, class_name: 'Distribution::Point'
 
+    accepts_nested_attributes_for :appointments, allow_destroy: :true
     accepts_nested_attributes_for :packages
 
     state_machine :state, :initial => :forming do
@@ -83,6 +86,7 @@ module Distribution
         [true, '', "Записано #{count_limited_packages} из #{self.package_limit}. Кейсов #{self.packages.case.count}"]
       end
       info[0] = true if admin_access
+      info[3] = self.id
       info
     end
 
@@ -90,10 +94,11 @@ module Distribution
       self.packages.not_case.where{state != 'canceled'}.count
     end
 
-    private
     def limit_filled?
       count_limited_packages >= self.package_limit
     end
+
+    private
 
     def set_package_limit
       self.package_limit = self.point.default_day_package_limit

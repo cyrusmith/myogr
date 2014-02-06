@@ -9,7 +9,7 @@
     %a.icon-remove{:href => '#close'}
 
 - package_list = @package_form.package_list
-= form_for @package_form.package do |f|
+= form_for @package_form.package, as: :package do |f|
   = render 'distribution/packages/form/point_control', points: @package_form.points, chosen_point: @package_form.chosen_point
   - unless @package_form.new?
     %h5
@@ -31,7 +31,7 @@
       #calendar-loading
         %span#krutilka
       = hidden_field_tag :package_date, package_list.nil? ? '' : package_list.date.to_date.iso8601
-
+    = f.hidden_field :package_list_id
   %h5 Ваши заказы в центре раздач:
   %table.tight
     %thead
