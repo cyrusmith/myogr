@@ -22,6 +22,8 @@ module Distribution
           conditions << [:where, '`distribution_package_lists`.`state` not in ("archived")']
         end
         @package_lists = conditions.inject(@package_lists) { |obj, method_and_args| obj.send(*method_and_args) }
+      else
+        @package_lists.where('`distribution_package_lists`.`state` not in ("archived")').where(schedule: {is_day_off: false})
       end
 
       @package_lists = @package_lists.order { schedule.date.asc }.order { schedule.till.asc }.page params[:page]
