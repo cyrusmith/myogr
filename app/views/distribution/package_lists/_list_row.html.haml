@@ -6,7 +6,7 @@
 - point = data.point
 %tr{id: list.id}
   %td
-    =l list.date, format: :short_num
+    =l list.date
     = "(с #{l list.from, format: :hours_only} до #{l list.till, format: :hours_only})" if list.from && list.till
   %td
     = t('distribution.package_lists.states.' + list.state)
