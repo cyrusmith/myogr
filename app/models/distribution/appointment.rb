@@ -4,7 +4,7 @@ module Distribution
 
     attr_accessible :from, :till, :meeting_place_id
 
-    delegate :short_address, to: :meeting_place
+    delegate :short_address, :full_address, to: :meeting_place
 
     belongs_to :package_list
     belongs_to :meeting_place

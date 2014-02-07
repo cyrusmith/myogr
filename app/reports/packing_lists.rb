@@ -60,7 +60,7 @@ class PackingLists < Prawn::Document
     end
     #text , :size => 14, :style => :bold, :align => :center
     data = [
-        ["Пользователь: #{list.user.try(:display_name)}", "Место получения: #{list.package_list.point.address.full_address}"],
+        ["Пользователь: #{list.user.try(:display_name)}", "Место получения: #{list.package_list.point.address.try(:full_address) || list.appointment.try(:full_address)}"],
         ["Паспорт получателя: #{list.document_number}", "Дата получения: #{formatted_package_date} - #{Russian::strftime list.package_list.date + 2.days, '%d.%m.%y'}",]
 
     ]

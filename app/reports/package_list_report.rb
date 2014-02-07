@@ -35,7 +35,7 @@ class PackageListReport < Prawn::Document
       formatted_package_date = Russian::strftime @package_list.date, '%d.%m.%y'
       text "Ведомость от #{formatted_package_date} / #{t('distribution.package.methods.' + method.to_s)}. В ведомости #{dataset.count.to_s + ' ' + Russian::p(dataset.count, 'пользователь', 'пользователя', 'пользователей')}", :size => 12, :style => :bold
       move_down 5
-      text "Центр раздач: #{@package_list.point.address.full_address}"
+      text "Центр раздач: #{@package_list.point.address.try(:full_address)}"
       new_package_table dataset
       @@tables += 1
       creation_date = Time.now.strftime("Лист сгенерирован %e %b %Y %H:%M")

@@ -4,7 +4,7 @@ module Distribution
 
     attr_accessible :description, :location_attributes
 
-    delegate :short_address, to: :location
+    delegate :short_address, :full_address, to: :location
 
     has_one :location, as: :addressable, dependent: :destroy
     has_many :appointments
