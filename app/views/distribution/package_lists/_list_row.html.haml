@@ -37,7 +37,7 @@
     %td
       - data.package_list.appointments.each do |app|
         = "#{l app.from, format: :hours_and_minutes}-#{l app.till, format: :hours_and_minutes}" if app.from && app.till
-        = app.meeting_place.location.short_address
+        = app.meeting_place.location.short_address if app.meeting_place.present?
         %br
   %td
     = link_to 'Редактировать', edit_distribution_point_package_list_path(point, data.package_list)
