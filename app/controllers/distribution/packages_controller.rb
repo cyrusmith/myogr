@@ -2,8 +2,8 @@
 module Distribution
   class PackagesController < AuthorizedController
 
-    before_filter :check_active_package, only: [:new, :create]
-    before_filter :check_changeability, only: [:edit, :update]
+    before_filter :check_active_package, only: [:new, :create, :new_by_type]
+    before_filter :check_changeability, only: [:edit, :update, :new_by_type]
 
     def index
       @distribution_packages = Package.all
