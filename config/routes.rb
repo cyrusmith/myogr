@@ -109,4 +109,6 @@ Ogromno::Application.routes.draw do
   resources :finances, :only => :index
 
   match '/delayed_job' => DelayedJobWeb, :anchor => false
+
+  #mount Distrib::Engine, at: 'distrib'
 end

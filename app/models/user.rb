@@ -116,4 +116,8 @@ class User < Forum::Models
     self.case_on and Time.now < Time.at(self.case_till)
   end
 
+  def select_view
+    "#{self.members_l_display_name} (#{self.email})"
+  end
+
 end
