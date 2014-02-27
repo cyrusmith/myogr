@@ -15,7 +15,7 @@ module Distribution
 
     attr_accessible :title, :head_user, :employee_ids,
                     :default_day_package_limit, :repeat_schedule, :autoaccept_point_id,
-                    :phone, :address_attributes
+                    :phone, :address_attributes, :work_schedule
 
     validates :head_user, presence: true
 

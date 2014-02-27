@@ -8,7 +8,7 @@ module Distribution
 
     # Количество дней, доступных для записи пользователю
     def self.record_time_duration
-      7.days
+      14.days
     end
 
   end
