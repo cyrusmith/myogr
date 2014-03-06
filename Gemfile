@@ -39,6 +39,7 @@ gem 'delayed_job_web'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'rack-mini-profiler'
 end
 
 group :test do
@@ -65,6 +66,8 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 #gem 'client_side_validations'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
+
+#gem 'distrib', path: '/home/nlopin/workspace-ruby/distrib'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

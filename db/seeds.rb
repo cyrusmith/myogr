@@ -9,3 +9,5 @@
 Role.create! name: 'admin'
 Role.create! name: 'distrib_manager'
 Role.create! name: 'distrib_employee'
+
+#Distrib::Engine.load_seed
