@@ -35,6 +35,8 @@ gem 'chartkick'
 gem 'daemons'
 gem 'delayed_job_active_record'
 gem 'delayed_job_web'
+gem 'foundation-rails'
+gem 'foundation-icons-sass-rails'
 
 group :development do
   gem 'better_errors'
