@@ -5,8 +5,8 @@
     = stylesheet_link_tag 'application', :media => 'all'
     -#= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,cyrillic', :media => "all"
     = javascript_include_tag 'application'
-    = javascript_include_tag 'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU&key=ACqF1lIBAAAA63Z1UwIAOMIQgaYn9lKpgsI6uod5i37aUI8AAAAAAAAAAAB3kADunBTyJRmRmF0zfH1uzuKPbg=='
-    = yield(:javascript)
+    = javascript_include_tag 'http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU'
+    = yield(:head)
     = csrf_meta_tags
   %body
     = render 'shared/header'

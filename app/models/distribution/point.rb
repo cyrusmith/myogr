@@ -56,6 +56,10 @@ module Distribution
       1
     end
 
+    def short_address
+      self.address.present? ? self.address.short_address : ''
+    end
+
     private
 
     def check_head_permission
