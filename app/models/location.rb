@@ -24,7 +24,9 @@ class Location < ActiveRecord::Base
   end
 
   def full_address
-    "г.#{self.city}, #{self.street}"
+    result = "г.#{self.city}"
+    result += ", #{self.street}" if self.street
+    result
   end
 
   def has_coordinates

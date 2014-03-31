@@ -6,7 +6,7 @@
       %li= link_to 'Доставка', 'http://ogromno.com/index.php?showtopic=36684'
       %li= link_to 'Оплата', 'http://ogromno.com/index.php?act=zak&CODE=04'
       %li= link_to 'Центр раздач', 'http://ogromno.com/index.php?showforum=325'
-      %li= link_to 'Контакты', contacts_path
+      %li= link_to 'Контакты', main_app.contacts_path
   #middle-header
     #middle-header-wrapper
       #logo= show_logo
@@ -19,12 +19,12 @@
           %p
           = 'Вы вошли как ' + current_user.display_name + '.'
           %br
-          = link_to('Выйти?', logout_path)
+          = link_to('Выйти?', main_app.logout_path)
         -else
           %p
-          = link_to('Войти', login_path) + ' или '
+          = link_to('Войти', main_app.login_path) + ' или '
           %br
-          = link_to('зарегистрироваться', signup_path)
+          = link_to('зарегистрироваться', main_app.signup_path)
       - if current_user.present?
         #notification-icon
           - new_notifications_counter = current_user.notifications.count{|n| not(n.read?)}

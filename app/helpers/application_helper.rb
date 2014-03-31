@@ -11,7 +11,7 @@ module ApplicationHelper
     if current_page? :root
       return image_tag logo_path
     else
-      return link_to image_tag(logo_path), root_path
+      return link_to image_tag(logo_path), main_app.root_path
     end
   end
 
