@@ -5,7 +5,23 @@ class Distributor < Forum::Models
 
   has_many :product_order_items, foreign_key: 'tid'
 
-  scope :owned_by, ->(owner_id) { where { (starter_id.eq owner_id) & (color.not_in [1,6]) } }
+  scope :owned_by, ->(owner_id) { where { (starter_id.eq owner_id) & (color.in [STATES[:order],
+                                                                                STATES[:payment],
+                                                                                STATES[:stop],
+                                                                                STATES[:road],
+                                                                                STATES[:issue]
+                                                                               ]) } }
+
+  STATES = {
+    undefined: 0,
+    start: 1,
+    order: 2,
+    payment: 3,
+    road: 4,
+    issue: 5,
+    archive: 5,
+    stop: -3
+  }
 
   def title
     CGI.unescapeHTML(read_attribute :title)
