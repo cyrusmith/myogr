@@ -8,7 +8,7 @@ module ApplicationHelper
   LOGO_ICON = 'ogromno-logo.png'
 
   def show_logo(logo_path=LOGO_ICON)
-    if current_page? :root
+    if current_page? main_app.root_path
       return image_tag logo_path
     else
       return link_to image_tag(logo_path), main_app.root_path
@@ -37,11 +37,11 @@ module ApplicationHelper
   def get_package_path
     user_packages = current_user.packages
     active_package = user_packages.empty? ? nil : user_packages.select{|package| package.active?}.first
-    return new_distribution_package_path if active_package.nil?
+    return main_app.new_distribution_package_path if active_package.nil?
     if active_package.changeable?
-      edit_distribution_package_path(active_package)
+      main_app.edit_distribution_package_path(active_package)
     else
-      distribution_package_path(active_package)
+      main_app.distribution_package_path(active_package)
     end
   end
 

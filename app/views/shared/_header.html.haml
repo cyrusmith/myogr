@@ -1,7 +1,7 @@
 %header
   #up-header
     %ul
-      %li= link_to 'Админка ЦР', distribution_points_path if can? :view_list, Distribution::Point
+      %li= link_to 'Админка ЦР', main_app.distribution_points_path if can? :view_list, Distribution::Point
       %li= link_to 'Помощь', 'http://ogromno.com/index.php?showforum=84'
       %li= link_to 'Доставка', 'http://ogromno.com/index.php?showtopic=36684'
       %li= link_to 'Оплата', 'http://ogromno.com/index.php?act=zak&CODE=04'
@@ -28,7 +28,7 @@
       - if current_user.present?
         #notification-icon
           - new_notifications_counter = current_user.notifications.count{|n| not(n.read?)}
-          = link_to user_notifications_path(current_user, unread: true), title: "Уведомления(#{new_notifications_counter} #{Russian::pluralize new_notifications_counter, 'новое', 'новых', 'новых'})", remote: true do
+          = link_to main_app.user_notifications_path(current_user, unread: true), title: "Уведомления(#{new_notifications_counter} #{Russian::pluralize new_notifications_counter, 'новое', 'новых', 'новых'})", remote: true do
             %i.icon-3x{class: (new_notifications_counter > 0 ? 'icon-bell-alt' : 'icon-bell' )}
             - if new_notifications_counter > 0
               %span= new_notifications_counter
