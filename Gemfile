@@ -69,7 +69,7 @@ gem 'jquery-ui-rails'
 #gem 'client_side_validations'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 
-#gem 'distrib', path: '/home/nlopin/workspace-ruby/distrib'
+gem 'distrib', path: 'd:\Workspace\ogromno\distribengine'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

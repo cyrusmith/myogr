@@ -1,0 +1,116 @@
+%div.aptform{:"ng-controller" => "NewAppointmentController"}
+  %h1 Где желаете получить ваши заказы?
+
+  %div.types
+    %input{:type => "radio", :"id" => "apptype-center", :name => "appointment_type", :value => "center", :"ng-model" => "selectedType"}
+    %label{:for => "apptype-center"}
+      В центре раздач
+
+    %input{:type => "radio", :"id" => "apptype-mobile", :name => "appointment_type", :value => "mobile", :"ng-model" => "selectedType"}
+    %label{:for => "apptype-mobile"}
+      В мобильном пункте выдачи
+
+    %input{:type => "radio", :"id" => "apptype-courier", :name => "appointment_type", :value => "courier", :"ng-model" => "selectedType"}
+    %label{:for => "apptype-courier"}
+      Доставьте домой
+
+  %form.apttype{:"ng-if" => "selectedType == 'courier'"}
+
+    %div.deliveryopts
+      %h2 Доставка
+      %div.col
+        %div
+          %label{:for => "shiplite"}
+            %input{:type => "radio", :id => "shiplite", :name => "deliverytype"}
+            Доставка лайт - 150 руб.
+            %br
+            Привезем заказы, когда наш курьер будет рядом с вами. Обязательно позвоним перед этим!
+        %div
+          %label{:for => "shippresise"}
+            %input{:type => "radio", :id => "shippresise", :name => "deliverytype"}
+            Точная доставка - 300 руб.
+            %br
+            Привезем заказы в удобное для вас время
+      %div.col
+        %div
+          %label{:for => "shiptk"}
+            %input{:type => "radio", :id => "shiptk", :name => "deliverytype"}
+            Транспортной компанией
+            %br
+            Довезем и сдадим ваши заказы транспортной компании
+
+    .address
+      %h3 Адрес доставки
+      %ul.components
+        %li.city
+          %label Город
+          %select{:name => "city", :"ng-model" => "courier.city"}
+            %option{:"ng-repeat" => "city in courier.cities", :value => "city"}
+              {{city}}
+        %li.street
+          %label Улица и дом
+          %input{:name => "street", "ng-model" => "courier.street"}
+        %li.porch
+          %label Подъезд
+          %input{:name => "porch", "ng-model" => "courier.porch"}
+        %li.storey
+          %label Этаж
+          %input{:name => "storey", "ng-model" => "courier.storey"}
+
+      .input.fio
+        %label
+          Получатель ФИО
+        %input{:name => "fio", "ng-model" => "courier.fio"}
+      .input.phone
+        %label
+          Телефон
+        %input{:name => "phone", "ng-model" => "courier.phone", :placeholder => "71234567890"}
+      .input.note
+        %label
+          Дополнительная информация
+        %textarea{:name => "note", "ng-model" => "courier.note", :placeholder => "Информация, которая поможет курьеру быстрее вас найти"}
+      .input.date
+        %label
+          Дата доставки
+        %input{:name => "date", "ng-model" => "courier.date"}
+        Время:
+        %span.radio
+          %span{:"ng-click" => "courier.period = 913", "ng-class" => "{selected : courier.period == 913}"}
+            9-13
+          %span{:"ng-click" => "courier.period = 1317", "ng-class" => "{selected : courier.period == 1317}"}
+            13-17
+          %span{:"ng-click" => "courier.period = 1721", "ng-class" => "{selected : courier.period == 1721}"}
+            17-21
+
+      .orders
+        //TODO implement table as directive
+        %h3 Заказы в сборочном центре
+        %table
+          %thead
+            %tr
+              %th
+                %a{"ng-click" => "sortOrders('org'); $event.preventDefault()", "href" => "#"}
+                  Организатор
+              %th
+                %a{"ng-click" => "sortOrders('purchase'); $event.preventDefault()", "href" => "#"}
+                  Закупка
+              %th
+          %tbody
+            %tr{"ng-repeat" => "order in orders"}
+              %td
+                {{order.org}}
+              %td
+                {{order.purchase.title}}
+              %td
+                %a{"ng-click" => "suspend(order);", "href" => "#"}
+                  Отложить
+
+      %hr
+      .input.submit
+        %button{:type => "submit"} Заказать
+
+  %div{:"ng-if" => "selectedType == 'mobile'"}
+    Тут будет форма для моб. пунка выдачи
+
+  %div{:"ng-if" => "selectedType == 'center'"}
+    Тут будет форма для центра выдачи

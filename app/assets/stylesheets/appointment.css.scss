@@ -1,0 +1,113 @@
+.clearfix {
+  zoom: 1;
+  &:before, &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.aptform {
+
+  .input {
+    padding-bottom: 0.5em;
+    label {
+      display: block;
+    }
+  }
+
+  .types {
+    label {
+      font: {
+        weight: bold;
+      }
+    }
+  }
+  .apttype {
+    padding: 3em 1.4em;
+    .deliveryopts {
+      @extend .clearfix;
+      .col {
+        float: left;
+        width: 50%;
+        div {
+          padding-right: 2em;
+          padding-bottom: 1em;
+          label {
+            position: relative;
+            input {
+              position: absolute;
+              left: -1em;
+              top: 0.4em;
+            }
+          }
+        }
+      }
+    }
+
+    .address {
+      .components {
+        margin: 0;
+        @extend .clearfix;
+        li {
+          float: left;
+          padding-right: 1em;
+          label {
+            display: block;
+          }
+
+          &.porch, &.storey {
+            input {
+              width: 3em;
+            }
+          }
+        }
+      }
+    }
+    .input.fio {
+      input {
+        width: 25em;
+      }
+    }
+    .input.date {
+      .radio {
+        margin: 0 1em;
+        border: 1px solid #999;
+        -webkit-border-radius: 0.5em;
+        border-radius: 0.5em;
+        padding: 0.5em 0;
+        span {
+          text-decoration: underline;
+          cursor: pointer;
+          padding: 0.5em;
+          -webkit-border-radius: 0.5em;
+          border-radius: 0.5em;
+          &.selected {
+            text-decoration: none;
+            background-color: #bad98b;
+          }
+        }
+      }
+    }
+
+    .orders
+    {
+      padding: 1em 0;
+      table {
+        width: 100%;
+        tr:hover {
+          td {
+            background-color: #bad98b;
+          }
+        }
+        td {
+          border-bottom: 1px solid #999;
+        }
+      }
+    }
+  }
+}

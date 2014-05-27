@@ -1,5 +1,7 @@
 Ogromno::Application.routes.draw do
 
+  get "appointment/new"
+
   root :to => 'home#index'
 
   resources :users, :except => :destroy do
@@ -110,5 +112,5 @@ Ogromno::Application.routes.draw do
 
   match '/delayed_job' => DelayedJobWeb, :anchor => false
 
-  #mount Distrib::Engine, at: 'distrib'
+  mount Distrib::Engine, at: 'distrib'
 end

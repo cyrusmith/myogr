@@ -14,7 +14,11 @@
 //= require common
 //= require dataTables/jquery.dataTables
 //= require date.format
-
+//= require angular/angular
+//= require_tree ./angular/apps/
+//= require_tree ./angular/controllers/
+//= require_tree ./angular/directives/
+//= require_tree ./angular/services/
 
 $(document).ready(function () {
     jQuery.fn.reverseEach = (function () {
